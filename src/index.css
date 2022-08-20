@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+@font-face {
+  font-family: "iconfont"; /* Project id 3478842 */
+  src: url('./assets/font/iconfont.woff2?t=1657003650741') format('woff2'),
+       url('./assets/font/iconfont.woff?t=1657003650741') format('woff'),
+       url('./assets/font/iconfont.ttf?t=1657003650741') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont", serif !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-drag:before {
+  content: "\e707";
+}
+
+.icon-clear_filters:before {
+  content: "\e87b";
+}
+
+.icon-sortdown:before {
+  content: "\e671";
+}
+
+.icon-sortup:before {
+  content: "\e674";
+}
+
+.icon-Filterfunnelsort:before {
+  content: "\e9ce";
+}
+
+.icon-sort:before {
+  content: "\e625";
+}

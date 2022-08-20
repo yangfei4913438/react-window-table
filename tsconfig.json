@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 指定ECMAScript目标版本
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // TS需要引用的库，即声明文件。新的包含了旧的，不需要每个都重复引入。
+    "allowJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext", // 指定生成哪个模块系统代码
+    "moduleResolution": "Node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
+    "resolveJsonModule": true, // 直接加载json文件
+    "esModuleInterop": true, // 可以直接使用 import react from react, 否则要 import * as react from react
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx", // jsx 支持 react 风格
+    "noUnusedLocals": true, // 检查只声明、未使用的局部变量(只提示不报错)
+    "noUnusedParameters": true, // 检查未使用的函数参数(只提示不报错)
+    "noImplicitReturns": true, // 每个分支都会有返回值
+
+    "types": ["vite/client"], // 静态资源导入支持
+
+    "baseUrl": ".", // 指定跟路径
+    "paths": {
+      // 路径映射
+      "src/*": ["src/*"] // 具体的别名映射 webpack: 'src': path.join(__dirname, 'src'),
+    }
+  },
+  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
