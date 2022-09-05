@@ -18,6 +18,8 @@ export const PersonLabels = {
 };
 
 export interface IPerson {
+  id: string;
+  group: boolean;
   name: string;
   age: number;
   status: '已婚' | '未婚' | '恋爱中';
@@ -34,6 +36,8 @@ export function makeData(lens: number): IPerson[] {
   const mock_data = {
     [`data|${lens}`]: [
       {
+        id: '@id',
+        group: false,
         name: '@cname',
         age: '@integer(18,60)',
         'status|1': ['已婚', '未婚', '恋爱中'],

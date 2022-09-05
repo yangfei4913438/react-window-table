@@ -1,6 +1,7 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
 import { VirtualTable } from '../VirtualTable';
+import cx from 'classnames';
 
 interface IProps {}
 const Table: FC<IProps> = () => {
@@ -17,6 +18,8 @@ const Table: FC<IProps> = () => {
   const [sort, setSort] = useState<{ [key: string]: 'asc' | 'desc' | undefined }>({});
   // 列筛选
   const [filter, setFilter] = useState<{ [key: string]: any }>({});
+  // 分组信息
+  const [groups, setGroups] = useState<{[key: string]: IPerson[]}>({})
 
   // 宽度百分比配置
   const [widths, changeWidths] = useState<{ [key: string]: number }>({
@@ -97,6 +100,28 @@ const Table: FC<IProps> = () => {
       }
     }
   };
+
+  // 分组响应
+  const handleGroup = (id: string, index: number) => {
+    const data = Array.from(list);
+    if (groups[id]) {
+      data.splice(index+1, groups[id].length);
+      setGroups(prevState => {
+        delete prevState[id];
+        return prevState
+      })
+    } else {
+      const newData = makeData(2).map(o => {
+        return {
+          ...o,
+          group: true
+        }
+      })
+      setGroups(prevState => ({...prevState, [id]: newData}))
+      data.splice(index+1, 0, ...newData);
+    }
+    setList(data)
+  }
 
   // 更新排序数据
   const getSortData = (sortData: typeof sort) => {
@@ -326,8 +351,8 @@ const Table: FC<IProps> = () => {
   const cellRenders: { [key: string]: (row: IPerson, index: number) => ReactNode } = {
     name: (item, index) => {
       return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">
-          {item.name} - {index}
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3" onClick={() => handleGroup(item.id, index)}>
+          <span className={cx(item.group && 'bg-red-400')}>{item.name} - {index}</span>
         </div>
       );
     },
@@ -414,7 +439,7 @@ const Table: FC<IProps> = () => {
           titleHeight={50}
           rowHeight={45}
           headerClass=""
-          rowClass={(idx) => (checked.includes(idx) ? 'bg-green-500 hover:bg-green-200' : '')}
+          rowClass={(idx) => (checked.includes(idx) || list[idx].group ? '!bg-green-500 hover:bg-green-200' : '')}
           rowClick={(e, idx) => console.log(idx, e)}
           list={list}
           widths={widths}
