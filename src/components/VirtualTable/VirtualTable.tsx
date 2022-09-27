@@ -63,6 +63,10 @@ export interface VirtualTableProps<T> {
   wrapperClass?: string;
   // 表格外部的内联样式
   wrapperStyle?: Partial<React.CSSProperties>;
+  // 表格的类名
+  tableClass?: string;
+  // 表格的内联样式
+  tableStyle?: Partial<React.CSSProperties>;
   // 表头的行类名
   headerClass?: string;
   // 表格的行类名
@@ -110,6 +114,8 @@ const VirtualTable: FC<VirtualTableProps<any>> = <T,>({
 
   wrapperStyle,
   wrapperClass,
+  tableClass,
+  tableStyle,
 
   titleHeight = 50,
   rowHeight = 45,
@@ -302,6 +308,8 @@ const VirtualTable: FC<VirtualTableProps<any>> = <T,>({
           >
             <FixedSizeList
               innerElementType={(props) => <TableWrapper {...props} className={cx(props.className, wrapperClass)}   style={{...props.style, ...wrapperStyle}} />}
+              className={tableClass}
+              style={tableStyle}
               itemData={{
                 list:
                   list.length > fixedTopCount
