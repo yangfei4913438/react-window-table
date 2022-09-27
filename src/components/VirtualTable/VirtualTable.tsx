@@ -1,4 +1,4 @@
-import {
+import React, {
   type Dispatch,
   type FC,
   type MouseEvent,
@@ -12,6 +12,7 @@ import {
   type ListOnItemsRenderedProps,
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import cx from 'classnames';
 import TableWrapper from './TableWrapper';
 import TableRow from './TableRow';
 import { type IHeaderTree, type IWidths, VirtualTableContext, checkBoxWidth } from './consts';
@@ -58,6 +59,10 @@ export interface VirtualTableProps<T> {
   // 每行的高度
   rowHeight?: number;
 
+  // 表格外部类名
+  wrapperClass?: string;
+  // 表格外部的内联样式
+  wrapperStyle?: Partial<React.CSSProperties>;
   // 表头的行类名
   headerClass?: string;
   // 表格的行类名
@@ -102,6 +107,9 @@ const VirtualTable: FC<VirtualTableProps<any>> = <T,>({
   canDragSortColumn = true,
   nextPage,
   nextTrigger = 0.55, // 默认值 55%
+
+  wrapperStyle,
+  wrapperClass,
 
   titleHeight = 50,
   rowHeight = 45,
@@ -293,7 +301,7 @@ const VirtualTable: FC<VirtualTableProps<any>> = <T,>({
             }}
           >
             <FixedSizeList
-              innerElementType={TableWrapper}
+              innerElementType={(props) => <TableWrapper {...props} className={cx(props.className, wrapperClass)}   style={{...props.style, ...wrapperStyle}} />}
               itemData={{
                 list:
                   list.length > fixedTopCount
