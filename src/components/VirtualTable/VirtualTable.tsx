@@ -69,9 +69,17 @@ export interface VirtualTableProps<T> {
   // 表头的行类名
   headerClass?: string;
   // 表格的行类名
-  rowClass?: (index: number) => string;
+  rowClass?: ({ index, row }: { index: number; row: T }) => string;
   // 行点击事件
-  rowClick?: (e: MouseEvent<HTMLDivElement>, index: number) => void;
+  rowClick?: ({
+    event,
+    index,
+    row,
+  }: {
+    event: MouseEvent<HTMLDivElement>;
+    index: number;
+    row: T;
+  }) => void;
 
   // 顶部固定行数量
   fixedTopCount?: number;
@@ -83,15 +91,15 @@ export interface VirtualTableProps<T> {
   // 是否启用选中
   canChecked?: boolean;
   // 选中的对象
-  checked?: number[];
+  checked?: string[];
   // 更新选中的对象
-  setChecked?: Dispatch<SetStateAction<number[]>>;
+  setChecked?: Dispatch<SetStateAction<string[]>>;
 
   // 空态图
   emptyNode?: ReactNode;
 }
 
-const VirtualTable = <T,>({
+const VirtualTable = <T extends { id: string; children: { id: string }[] }>({
   list,
   widths,
   labels,
@@ -336,7 +344,7 @@ const VirtualTable = <T,>({
                 return (
                   <TableRow
                     row={row}
-                    rowClass={rowClass(index + fixedTopCount)}
+                    rowClass={rowClass({ index: index + fixedTopCount, row })}
                     style={style}
                     index={index}
                     isScrolling={isScrolling}

@@ -37,9 +37,17 @@ export const VirtualTableContext = createContext<{
   // 表头的行类名
   headerClass?: string;
   // 表格的行类名
-  rowClass: (index: number) => string;
+  rowClass?: ({ index, row }: { index: number; row: any }) => string;
   // 行点击事件
-  rowClick: (e: MouseEvent<HTMLDivElement>, index: number) => void;
+  rowClick?: ({
+    event,
+    index,
+    row,
+  }: {
+    event: MouseEvent<HTMLDivElement>;
+    index: number;
+    row: any;
+  }) => void;
   // 文字布局
   textLayout?: 'left' | 'center';
   // 列名的国际化变量, 如: { name: strings.NAME, description: strings.DESCRIPTION }
@@ -57,9 +65,9 @@ export const VirtualTableContext = createContext<{
   // 是否启用选中
   canChecked: boolean;
   // 选中的对象
-  checked: number[];
+  checked: string[];
   // 更新选中的对象
-  setChecked: Dispatch<SetStateAction<number[]>>;
+  setChecked: Dispatch<SetStateAction<string[]>>;
   // 列的筛选渲染
   filterRenders?: { [key: string]: ReactNode };
   // 列的排序渲染

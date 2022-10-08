@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
-import { VirtualTable } from '../VirtualTable';
+import { VirtualTable, inArray } from '../VirtualTable';
 
 interface IProps {}
 const Table: FC<IProps> = () => {
@@ -12,7 +12,7 @@ const Table: FC<IProps> = () => {
   // 表格数据
   const [list, setList] = useState<IPerson[]>([]);
   // 选中的对象
-  const [checked, setChecked] = useState<number[]>([]);
+  const [checked, setChecked] = useState<string[]>([]);
   // 列排序
   const [sort, setSort] = useState<{ [key: string]: 'asc' | 'desc' | undefined }>({});
   // 列筛选
@@ -517,8 +517,18 @@ const Table: FC<IProps> = () => {
           titleHeight={50}
           rowHeight={45}
           headerClass=""
-          rowClass={(idx) => (checked.includes(idx) ? '!bg-green-500 hover:bg-green-200' : '')}
-          rowClick={(e, idx) => console.log(idx, e)}
+          rowClass={({ row }) =>
+            checked.includes(row.id) ||
+            (row.children &&
+              row.children.length > 0 &&
+              inArray(
+                checked,
+                row.children.map((o) => o.id)
+              ))
+              ? '!bg-green-500' + ' hover:bg-green-200'
+              : ''
+          }
+          rowClick={({ event, index, row }) => console.log(index, event, row)}
           list={list}
           widths={widths}
           labels={labels}

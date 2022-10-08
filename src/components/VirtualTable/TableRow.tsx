@@ -1,8 +1,9 @@
-import { type CSSProperties, useContext } from 'react';
+import React, { type CSSProperties, Dispatch, useContext } from 'react';
 import { VirtualTableContext } from './consts';
 import cx from 'classnames';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
-import { handleCheckBox } from './checkboxHelper';
+import intersection from 'lodash/intersection';
+import difference from 'lodash/difference';
 
 interface TableRowProps<T> {
   style?: CSSProperties;
@@ -13,7 +14,14 @@ interface TableRowProps<T> {
   id: number;
 }
 
-const TableRow = <T,>({ style, rowClass, index, isScrolling, row, id }: TableRowProps<T>) => {
+const TableRow = <T extends { id: string; children: { id: string }[] }>({
+  style,
+  rowClass,
+  index,
+  isScrolling,
+  row,
+  id,
+}: TableRowProps<T>) => {
   const {
     textLayout,
     labels,
@@ -33,6 +41,72 @@ const TableRow = <T,>({ style, rowClass, index, isScrolling, row, id }: TableRow
     rowClick,
   } = useContext(VirtualTableContext);
 
+  // 选中行
+  const handleCheckBox = (
+    row: T,
+    checked: string[],
+    setChecked: Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    // 没有下级
+    if (!row?.children || row.children.length === 0) {
+      if (checked.includes(row.id)) {
+        const idx = checked.indexOf(row.id);
+        const list1 = checked.slice(0, idx);
+        const list2 = checked.slice(idx + 1, checked.length);
+        setChecked(() => list1.concat(list2));
+      } else {
+        setChecked((prevState) => prevState.concat([row.id]));
+      }
+    }
+    // 有下级
+    else {
+      const ids = row.children.map((o) => o.id);
+      // ids 中被选中的元素
+      const inners = intersection(checked, ids);
+      if (inners.length === ids.length) {
+        // 不存在ids中的所有值
+        setChecked(difference(checked, ids));
+      } else {
+        setChecked((prevState) => prevState.concat(ids));
+      }
+    }
+  };
+
+  // 判断是否选中
+  const isChecked = () => {
+    // 没有下级
+    if (!row?.children || row.children.length === 0) {
+      return checked.includes(row.id);
+    }
+    // 有下级
+    else {
+      const ids = row.children.map((o) => o.id);
+      // ids 中被选中的元素
+      const inners = intersection(checked, ids);
+      return inners.length === ids.length;
+    }
+  };
+
+  // 判断是否选择一部分
+  const isIndeterminate = () => {
+    // 没有下级
+    if (!row?.children || row.children.length === 0) {
+      return false;
+    }
+    // 有下级
+    else {
+      const ids = row.children.map((o) => o.id);
+      // ids 中被选中的元素
+      const inners = intersection(checked, ids);
+      // 空值就是false
+      if (inners.length === 0) {
+        return false;
+      }
+      // 不等就是对的
+      return inners.length !== ids.length;
+    }
+  };
+
   return (
     <div
       className={cx(
@@ -45,12 +119,13 @@ const TableRow = <T,>({ style, rowClass, index, isScrolling, row, id }: TableRow
           id * rowHeight + (headerList.length > 0 ? headerList.length * titleHeight : titleHeight),
         width: realWidth,
       }}
-      onClick={(e) => rowClick(e, id)}
+      onClick={(event) => rowClick?.({ event, index, row })}
     >
       {!isScrolling && canChecked && (
         <IndeterminateCheckbox
-          checked={checked.includes(id)}
-          onClick={() => handleCheckBox(id, checked, setChecked)}
+          indeterminate={isIndeterminate()}
+          checked={isChecked()}
+          onClick={() => handleCheckBox(row, checked, setChecked)}
         />
       )}
       {isScrolling

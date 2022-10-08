@@ -11,6 +11,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
+import uniq from 'lodash/uniq';
 
 import TableHead from './TableHead';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
@@ -51,11 +52,22 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     const getIndex = (label: string) => labels.indexOf(label);
     const activeIndex = activeLabel ? getIndex(activeLabel) : -1;
 
+    const allIds = uniq(
+      list
+        .map((o) => {
+          if (!o?.children || o.children.length === 0) {
+            return o.id;
+          } else {
+            return o.children.map((r: { id: any }) => r.id);
+          }
+        })
+        .flat()
+    );
+
     const handleAllChecked = () => {
-      if (checked.length !== list.length) {
-        // 获取全部的索引
-        const arr = Array.from({ length: list.length }, (_, idx) => idx);
-        setChecked(() => arr);
+      if (checked.length === 0 || (checked.length > 0 && checked.length !== allIds.length)) {
+        // 获取全部的id
+        setChecked(() => allIds);
       } else {
         setChecked([]);
       }
@@ -170,8 +182,8 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             <SortableContext items={list} strategy={horizontalListSortingStrategy}>
               {canChecked && (
                 <IndeterminateCheckbox
-                  indeterminate={checked.length > 0 && checked.length !== list.length}
-                  checked={checked.length === list.length && list.length > 0}
+                  indeterminate={checked.length > 0 && checked.length !== allIds.length}
+                  checked={checked.length > 0 && checked.length === allIds.length}
                   onClick={() => handleAllChecked()}
                 />
               )}
@@ -241,7 +253,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             return (
               <TableRow
                 row={row}
-                rowClass={rowClass(index)}
+                rowClass={rowClass?.({ index, row })}
                 style={{ top: index * rowHeight, height: rowHeight }}
                 index={index}
                 key={index}
