@@ -113,7 +113,7 @@ const Table: FC<IProps> = () => {
         return prevState;
       });
     } else {
-      setGroups((prevState) => ({ ...prevState, [item.id]: item.children }));
+      setGroups((prevState) => ({ ...prevState, [item.id]: item.children! }));
       data.splice(index + 1, 0, ...item.children);
     }
     setList(data);

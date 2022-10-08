@@ -29,7 +29,7 @@ export interface IPerson {
   visits: number;
   ip: string;
   last_visit: string;
-  children: IPerson[];
+  children?: IPerson[];
 }
 
 export function makeData(lens: number): IPerson[] {

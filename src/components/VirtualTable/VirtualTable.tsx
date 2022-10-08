@@ -98,7 +98,7 @@ export interface VirtualTableProps<T> {
   emptyNode?: ReactNode;
 }
 
-const VirtualTable = <T extends { id: string; children: { id: string }[] }>({
+const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
   list,
   widths,
   labels,

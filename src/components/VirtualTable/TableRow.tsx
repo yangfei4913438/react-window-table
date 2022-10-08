@@ -14,7 +14,7 @@ interface TableRowProps<T> {
   id: number;
 }
 
-const TableRow = <T extends { id: string; children: { id: string }[] }>({
+const TableRow = <T extends { id: string; children?: { id: string }[] }>({
   style,
   rowClass,
   index,
