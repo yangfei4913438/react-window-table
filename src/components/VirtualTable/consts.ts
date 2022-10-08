@@ -45,11 +45,11 @@ export const VirtualTableContext = createContext<{
   // 列名的国际化变量, 如: { name: strings.NAME, description: strings.DESCRIPTION }
   labels: string[];
   // 改变列的顺序，也可以修改多语言（当前组件内，只用于改变列的显示顺序）
-  changeLabels: Dispatch<SetStateAction<string[]>>;
+  changeLabels?: Dispatch<SetStateAction<string[]>>;
   // 列的显示比例,完整为1，如: { name: 0.3, description: 0.7 }
   widths: IWidths;
   // 列头拖动时的响应方法，用于更新宽度
-  changeWidths: Dispatch<SetStateAction<IWidths>>;
+  changeWidths?: Dispatch<SetStateAction<IWidths>>;
   // 能否拖拽列顺序
   canDragSortColumn: boolean;
   // 能否改变列宽度

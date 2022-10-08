@@ -83,8 +83,8 @@ const TableRow: FC<TableRowProps<any>> = <T,>({
               <div
                 className={cx('relative flex h-full flex-col justify-center overflow-hidden', {
                   'text-center': textLayout === 'center',
-                  'bg-inherit sticky left-0 z-50': idx < fixedLeftCount,
-                  'bg-inherit sticky right-0 z-50': idx > labels.length - fixedRightCount - 1,
+                  'sticky left-0 z-50 bg-inherit': idx < fixedLeftCount,
+                  'sticky right-0 z-50 bg-inherit': idx > labels.length - fixedRightCount - 1,
                 })}
                 style={style}
                 key={idx}

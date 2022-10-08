@@ -54,10 +54,10 @@ const TableHead: FC<ITableHead> = ({
     >
       <div
         className={cx(
-          'select-none flex items-center',
+          'flex select-none items-center',
           !canDragSortColumn && 'cursor-default',
           canDragSortColumn && isDragging && 'z-0 opacity-50',
-          canDragSortColumn && dragOverlay && 'cursor-grabbing shadow-lg bg-white',
+          canDragSortColumn && dragOverlay && 'cursor-grabbing bg-white shadow-lg',
           canDragSortColumn && !dragOverlay && 'cursor-grab touch-manipulation',
           {
             'justify-start': textLayout === 'left',
@@ -72,7 +72,7 @@ const TableHead: FC<ITableHead> = ({
         {!!sortRenders && !dragOverlay && sortRenders[id] && (
           <div
             className={cx(
-              'mx-3 absolute top-0 bottom-0 right-0 flex items-center cursor-pointer',
+              'absolute top-0 bottom-0 right-0 mx-3 flex cursor-pointer items-center',
               filterRenders?.[id] && 'right-5'
             )}
             onMouseDown={(e) => e.stopPropagation()}
@@ -82,7 +82,7 @@ const TableHead: FC<ITableHead> = ({
         )}
         {!!filterRenders && !dragOverlay && filterRenders[id] && (
           <div
-            className={'mx-3 absolute top-0 bottom-0 right-0 flex items-center cursor-pointer'}
+            className={'absolute top-0 bottom-0 right-0 mx-3 flex cursor-pointer items-center'}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {filterRenders[id]}
@@ -94,7 +94,7 @@ const TableHead: FC<ITableHead> = ({
           </span>
         )}
         {!canResize && !endCol && (
-          <div className="absolute right-0 h-[50%] top-[25%] w-0 border-r-2 border-gray-500" />
+          <div className="absolute right-0 top-[25%] h-[50%] w-0 border-r-2 border-gray-500" />
         )}
       </div>
     </div>

@@ -36,7 +36,7 @@ function DraggableItem({ id }: DraggableItemProps) {
   return (
     <div
       ref={setNodeRef}
-      className="cursor-col-resize absolute right-0 h-[50%] top-[25%] w-0 border-r-2 border-dotted border-gray-500"
+      className="absolute right-0 top-[25%] h-[50%] w-0 cursor-col-resize border-r-2 border-dotted border-gray-500"
       {...listeners}
     />
   );

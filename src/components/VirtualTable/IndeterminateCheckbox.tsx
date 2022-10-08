@@ -23,7 +23,7 @@ const IndeterminateCheckbox = React.forwardRef(
 
     return (
       <div
-        className="px-3 sticky z-50 left-0 h-full flex items-center bg-inherit"
+        className="sticky left-0 z-50 flex h-full items-center bg-inherit px-3"
         style={{
           boxShadow: fixedLeftCount === 0 ? '2px 0 4px 0px #eee' : 'unset',
           width: checkBoxWidth,

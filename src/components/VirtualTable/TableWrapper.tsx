@@ -91,7 +91,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           return (
             <div
               className={cx(
-                'flex items-center bg-[#f8f8f8] border-b border-b-[#eee] sticky',
+                'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
                 headerClass
               )}
               style={{
@@ -106,13 +106,13 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               {cols.map((col, idx2) => {
                 return (
                   <div
-                    className={cx('overflow-hidden relative flex justify-center')}
+                    className={cx('relative flex justify-center overflow-hidden')}
                     key={col}
                     style={{ width: headerColumnWidth(col) + 8 }}
                   >
                     {headRenders[col]}
                     {idx2 !== cols.length - 1 && (
-                      <div className="absolute right-0 h-[50%] top-[25%] w-0 border-r border-solid border-gray-500" />
+                      <div className="absolute right-0 top-[25%] h-[50%] w-0 border-r border-solid border-gray-500" />
                     )}
                   </div>
                 );
@@ -122,7 +122,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
         })}
         <div
           className={cx(
-            'flex items-center bg-[#f8f8f8] border-b border-b-[#eee] sticky',
+            'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
             headerClass
           )}
           style={{
@@ -155,14 +155,14 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
                 // 交换 label 元素的位置
                 const arr = arrayMove(labels, activeIndex, overIndex);
                 // 更新label
-                changeLabels(arr);
+                changeLabels?.(arr);
                 // 新的宽度
                 const widthObj: IWidths = {};
                 arr.forEach((label) => {
                   widthObj[label] = widths[label];
                 });
                 // 更新宽度
-                changeWidths(widthObj);
+                changeWidths?.(widthObj);
               }
             }}
             onDragCancel={() => setActiveLabel(null)}
@@ -194,9 +194,9 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
 
                 return (
                   <div
-                    className={cx('overflow-hidden relative h-full flex flex-col justify-center', {
-                      'sticky z-50 left-0 bg-inherit': idx < fixedLeftCount!,
-                      'sticky z-50 right-0 bg-inherit': idx > labels.length - fixedRightCount - 1,
+                    className={cx('relative flex h-full flex-col justify-center overflow-hidden', {
+                      'sticky left-0 z-50 bg-inherit': idx < fixedLeftCount!,
+                      'sticky right-0 z-50 bg-inherit': idx > labels.length - fixedRightCount - 1,
                     })}
                     style={style}
                     key={idx}
