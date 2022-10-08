@@ -1,4 +1,4 @@
-import { type FC, type CSSProperties, useContext } from 'react';
+import { type CSSProperties, useContext } from 'react';
 import { VirtualTableContext } from './consts';
 import cx from 'classnames';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
@@ -13,14 +13,7 @@ interface TableRowProps<T> {
   id: number;
 }
 
-const TableRow: FC<TableRowProps<any>> = <T,>({
-  style,
-  rowClass,
-  index,
-  isScrolling,
-  row,
-  id,
-}: TableRowProps<T>) => {
+const TableRow = <T,>({ style, rowClass, index, isScrolling, row, id }: TableRowProps<T>) => {
   const {
     textLayout,
     labels,

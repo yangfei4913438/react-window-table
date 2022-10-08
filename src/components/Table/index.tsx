@@ -1,7 +1,6 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
 import { VirtualTable } from '../VirtualTable';
-import cx from 'classnames';
 
 interface IProps {}
 const Table: FC<IProps> = () => {
@@ -19,7 +18,7 @@ const Table: FC<IProps> = () => {
   // 列筛选
   const [filter, setFilter] = useState<{ [key: string]: any }>({});
   // 分组信息
-  const [groups, setGroups] = useState<{[key: string]: IPerson[]}>({})
+  const [groups, setGroups] = useState<{ [key: string]: IPerson[] }>({});
 
   // 宽度百分比配置
   const [widths, changeWidths] = useState<{ [key: string]: number }>({
@@ -102,26 +101,23 @@ const Table: FC<IProps> = () => {
   };
 
   // 分组响应
-  const handleGroup = (id: string, index: number) => {
+  const handleGroup = (item: IPerson, index: number) => {
+    // 没有下级属性的返回
+    if (!item?.children || item.children.length === 0) return;
+
     const data = Array.from(list);
-    if (groups[id]) {
-      data.splice(index+1, groups[id].length);
-      setGroups(prevState => {
-        delete prevState[id];
-        return prevState
-      })
+    if (groups[item.id]) {
+      data.splice(index + 1, groups[item.id].length);
+      setGroups((prevState) => {
+        delete prevState[item.id];
+        return prevState;
+      });
     } else {
-      const newData = makeData(2).map(o => {
-        return {
-          ...o,
-          group: true
-        }
-      })
-      setGroups(prevState => ({...prevState, [id]: newData}))
-      data.splice(index+1, 0, ...newData);
+      setGroups((prevState) => ({ ...prevState, [item.id]: item.children }));
+      data.splice(index + 1, 0, ...item.children);
     }
-    setList(data)
-  }
+    setList(data);
+  };
 
   // 更新排序数据
   const getSortData = (sortData: typeof sort) => {
@@ -194,7 +190,7 @@ const Table: FC<IProps> = () => {
       </div>
     ),
     name: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 pl-12 text-lg font-bold">
         {PersonLabels.name}
       </div>
     ),
@@ -350,9 +346,91 @@ const Table: FC<IProps> = () => {
   // 所有列的渲染方法
   const cellRenders: { [key: string]: (row: IPerson, index: number) => ReactNode } = {
     name: (item, index) => {
+      const renderIcon = () => {
+        if (!item?.children) {
+          return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-file-earmark-text"
+              viewBox="0 0 16 16"
+            >
+              <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+              <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+            </svg>
+          );
+        } else {
+          if (item.children.length === 0 || !groups[item.id]) {
+            return (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-folder-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z" />
+              </svg>
+            );
+          }
+          return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-folder2-open"
+              viewBox="0 0 16 16"
+            >
+              <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z" />
+            </svg>
+          );
+        }
+      };
+      const renderPointer = () => {
+        if (!item?.children || item.children.length === 0) {
+          return <span className="w-4" />;
+        }
+        if (!groups[item.id]) {
+          return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-caret-right-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+            </svg>
+          );
+        }
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-caret-down-fill"
+            viewBox="0 0 16 16"
+          >
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        );
+      };
       return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3" onClick={() => handleGroup(item.id, index)}>
-          <span className={cx(item.group && 'bg-red-400')}>{item.name} - {index}</span>
+        <div
+          className="flex items-center space-x-2 overflow-hidden text-ellipsis whitespace-nowrap pr-3"
+          onClick={() => handleGroup(item, index)}
+        >
+          {renderPointer()}
+          {renderIcon()}
+          <span className={''}>
+            {item.name} - {index}
+          </span>
         </div>
       );
     },
@@ -416,7 +494,7 @@ const Table: FC<IProps> = () => {
   // 空态图
   const emptyDom = useMemo(
     () => (
-      <div className="w-full h-full flex items-center justify-center text-gray-500 bg-[#f6f6f6]">
+      <div className="flex h-full w-full items-center justify-center bg-[#f6f6f6] text-gray-500">
         Empty Table
       </div>
     ),
@@ -424,9 +502,9 @@ const Table: FC<IProps> = () => {
   );
 
   return (
-    <div className="p-2 w-full h-screen flex flex-col">
-      <div className="navbar bg-neutral text-neutral-content flex justify-between px-8">
-        <div className="text-xl select-none">React Window Table</div>
+    <div className="flex h-screen w-full flex-col p-2">
+      <div className="navbar flex justify-between bg-neutral px-8 text-neutral-content">
+        <div className="select-none text-xl">React Window Table</div>
         <div className="gap-2">
           <a className="btn" onClick={initData}>
             刷新数据
@@ -439,7 +517,7 @@ const Table: FC<IProps> = () => {
           titleHeight={50}
           rowHeight={45}
           headerClass=""
-          rowClass={(idx) => (checked.includes(idx) || list[idx].group ? '!bg-green-500 hover:bg-green-200' : '')}
+          rowClass={(idx) => (checked.includes(idx) ? '!bg-green-500 hover:bg-green-200' : '')}
           rowClick={(e, idx) => console.log(idx, e)}
           list={list}
           widths={widths}
@@ -449,7 +527,7 @@ const Table: FC<IProps> = () => {
           changeWidths={changeWidths}
           canChangeWidths={true}
           canDragSortColumn={true}
-          textLayout="center"
+          textLayout="left"
           headerTrees={headerTrees}
           headRenders={headRenders}
           cellRenders={cellRenders}

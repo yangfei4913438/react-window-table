@@ -1,6 +1,5 @@
 import React, {
   type Dispatch,
-  type FC,
   type MouseEvent,
   type ReactNode,
   type SetStateAction,
@@ -92,7 +91,7 @@ export interface VirtualTableProps<T> {
   emptyNode?: ReactNode;
 }
 
-const VirtualTable: FC<VirtualTableProps<any>> = <T,>({
+const VirtualTable = <T,>({
   list,
   widths,
   labels,

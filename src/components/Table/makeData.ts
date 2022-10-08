@@ -19,7 +19,6 @@ export const PersonLabels = {
 
 export interface IPerson {
   id: string;
-  group: boolean;
   name: string;
   age: number;
   status: '已婚' | '未婚' | '恋爱中';
@@ -30,6 +29,7 @@ export interface IPerson {
   visits: number;
   ip: string;
   last_visit: string;
+  children: IPerson[];
 }
 
 export function makeData(lens: number): IPerson[] {
@@ -37,7 +37,6 @@ export function makeData(lens: number): IPerson[] {
     [`data|${lens}`]: [
       {
         id: '@id',
-        group: false,
         name: '@cname',
         age: '@integer(18,60)',
         'status|1': ['已婚', '未婚', '恋爱中'],
@@ -48,6 +47,21 @@ export function makeData(lens: number): IPerson[] {
         visits: '@integer(0,1000)',
         ip: '@ip',
         last_visit: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        [`children|0-3`]: [
+          {
+            id: '@id',
+            name: '@cname',
+            age: '@integer(18,60)',
+            'status|1': ['已婚', '未婚', '恋爱中'],
+            region: '@region',
+            city: '@city(true)',
+            email: '@email',
+            phone: '@integer(13)',
+            visits: '@integer(0,1000)',
+            ip: '@ip',
+            last_visit: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          },
+        ],
       },
     ],
   };
