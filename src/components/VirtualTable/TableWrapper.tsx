@@ -45,6 +45,8 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
       headRenders,
       headerTrees,
       headerColumnWidth,
+      wrapperClass,
+      wrapperStyle,
     } = useContext(VirtualTableContext);
 
     const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -97,7 +99,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     };
 
     return (
-      <div ref={ref} {...rest}>
+      <div ref={ref} {...rest} className={wrapperClass} style={{ ...rest.style, ...wrapperStyle }}>
         {headerList.map((cols, idx) => {
           if (idx === headerList.length - 1) return;
           return (

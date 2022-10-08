@@ -1,4 +1,4 @@
-import {
+import React, {
   type Dispatch,
   type ReactNode,
   type SetStateAction,
@@ -90,6 +90,10 @@ export const VirtualTableContext = createContext<{
   headRenders: { [key: string]: ReactNode };
   // 标题行的树形层级关系
   headerTrees: IHeaderTree[];
+  // 表格外部类名
+  wrapperClass?: string;
+  // 表格外部的内联样式
+  wrapperStyle?: Partial<React.CSSProperties>;
 }>({
   list: [],
   columns: [],

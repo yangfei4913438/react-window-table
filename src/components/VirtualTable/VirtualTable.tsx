@@ -11,7 +11,6 @@ import {
   type ListOnItemsRenderedProps,
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import cx from 'classnames';
 import TableWrapper from './TableWrapper';
 import TableRow from './TableRow';
 import { type IHeaderTree, type IWidths, VirtualTableContext, checkBoxWidth } from './consts';
@@ -311,16 +310,12 @@ const VirtualTable = <T extends { id: string; children: { id: string }[] }>({
               getLeftWidth,
               getRightWidth,
               scrollingRender,
+              wrapperStyle,
+              wrapperClass,
             }}
           >
             <FixedSizeList
-              innerElementType={(props) => (
-                <TableWrapper
-                  {...props}
-                  className={cx(props.className, wrapperClass)}
-                  style={{ ...props.style, ...wrapperStyle }}
-                />
-              )}
+              innerElementType={TableWrapper}
               className={tableClass}
               style={tableStyle}
               itemData={{
