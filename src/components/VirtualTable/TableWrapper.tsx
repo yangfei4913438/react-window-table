@@ -1,4 +1,4 @@
-import { useContext, useState, forwardRef, type HTMLProps } from 'react';
+import { useContext, useState, forwardRef, type HTMLProps, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'classnames';
 import {
@@ -15,26 +15,30 @@ import uniq from 'lodash/uniq';
 
 import TableHead from './TableHead';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
-import { type IHeaderTree, type IWidths, VirtualTableContext, checkBoxWidth } from './consts';
-import TableRow from './TableRow';
+import {
+  type IHeaderTree,
+  type IWidths,
+  VirtualTableContext,
+  checkBoxWidth,
+  dragIconWidth,
+} from './consts';
+import DragRows from './DragRows';
 
 const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
   ({ children, ...rest }, ref) => {
     const {
       list,
-      fixedTopCount,
       fixedLeftCount,
       fixedRightCount,
       titleHeight,
-      rowHeight,
       columns,
-      rowClass,
       labels,
       changeLabels,
       widths,
       changeWidths,
       headerClass,
       canDragSortColumn,
+      canDragSortRow,
       canChecked,
       checked,
       setChecked,
@@ -53,6 +57,18 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     const [activeLabel, setActiveLabel] = useState<string | null>(null);
     const getIndex = (label: string) => labels.indexOf(label);
     const activeIndex = activeLabel ? getIndex(activeLabel) : -1;
+
+    const getMoreWidth = useMemo(() => {
+      if (canChecked && !canDragSortRow) {
+        return checkBoxWidth;
+      } else if (!canChecked && canDragSortRow) {
+        return dragIconWidth;
+      } else if (canChecked && canDragSortRow) {
+        return dragIconWidth + checkBoxWidth;
+      } else {
+        return 0;
+      }
+    }, [canChecked, canDragSortRow]);
 
     const allIds = uniq(
       list
@@ -116,7 +132,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               }}
               key={idx}
             >
-              <div style={{ width: canChecked ? checkBoxWidth : 0 }} />
+              <div style={{ width: getMoreWidth }} />
               {cols.map((col, idx2) => {
                 return (
                   <div
@@ -137,6 +153,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
         <div
           className={cx(
             'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
+            canDragSortRow && 'pl-12',
             headerClass
           )}
           style={{
@@ -226,7 +243,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               // 拖拽对象渲染
               canDragSortColumn &&
                 createPortal(
-                  <DragOverlay>
+                  <DragOverlay adjustScale={false}>
                     {activeLabel && (
                       <TableHead id={labels[activeIndex]} key={labels[activeIndex]} dragOverlay>
                         {
@@ -242,29 +259,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             }
           </DndContext>
         </div>
-        <div
-          className="sticky"
-          style={{
-            zIndex: 51,
-            top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
-            width: realWidth,
-            boxShadow: '0 2px 4px 0 #eee',
-          }}
-        >
-          {list.slice(0, fixedTopCount).map((row, index) => {
-            return (
-              <TableRow
-                row={row}
-                rowClass={rowClass?.({ index, row })}
-                style={{ top: index * rowHeight, height: rowHeight }}
-                index={index}
-                key={index}
-                id={index}
-              />
-            );
-          })}
-        </div>
-        {children}
+        <DragRows>{children}</DragRows>
       </div>
     );
   }

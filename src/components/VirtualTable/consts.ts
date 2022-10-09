@@ -8,6 +8,8 @@ import React, {
 
 // 勾选框的宽度
 export const checkBoxWidth = 44;
+// 拖拽对象的宽度
+export const dragIconWidth = 48;
 
 // 标题行的树形结构
 export interface IHeaderTree {
@@ -19,9 +21,17 @@ export interface IWidths {
   [key: string]: number;
 }
 
-export const VirtualTableContext = createContext<{
+export type ListType = { id: string; children?: { id: string }[] };
+
+interface VirtualTableContextProps<T extends ListType> {
   // 展示的数据
-  list: any[];
+  list: T[];
+  // 表格内部更新数据
+  setList?: Dispatch<SetStateAction<T[]>>;
+  // 分组数据
+  groups?: { [key: string]: T[] };
+  // 更新分组信息
+  setGroups?: Dispatch<SetStateAction<{ [key: string]: T[] }>>;
   // 渲染列
   columns: any[];
   // 顶部固定行数量
@@ -62,6 +72,10 @@ export const VirtualTableContext = createContext<{
   canDragSortColumn: boolean;
   // 能否改变列宽度
   canChangeWidths: boolean;
+  // 能否拖拽行顺序
+  canDragSortRow: boolean;
+  // 拖拽行的icon class，用于自定义图标
+  dragRowIcon?: string;
   // 是否启用选中
   canChecked: boolean;
   // 选中的对象
@@ -94,8 +108,17 @@ export const VirtualTableContext = createContext<{
   wrapperClass?: string;
   // 表格外部的内联样式
   wrapperStyle?: Partial<React.CSSProperties>;
-}>({
+  // 拖拽的行
+  activeRow?: T;
+  // 更新拖拽的行
+  setActiveRow: Dispatch<SetStateAction<T | undefined>>;
+}
+
+const initContext: VirtualTableContextProps<any> = {
   list: [],
+  setList: () => undefined,
+  groups: {},
+  setGroups: () => undefined,
   columns: [],
   fixedTopCount: 0,
   fixedLeftCount: 0,
@@ -105,6 +128,7 @@ export const VirtualTableContext = createContext<{
   textLayout: 'left',
   canDragSortColumn: true,
   canChecked: true,
+  canDragSortRow: true,
   checked: [],
   setChecked: () => undefined,
   labels: [],
@@ -122,4 +146,7 @@ export const VirtualTableContext = createContext<{
   headerTrees: [],
   rowClass: () => '',
   rowClick: () => undefined,
-});
+  setActiveRow: () => undefined,
+};
+
+export const VirtualTableContext = createContext(initContext);

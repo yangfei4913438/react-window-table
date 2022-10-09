@@ -1,39 +1,45 @@
-import React, { type CSSProperties, Dispatch, useContext } from 'react';
-import { VirtualTableContext } from './consts';
+import React, { type Dispatch, useContext } from 'react';
+import { VirtualTableContext, ListType } from './consts';
 import cx from 'classnames';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
 import intersection from 'lodash/intersection';
 import difference from 'lodash/difference';
+import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
+import DragRowHandle from './DragRowHandle';
 
 interface TableRowProps<T> {
-  style?: CSSProperties;
   rowClass?: string;
   index: number;
   isScrolling?: boolean;
   row: T;
-  id: number;
+  listeners?: Record<string, Function>;
+  attributes?: DraggableAttributes;
+  dragOverlay?: boolean;
+  isOver?: boolean;
+  isDragging?: boolean;
 }
 
-const TableRow = <T extends { id: string; children?: { id: string }[] }>({
-  style,
+const TableRow = <T extends ListType>({
   rowClass,
   index,
   isScrolling,
   row,
-  id,
+  attributes,
+  listeners,
+  isDragging,
+  dragOverlay,
 }: TableRowProps<T>) => {
   const {
     textLayout,
     labels,
-    realWidth,
     rowHeight,
-    titleHeight,
+    canDragSortRow,
+    dragRowIcon,
     canChecked,
     checked,
     setChecked,
     scrollingRender,
     columns,
-    headerList,
     fixedLeftCount,
     fixedRightCount,
     getLeftWidth,
@@ -109,18 +115,18 @@ const TableRow = <T extends { id: string; children?: { id: string }[] }>({
 
   return (
     <div
-      className={cx(
-        'inline-flex items-center border-b border-b-[#eee] bg-white hover:bg-[#f6f6f6]',
-        rowClass
-      )}
-      style={{
-        ...style,
-        top:
-          id * rowHeight + (headerList.length > 0 ? headerList.length * titleHeight : titleHeight),
-        width: realWidth,
-      }}
+      className={cx('inline-flex items-center border-b border-b-[#eee] bg-white', rowClass)}
+      style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}
     >
+      {canDragSortRow && (
+        <DragRowHandle
+          isDragging={isDragging}
+          dragRowIcon={dragRowIcon}
+          {...attributes}
+          {...listeners}
+        />
+      )}
       {!isScrolling && canChecked && (
         <IndeterminateCheckbox
           indeterminate={isIndeterminate()}
@@ -134,30 +140,35 @@ const TableRow = <T extends { id: string; children?: { id: string }[] }>({
             const style: { [key: string]: number | string } = {
               width: item?.width,
             };
-            if (idx < fixedLeftCount) {
-              style['left'] = getLeftWidth(idx);
-            }
-            if (idx > labels.length - fixedRightCount - 1) {
-              style['right'] = getRightWidth(idx);
-            }
-            if (idx === fixedLeftCount - 1) {
-              style['boxShadow'] = '2px 0 4px 0 #eee';
-            }
-            if (idx === labels.length - fixedRightCount) {
-              style['boxShadow'] = '-2px 0 4px 0 #eee';
+            if (!dragOverlay) {
+              if (idx < fixedLeftCount) {
+                style['left'] = getLeftWidth(idx);
+              }
+              if (idx > labels.length - fixedRightCount - 1) {
+                style['right'] = getRightWidth(idx);
+              }
+              if (idx === fixedLeftCount - 1) {
+                style['boxShadow'] = '2px 0 4px 0 #eee';
+              }
+              if (idx === labels.length - fixedRightCount) {
+                style['boxShadow'] = '-2px 0 4px 0 #eee';
+              }
             }
 
             return (
               <div
-                className={cx('relative flex h-full flex-col justify-center overflow-hidden', {
+                className={cx('flex h-full flex-col justify-center overflow-hidden', {
+                  relative: !dragOverlay,
                   'text-center': textLayout === 'center',
-                  'sticky left-0 z-50 bg-inherit': idx < fixedLeftCount,
-                  'sticky right-0 z-50 bg-inherit': idx > labels.length - fixedRightCount - 1,
+                  'sticky left-0 z-50 bg-inherit': !dragOverlay && idx < fixedLeftCount,
+                  'sticky right-0 z-50 bg-inherit':
+                    !dragOverlay && idx > labels.length - fixedRightCount - 1,
+                  'sticky z-50 bg-inherit': dragOverlay,
                 })}
                 style={style}
                 key={idx}
               >
-                {item?.cellRenders(row, id)}
+                {item?.cellRenders(row, index)}
               </div>
             );
           })}

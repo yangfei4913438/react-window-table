@@ -525,11 +525,14 @@ const Table: FC<IProps> = () => {
                 checked,
                 row.children.map((o) => o.id)
               ))
-              ? '!bg-green-500' + ' hover:bg-green-200'
+              ? '!bg-green-500 hover:bg-green-200'
               : ''
           }
           rowClick={({ event, index, row }) => console.log(index, event, row)}
           list={list}
+          setList={setList}
+          groups={groups}
+          setGroups={setGroups}
           widths={widths}
           labels={labels}
           changeLabels={changeLabels}

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { VirtualTableContext, checkBoxWidth } from './consts';
+import { VirtualTableContext, checkBoxWidth, dragIconWidth } from './consts';
 
 const IndeterminateCheckbox = React.forwardRef(
   (
@@ -12,7 +12,7 @@ const IndeterminateCheckbox = React.forwardRef(
     >,
     ref: any
   ) => {
-    const { fixedLeftCount } = useContext(VirtualTableContext);
+    const { fixedLeftCount, canDragSortRow } = useContext(VirtualTableContext);
 
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
@@ -23,10 +23,11 @@ const IndeterminateCheckbox = React.forwardRef(
 
     return (
       <div
-        className="sticky left-0 z-50 flex h-full items-center bg-inherit px-3"
+        className="sticky z-50 flex h-full items-center bg-inherit px-3"
         style={{
           boxShadow: fixedLeftCount === 0 ? '2px 0 4px 0px #eee' : 'unset',
           width: checkBoxWidth,
+          left: canDragSortRow ? dragIconWidth : 0,
         }}
       >
         <input

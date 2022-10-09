@@ -3,6 +3,7 @@ import React, {
   type MouseEvent,
   type ReactNode,
   type SetStateAction,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -12,12 +13,26 @@ import {
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import TableWrapper from './TableWrapper';
-import TableRow from './TableRow';
-import { type IHeaderTree, type IWidths, VirtualTableContext, checkBoxWidth } from './consts';
+import DragRowsItem from './DragRowsItem';
+import {
+  type IHeaderTree,
+  type IWidths,
+  type ListType,
+  VirtualTableContext,
+  checkBoxWidth,
+  dragIconWidth,
+} from './consts';
 
 export interface VirtualTableProps<T> {
   // 展示的数据
   list: T[];
+  // 表格内部更新数据
+  setList?: Dispatch<SetStateAction<T[]>>;
+  // 分组数据
+  groups?: { [key: string]: T[] };
+  // 更新分组信息
+  setGroups?: Dispatch<SetStateAction<{ [key: string]: T[] }>>;
+
   // 列的显示比例,完整为1，如: { name: 0.3, description: 0.7 }
   widths: IWidths;
   // 列头拖动时的响应方法，用于更新宽度
@@ -26,6 +41,11 @@ export interface VirtualTableProps<T> {
   canChangeWidths?: boolean;
   // 能否拖拽列顺序
   canDragSortColumn?: boolean;
+  // 能否拖拽行顺序
+  canDragSortRow?: boolean;
+  // 拖拽行的icon class，用于自定义图标
+  dragRowIcon?: string;
+
   // 文字布局
   textLayout?: 'left' | 'center';
 
@@ -98,8 +118,12 @@ export interface VirtualTableProps<T> {
   emptyNode?: ReactNode;
 }
 
-const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
+const VirtualTable = <T extends ListType>({
   list,
+  setList,
+  groups,
+  setGroups,
+
   widths,
   labels,
   changeLabels,
@@ -115,6 +139,9 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
   changeWidths,
   canChangeWidths = true,
   canDragSortColumn = true,
+  canDragSortRow = true,
+  dragRowIcon,
+
   nextPage,
   nextTrigger = 0.55, // 默认值 55%
 
@@ -141,6 +168,8 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
 }: VirtualTableProps<T>) => {
   // 表格宽度
   const [tableWidth, setTableWidth] = useState<number>(0);
+  // 拖拽的行对象
+  const [activeRow, setActiveRow] = useState<T>();
 
   // 标题行的树形层级关系
   const headerList: string[][] = [];
@@ -189,9 +218,21 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
     }
   };
 
+  const getMoreWidth = useMemo(() => {
+    if (canChecked && !canDragSortRow) {
+      return checkBoxWidth;
+    } else if (!canChecked && canDragSortRow) {
+      return dragIconWidth;
+    } else if (canChecked && canDragSortRow) {
+      return dragIconWidth + checkBoxWidth;
+    } else {
+      return 0;
+    }
+  }, [canChecked, canDragSortRow]);
+
   const realWidth = () => {
     const res = labels.map((key) => widths[key] * tableWidth).reduce((a, b) => a + b);
-    return canChecked ? res + checkBoxWidth : res;
+    return getMoreWidth + res;
   };
 
   // 监听渲染的行索引
@@ -248,14 +289,14 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
   // 获取左侧绝对定位的距离
   const getLeftWidth = (idx: number) => {
     if (idx === 0) {
-      return canChecked ? checkBoxWidth : 0;
+      return getMoreWidth;
     }
     const cols = labels
       .map((key) => widths[key] * tableWidth)
       .slice(0, idx)
       .reduce((a, b) => a + b);
 
-    return canChecked ? cols + checkBoxWidth : cols;
+    return getMoreWidth + cols;
   };
 
   // 获取右侧绝对定位的距离
@@ -283,6 +324,9 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
               fixedLeftCount,
               fixedRightCount,
               list,
+              setList,
+              groups,
+              setGroups,
               titleHeight,
               rowHeight,
               columns,
@@ -297,6 +341,8 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
               rowClick,
               canDragSortColumn,
               canChecked,
+              canDragSortRow,
+              dragRowIcon,
               checked,
               setChecked,
               filterRenders,
@@ -312,6 +358,8 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
               scrollingRender,
               wrapperStyle,
               wrapperClass,
+              activeRow,
+              setActiveRow,
             }}
           >
             <FixedSizeList
@@ -337,14 +385,13 @@ const VirtualTable = <T extends { id: string; children?: { id: string }[] }>({
                 const row = data.list[index];
 
                 return (
-                  <TableRow
+                  <DragRowsItem
                     row={row}
                     rowClass={rowClass({ index: index + fixedTopCount, row })}
                     style={style}
-                    index={index}
+                    index={index + fixedTopCount}
                     isScrolling={isScrolling}
-                    key={index}
-                    id={index + fixedTopCount}
+                    key={row.id ?? String(index)}
                   />
                 );
               }}
