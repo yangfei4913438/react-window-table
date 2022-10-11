@@ -192,6 +192,10 @@ const DragRows = ({ children }: DragRowsProps) => {
       arr: typeof activeRow[],
       dirObj: typeof activeRow
     ): typeof activeRow[] => {
+      // 如果下级没有子元素了，就不用处理
+      if (dirObj.children.length === 0) {
+        return arr;
+      }
       // 找到旧的子元素开始的索引(第一个子元素的索引)
       const startIndex = arr.map((o) => o.id).indexOf(dirObj.children[0].id);
       // 删除展开的子元素（移动之前的）
