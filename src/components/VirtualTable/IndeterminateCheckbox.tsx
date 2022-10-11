@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import cx from 'classnames';
 import { VirtualTableContext, checkBoxWidth, dragIconWidth } from './consts';
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -23,16 +24,18 @@ const IndeterminateCheckbox = React.forwardRef(
 
     return (
       <div
-        className="sticky z-50 flex h-full items-center bg-inherit px-3"
+        className={cx(
+          'indeterminate_checkbox_wrapper',
+          fixedLeftCount === 0 && 'indeterminate_checkbox_wrapper_shadow'
+        )}
         style={{
-          boxShadow: fixedLeftCount === 0 ? '2px 0 4px 0px #eee' : 'unset',
           width: checkBoxWidth,
           left: canDragSortRow ? dragIconWidth : 0,
         }}
       >
         <input
           type="checkbox"
-          className="checkbox checkbox-sm"
+          className="indeterminate_checkbox"
           ref={resolvedRef}
           onChange={() => undefined}
           {...rest}

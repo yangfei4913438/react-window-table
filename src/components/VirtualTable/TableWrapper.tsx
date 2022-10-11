@@ -115,17 +115,18 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     };
 
     return (
-      <div ref={ref} {...rest} className={wrapperClass} style={{ ...rest.style, ...wrapperStyle }}>
+      <div
+        ref={ref}
+        {...rest}
+        className={cx('tx-virtual-table_wrapper', wrapperClass)}
+        style={{ ...rest.style, ...wrapperStyle }}
+      >
         {headerList.map((cols, idx) => {
           if (idx === headerList.length - 1) return;
           return (
             <div
-              className={cx(
-                'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
-                headerClass
-              )}
+              className={cx('tx-virtual-table_wrapper_header_parent', headerClass)}
               style={{
-                zIndex: 51,
                 width: realWidth,
                 height: titleHeight,
                 top: idx * titleHeight,
@@ -136,13 +137,13 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               {cols.map((col, idx2) => {
                 return (
                   <div
-                    className={cx('relative flex justify-center overflow-hidden')}
+                    className="tx-virtual-table_wrapper_header_parent_cell_wrapper"
                     key={col}
                     style={{ width: headerColumnWidth(col) + 8 }}
                   >
                     {headRenders[col]}
                     {idx2 !== cols.length - 1 && (
-                      <div className="absolute right-0 top-[25%] h-[50%] w-0 border-r border-solid border-gray-500" />
+                      <div className="tx-virtual-table_wrapper_header_parent_cell_wrapper_border" />
                     )}
                   </div>
                 );
@@ -151,12 +152,8 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           );
         })}
         <div
-          className={cx(
-            'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
-            headerClass
-          )}
+          className={cx('tx-virtual-table_wrapper_header', headerClass)}
           style={{
-            zIndex: 51,
             top: headerTrees.length && (headerList.length - 1) * titleHeight,
             height: titleHeight,
             width: realWidth,
@@ -199,7 +196,10 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           >
             <SortableContext items={list} strategy={horizontalListSortingStrategy}>
               {canDragSortRow && (
-                <div className={'sticky left-0 z-50 bg-inherit'} style={{ width: dragIconWidth }}>
+                <div
+                  className="tx-virtual-table_wrapper_header_drag_icon_none"
+                  style={{ width: dragIconWidth }}
+                >
                   <span>&nbsp;</span>
                 </div>
               )}
@@ -229,9 +229,11 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
 
                 return (
                   <div
-                    className={cx('relative flex h-full flex-col justify-center overflow-hidden', {
-                      'sticky left-0 z-50 bg-inherit': idx < fixedLeftCount!,
-                      'sticky right-0 z-50 bg-inherit': idx > labels.length - fixedRightCount - 1,
+                    className={cx('tx-virtual-table_wrapper_header_cell_wrapper', {
+                      'tx-virtual-table_wrapper_header_cell_wrapper_fixed_left':
+                        idx < fixedLeftCount!,
+                      'tx-virtual-table_wrapper_header_cell_wrapper_fixed_right':
+                        idx > labels.length - fixedRightCount - 1,
                     })}
                     style={style}
                     key={idx}

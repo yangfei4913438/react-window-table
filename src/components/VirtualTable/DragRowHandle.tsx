@@ -9,10 +9,7 @@ interface DragRowHandleProps {
 const DragRowHandle = ({ dragRowIcon, isDragging, ...rest }: DragRowHandleProps) => {
   return (
     <div
-      className={cx(
-        'sticky left-0 z-50 flex h-full items-center bg-inherit px-3 px-4',
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
-      )}
+      className={cx('tx-virtual-table_drag_icon', isDragging ? 'cursor-grabbing' : 'cursor-grab')}
       style={{ width: dragIconWidth }}
       {...rest}
     >

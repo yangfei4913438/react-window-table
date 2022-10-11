@@ -33,11 +33,5 @@ interface DraggableItemProps {
 }
 function DraggableItem({ id }: DraggableItemProps) {
   const { listeners, setNodeRef } = useDraggable({ id });
-  return (
-    <div
-      ref={setNodeRef}
-      className="absolute right-0 top-[25%] h-[50%] w-0 cursor-col-resize border-r-2 border-dotted border-gray-500"
-      {...listeners}
-    />
-  );
+  return <div ref={setNodeRef} className="tx-virtual-table_header_drag_resize" {...listeners} />;
 }

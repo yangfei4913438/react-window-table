@@ -48,17 +48,17 @@ const TableHead: FC<ITableHead> = ({
   return (
     <div
       ref={setNodeRef}
-      className="box-border touch-manipulation"
+      className="tx-virtual-table_header_drag_wrapper"
       {...attributes}
       style={{ transform: CSS.Transform.toString(transform), transition }}
     >
       <div
         className={cx(
-          'flex select-none items-center',
-          !canDragSortColumn && 'cursor-default',
-          canDragSortColumn && isDragging && 'z-0 opacity-50',
-          canDragSortColumn && dragOverlay && 'cursor-grabbing bg-white shadow-lg',
-          canDragSortColumn && !dragOverlay && 'cursor-grab touch-manipulation',
+          'tx-virtual-table_header_drag',
+          !canDragSortColumn && 'tx-virtual-table_header_drag_default',
+          canDragSortColumn && isDragging && 'tx-virtual-table_header_drag_dragging',
+          canDragSortColumn && dragOverlay && 'tx-virtual-table_header_drag_over',
+          canDragSortColumn && !dragOverlay && 'tx-virtual-table_header_drag_source',
           {
             'justify-start': textLayout === 'left',
             'justify-center': textLayout === 'center',
@@ -72,8 +72,8 @@ const TableHead: FC<ITableHead> = ({
         {!!sortRenders && !dragOverlay && sortRenders[id] && (
           <div
             className={cx(
-              'absolute top-0 bottom-0 right-0 mx-3 flex cursor-pointer items-center',
-              filterRenders?.[id] && 'right-5'
+              'tx-virtual-table_header_cell_sort_wrapper',
+              filterRenders?.[id] && '!right-5'
             )}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -82,7 +82,7 @@ const TableHead: FC<ITableHead> = ({
         )}
         {!!filterRenders && !dragOverlay && filterRenders[id] && (
           <div
-            className={'absolute top-0 bottom-0 right-0 mx-3 flex cursor-pointer items-center'}
+            className="tx-virtual-table_header_cell_filter_wrapper"
             onMouseDown={(e) => e.stopPropagation()}
           >
             {filterRenders[id]}
@@ -93,9 +93,7 @@ const TableHead: FC<ITableHead> = ({
             <DragResize id={id} handleChangeWidth={(x) => onChangeWidth(id, x)} />
           </span>
         )}
-        {!canResize && !endCol && (
-          <div className="absolute right-0 top-[25%] h-[50%] w-0 border-r-2 border-gray-500" />
-        )}
+        {!canResize && !endCol && <div className="tx-virtual-table_header_drag_end" />}
       </div>
     </div>
   );

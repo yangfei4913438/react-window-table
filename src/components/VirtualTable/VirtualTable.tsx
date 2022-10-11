@@ -12,6 +12,7 @@ import {
   type ListOnItemsRenderedProps,
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import cx from 'classnames';
 import TableWrapper from './TableWrapper';
 import DragRowsItem from './DragRowsItem';
 import {
@@ -137,9 +138,9 @@ const VirtualTable = <T extends ListType>({
   scrollingRender,
 
   changeWidths,
-  canChangeWidths = true,
-  canDragSortColumn = true,
-  canDragSortRow = true,
+  canChangeWidths = false,
+  canDragSortColumn = false,
+  canDragSortRow = false,
   dragRowIcon,
 
   nextPage,
@@ -160,7 +161,7 @@ const VirtualTable = <T extends ListType>({
   fixedLeftCount = 0, // 默认不锁定列
   fixedRightCount = 0, // 默认不锁定列
 
-  canChecked = true,
+  canChecked = false,
   checked = [],
   setChecked = () => undefined,
 
@@ -364,7 +365,7 @@ const VirtualTable = <T extends ListType>({
           >
             <FixedSizeList
               innerElementType={TableWrapper}
-              className={tableClass}
+              className={cx('tx-virtual-table', tableClass)}
               style={tableStyle}
               itemData={{
                 list:
@@ -398,7 +399,7 @@ const VirtualTable = <T extends ListType>({
             </FixedSizeList>
             {list.length === 0 && (
               <div
-                className="absolute bottom-0 left-0 z-50 bg-white"
+                className="tx-virtual-table_empty"
                 style={{
                   width,
                   top:

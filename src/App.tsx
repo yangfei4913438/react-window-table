@@ -12,7 +12,7 @@ const App = () => {
         canSort={true}
         fixedLeftCount={1}
         fixedRightCount={1}
-        fixedTopCount={1}
+        fixedTopCount={2}
         multiTitle={false}
         showEmpty={false}
         showScrolling={false}
