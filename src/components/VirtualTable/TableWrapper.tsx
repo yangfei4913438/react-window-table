@@ -11,7 +11,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
-import uniq from 'lodash/uniq';
+import uniq from 'lodash-es/uniq';
 
 import TableHead from './TableHead';
 import IndeterminateCheckbox from './IndeterminateCheckbox';

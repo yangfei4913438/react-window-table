@@ -2,8 +2,8 @@ import React, { type Dispatch, useContext } from 'react';
 import { VirtualTableContext, ListType } from './consts';
 import cx from 'classnames';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
-import intersection from 'lodash/intersection';
-import difference from 'lodash/difference';
+import intersection from 'lodash-es/intersection';
+import difference from 'lodash-es/difference';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import DragRowHandle from './DragRowHandle';
 

@@ -1,4 +1,4 @@
-import { intersection } from 'lodash';
+import intersection from 'lodash-es/intersection';
 
 export const inArray = (maxArr: string[], minArr: string[]) => {
   const arr = intersection(maxArr, minArr);
