@@ -1,9 +1,49 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
-import { VirtualTable, inArray } from '../VirtualTable';
+import { VirtualTable } from 'src/components/VirtualTable';
+import { inArray } from 'src/components/VirtualTable';
 
-interface IProps {}
-const Table: FC<IProps> = () => {
+export interface TableProps {
+  // 是否开启滚动
+  showScrolling?: boolean;
+  // 顶部锁定多少行
+  fixedTopCount?: number;
+  // 左边锁定多少列
+  fixedLeftCount?: number;
+  // 右边锁定多少列
+  fixedRightCount?: number;
+  // 是否使用行选中功能
+  canChecked?: boolean;
+  // 是否使用数据排序功能
+  canSort?: boolean;
+  // 是否使用筛选功能
+  canFilter?: boolean;
+  // 是否使用列宽调整功能
+  canResize?: boolean;
+  // 是否启用列头排序功能
+  canDragOrder?: boolean;
+  // 是否启用行拖拽排序功能
+  canDragSortRow?: boolean;
+  // 是否显示空态图
+  showEmpty?: boolean;
+  // 是否显示多行标题
+  multiTitle?: boolean;
+}
+
+const Table: FC<TableProps> = ({
+  showScrolling = false,
+  fixedTopCount = 0,
+  fixedLeftCount = 0,
+  fixedRightCount = 0,
+  canChecked = false,
+  canSort = false,
+  canFilter = false,
+  canResize = false,
+  canDragOrder = false,
+  canDragSortRow = false,
+  showEmpty = false,
+  multiTitle = false,
+}) => {
   // 表单数据相关
   // 第几页
   const [pageOffset, setPageOffset] = useState(0);
@@ -190,7 +230,7 @@ const Table: FC<IProps> = () => {
       </div>
     ),
     name: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 pl-12 text-lg font-bold">
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 pl-16 text-lg font-bold">
         {PersonLabels.name}
       </div>
     ),
@@ -423,12 +463,12 @@ const Table: FC<IProps> = () => {
       };
       return (
         <div
-          className="flex items-center space-x-2 overflow-hidden text-ellipsis whitespace-nowrap pr-3"
+          className="flex items-center space-x-2 overflow-hidden text-ellipsis whitespace-nowrap px-3"
           onClick={() => handleGroup(item, index)}
         >
           {renderPointer()}
           {renderIcon()}
-          <span className={''}>
+          <span>
             {item.name} - {index}
           </span>
         </div>
@@ -487,9 +527,9 @@ const Table: FC<IProps> = () => {
   };
 
   // 渲染滚动行（滚动的时候，不显示原始内容，显示这个替代行内容）
-  // const scrollingRender = (index: number) => {
-  //   return <div className="w-full text-center">Scrolling {index}</div>;
-  // };
+  const scrollingRender = (index: number) => {
+    return <div className="w-full text-center">Scrolling {index}</div>;
+  };
 
   // 空态图
   const emptyDom = useMemo(
@@ -506,12 +546,11 @@ const Table: FC<IProps> = () => {
       <div className="navbar flex justify-between bg-neutral px-8 text-neutral-content">
         <div className="select-none text-xl">React Window Table</div>
         <div className="gap-2">
-          <a className="btn" onClick={initData}>
+          <a className="btn cursor-pointer" onClick={initData}>
             刷新数据
           </a>
         </div>
       </div>
-
       <div className="flex-1">
         <VirtualTable
           titleHeight={50}
@@ -529,7 +568,7 @@ const Table: FC<IProps> = () => {
               : ''
           }
           rowClick={({ event, index, row }) => console.log(index, event, row)}
-          list={list}
+          list={showEmpty ? [] : list}
           setList={setList}
           groups={groups}
           setGroups={setGroups}
@@ -538,21 +577,22 @@ const Table: FC<IProps> = () => {
           changeLabels={changeLabels}
           nextPage={nextPageData}
           changeWidths={changeWidths}
-          canChangeWidths={true}
-          canDragSortColumn={true}
+          canChangeWidths={canResize}
+          canDragSortColumn={canDragOrder}
+          canDragSortRow={canDragSortRow}
           textLayout="left"
-          headerTrees={headerTrees}
           headRenders={headRenders}
           cellRenders={cellRenders}
-          // scrollingRender={scrollingRender}
-          fixedTopCount={1}
-          fixedLeftCount={1}
-          fixedRightCount={1}
-          canChecked={true}
+          headerTrees={multiTitle ? headerTrees : []}
+          scrollingRender={showScrolling ? scrollingRender : undefined}
+          fixedTopCount={fixedTopCount}
+          fixedLeftCount={fixedLeftCount}
+          fixedRightCount={fixedRightCount}
+          canChecked={canChecked}
           checked={checked}
           setChecked={setChecked}
-          sortRenders={sortRenders}
-          filterRenders={filterRenders}
+          sortRenders={canSort ? sortRenders : undefined}
+          filterRenders={canFilter ? filterRenders : undefined}
           emptyNode={emptyDom}
         />
       </div>
