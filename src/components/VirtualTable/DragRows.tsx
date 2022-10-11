@@ -385,8 +385,16 @@ const DragRows = ({ children }: DragRowsProps) => {
 
         // 5、更新目标分组
         setGroups!((prevState) => {
-          prevState[row.parent_id] = targetObj.children;
-          prevState[activeRow.parent_id] = sourceObj.children;
+          if (targetObj.children.length > 0) {
+            prevState[row.parent_id] = targetObj.children;
+          } else {
+            delete prevState[row.parent_id];
+          }
+          if (targetObj.children.length > 0) {
+            prevState[activeRow.parent_id] = sourceObj.children;
+          } else {
+            delete prevState[activeRow.parent_id];
+          }
           return prevState;
         });
 
@@ -472,9 +480,17 @@ const DragRows = ({ children }: DragRowsProps) => {
             setGroups!((prevState) => {
               // 只有展开的情况，才需要修正分组数据
               if (inNext && targetObjOpen) {
-                prevState[targetObj.id] = targetObj.children;
+                if (targetObj.children.length > 0) {
+                  prevState[targetObj.id] = targetObj.children;
+                } else {
+                  delete prevState[targetObj.id];
+                }
               }
-              prevState[activeRow.parent_id] = sourceObj.children;
+              if (sourceObj.children.length > 0) {
+                prevState[activeRow.parent_id] = sourceObj.children;
+              } else {
+                delete prevState[activeRow.parent_id];
+              }
               return prevState;
             });
 
@@ -522,8 +538,12 @@ const DragRows = ({ children }: DragRowsProps) => {
 
           // 5、更新目标分组
           setGroups!((prevState) => {
-            // 只需要更新拖拽对象的那个分组即可，目标没有分组数据。
-            prevState[activeRow.parent_id] = sourceObj.children;
+            if (sourceObj.children.length > 0) {
+              // 只需要更新拖拽对象的那个分组即可，目标没有分组数据。
+              prevState[activeRow.parent_id] = sourceObj.children;
+            } else {
+              delete prevState[activeRow.parent_id];
+            }
             return prevState;
           });
 
