@@ -153,7 +153,6 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
         <div
           className={cx(
             'sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8]',
-            canDragSortRow && 'pl-12',
             headerClass
           )}
           style={{
@@ -199,6 +198,11 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             onDragCancel={() => setActiveLabel(null)}
           >
             <SortableContext items={list} strategy={horizontalListSortingStrategy}>
+              {canDragSortRow && (
+                <div className={'sticky left-0 z-50 bg-inherit'} style={{ width: dragIconWidth }}>
+                  <span>&nbsp;</span>
+                </div>
+              )}
               {canChecked && (
                 <IndeterminateCheckbox
                   indeterminate={checked.length > 0 && checked.length !== allIds.length}

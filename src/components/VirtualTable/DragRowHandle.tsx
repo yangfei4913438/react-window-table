@@ -1,4 +1,5 @@
 import cx from 'classnames';
+import { dragIconWidth } from './consts';
 
 interface DragRowHandleProps {
   dragRowIcon?: string;
@@ -12,6 +13,7 @@ const DragRowHandle = ({ dragRowIcon, isDragging, ...rest }: DragRowHandleProps)
         'sticky left-0 z-50 flex h-full items-center bg-inherit px-3 px-4',
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       )}
+      style={{ width: dragIconWidth }}
       {...rest}
     >
       {dragRowIcon ?? (
