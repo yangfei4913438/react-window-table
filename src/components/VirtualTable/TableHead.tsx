@@ -35,6 +35,7 @@ const TableHead: FC<ITableHead> = ({
     sortRenders,
     titleHeight,
     onChangeWidth,
+    onDragWidthEnd,
   } = useContext(VirtualTableContext);
 
   const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
@@ -90,7 +91,11 @@ const TableHead: FC<ITableHead> = ({
         )}
         {canChangeWidths && canResize && canRender && !dragOverlay && (
           <span onMouseDown={(e) => e.stopPropagation()}>
-            <DragResize id={id} handleChangeWidth={(x) => onChangeWidth(id, x)} />
+            <DragResize
+              id={id}
+              handleChangeWidth={(x) => onChangeWidth(id, x)}
+              onDragEnd={onDragWidthEnd}
+            />
           </span>
         )}
         {!canResize && !endCol && <div className="tx-virtual-table_header_drag_end" />}

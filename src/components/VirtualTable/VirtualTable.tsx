@@ -169,6 +169,11 @@ const VirtualTable = <T extends ListType>({
 }: VirtualTableProps<T>) => {
   // 表格宽度
   const [tableWidth, setTableWidth] = useState<number>(0);
+  // 临时变化的key
+  const [changeKey, setChangeKey] = useState<string>('');
+  // 临时变化的宽度
+  const [changeWidth, setChangeWidth] = useState(0);
+
   // 拖拽的行对象
   const [activeRow, setActiveRow] = useState<T>();
 
@@ -191,7 +196,34 @@ const VirtualTable = <T extends ListType>({
     headerList[headerList.length - 1] = labels;
   }
 
-  // 宽度变更
+  // 最终响应宽度改变
+  const onDragWidthEnd = () => {
+    // 当前的宽度
+    const currentWidth = widths[changeKey] * tableWidth + changeWidth;
+    // 下一个宽度
+    const index = labels.indexOf(changeKey);
+    const nextDataKey = labels[index + 1];
+    const nextWidth = widths[nextDataKey] * tableWidth - changeWidth;
+
+    // 宽度最小不能低于100px
+    if (currentWidth > 100 && nextWidth > 100) {
+      // 计算出百分比
+      const currentPercent = currentWidth / tableWidth;
+      // const nextPercent = nextWidth / tableWidth;
+      // 更新宽度比例
+      changeWidths?.((prev) => ({
+        ...prev,
+        [changeKey]: currentPercent,
+        // 不改变后面的宽度，有需要再加
+        // [nextDataKey]: nextPercent,
+      }));
+    }
+    // 重置临时宽度
+    setChangeWidth(0);
+    setChangeKey('');
+  };
+
+  // 宽度临时变更
   const onChangeWidth = (key: string, x: number) => {
     // 空值是重置宽度
     if (key === '' || x === 0) {
@@ -207,15 +239,10 @@ const VirtualTable = <T extends ListType>({
 
     // 宽度最小不能低于100px
     if (currentWidth > 100 && nextWidth > 100) {
-      // 计算出百分比
-      const currentPercent = currentWidth / tableWidth;
-      const nextPercent = nextWidth / tableWidth;
-      // 更新宽度比例
-      changeWidths?.((prev) => ({
-        ...prev,
-        [key]: currentPercent,
-        [nextDataKey]: nextPercent,
-      }));
+      // 改变的宽度
+      setChangeWidth(x);
+      // 记录哪个列在变化
+      setChangeKey(key);
     }
   };
 
@@ -231,8 +258,19 @@ const VirtualTable = <T extends ListType>({
     }
   }, [canChecked, canDragSortRow]);
 
+  // 获取key的临时宽度
+  const getTempKeyWidth = (key: string): number => {
+    if (key === changeKey) {
+      return widths[key] * tableWidth + changeWidth;
+    }
+    return widths[key] * tableWidth;
+  };
+
+  // 实时宽度
   const realWidth = () => {
-    const res = labels.map((key) => widths[key] * tableWidth).reduce((a, b) => a + b);
+    // 正常计算
+    const res = labels.map(getTempKeyWidth).reduce((a, b) => a + b);
+    // 返回的总宽度，要带上变化的宽度
     return getMoreWidth + res;
   };
 
@@ -252,7 +290,7 @@ const VirtualTable = <T extends ListType>({
   const renderColumn = (dataKey: string) => {
     return {
       dataKey,
-      width: widths[dataKey] * tableWidth,
+      width: getTempKeyWidth(dataKey),
       headRenders,
       cellRenders: (rowData: T, index: number) => cellRenders[dataKey](rowData, index),
     };
@@ -293,7 +331,7 @@ const VirtualTable = <T extends ListType>({
       return getMoreWidth;
     }
     const cols = labels
-      .map((key) => widths[key] * tableWidth)
+      .map(getTempKeyWidth)
       .slice(0, idx)
       .reduce((a, b) => a + b);
 
@@ -306,7 +344,7 @@ const VirtualTable = <T extends ListType>({
       return 0;
     }
     return labels
-      .map((key) => widths[key] * tableWidth)
+      .map(getTempKeyWidth)
       .slice(idx + 1)
       .reduce((a, b) => a + b);
   };
@@ -349,6 +387,7 @@ const VirtualTable = <T extends ListType>({
               filterRenders,
               sortRenders,
               onChangeWidth,
+              onDragWidthEnd,
               realWidth: realWidth(),
               headerList,
               headerColumnWidth,

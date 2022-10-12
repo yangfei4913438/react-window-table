@@ -88,6 +88,8 @@ interface VirtualTableContextProps<T extends ListType> {
   sortRenders?: { [key: string]: ReactNode };
   // 修改拖拽偏移量
   onChangeWidth: (key: string, x: number) => void;
+  // 拖拽宽度终止
+  onDragWidthEnd: () => void;
   // 表的完整宽度
   realWidth: number;
   // 获取左侧绝对定位的距离
@@ -137,6 +139,7 @@ const initContext: VirtualTableContextProps<any> = {
   widths: {},
   changeWidths: () => undefined,
   onChangeWidth: () => undefined,
+  onDragWidthEnd: () => undefined,
   realWidth: 0,
   getLeftWidth: () => 0,
   getRightWidth: () => 0,

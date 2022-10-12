@@ -12,13 +12,16 @@ import { FC } from 'react';
 interface IDragResizeProps {
   id: string;
   handleChangeWidth: (x: number) => void;
+  onDragEnd: () => void;
 }
-const DragResize: FC<IDragResizeProps> = ({ id, handleChangeWidth }) => {
+
+const DragResize: FC<IDragResizeProps> = ({ id, handleChangeWidth, onDragEnd }) => {
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   return (
     <DndContext
       sensors={sensors}
       onDragMove={({ delta: { x } }) => handleChangeWidth(x)}
+      onDragEnd={onDragEnd}
       modifiers={[restrictToHorizontalAxis]}
     >
       <DraggableItem id={id} />
