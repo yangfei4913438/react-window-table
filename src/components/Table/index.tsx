@@ -542,7 +542,7 @@ const Table: FC<TableProps> = ({
   );
 
   return (
-    <div className="flex h-screen w-full flex-col p-2">
+    <div className="flex h-screen w-full flex-col">
       <div className="navbar flex justify-between bg-neutral px-8 text-neutral-content">
         <div className="select-none text-xl">React Window Table</div>
         <div className="gap-2">
