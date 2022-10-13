@@ -406,12 +406,11 @@ const VirtualTable = <T extends ListType>({
               innerElementType={TableWrapper}
               className={cx('tx-virtual-table', tableClass)}
               style={tableStyle}
-              itemData={{
-                list:
-                  list.length > fixedTopCount
-                    ? list.slice(fixedTopCount, list.length)
-                    : [emptyRow as T],
-              }}
+              itemData={
+                list.length > fixedTopCount
+                  ? list.slice(fixedTopCount, list.length)
+                  : [emptyRow as T]
+              }
               itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1} // 一共有多少行
               height={height}
               width={width}
@@ -420,9 +419,9 @@ const VirtualTable = <T extends ListType>({
               onItemsRendered={onItemsRendered} // 渲染进度监听
               useIsScrolling={!!scrollingRender}
             >
-              {(props: ListChildComponentProps<{ list: T[] }>) => {
+              {(props: ListChildComponentProps) => {
                 const { data, index, style, isScrolling } = props;
-                const row = data.list[index];
+                const row = data[index];
 
                 return (
                   <DragRowsItem

@@ -19,6 +19,7 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers';
+import { FixedSizeList, type ListChildComponentProps } from 'react-window';
 
 import { VirtualTableContext } from './consts';
 import DragRowsItem from './DragRowsItem';
@@ -43,6 +44,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     canDragSortRow,
     activeRow,
     setActiveRow,
+    rowHeight,
   } = useContext(VirtualTableContext);
 
   const sensors = useSensors(
@@ -579,16 +581,28 @@ const DragRows = ({ children }: DragRowsProps) => {
             width: realWidth,
           }}
         >
-          {list.slice(0, fixedTopCount).map((row, index) => {
-            return (
-              <DragRowsItem
-                row={row}
-                rowClass={rowClass?.({ index, row })}
-                index={index}
-                key={index}
-              />
-            );
-          })}
+          <FixedSizeList
+            itemData={list.slice(0, fixedTopCount)}
+            itemCount={fixedTopCount}
+            height={fixedTopCount * rowHeight}
+            width={realWidth}
+            itemSize={rowHeight}
+          >
+            {(props: ListChildComponentProps) => {
+              const { data, index, style, isScrolling } = props;
+              const row = data[index];
+              return (
+                <DragRowsItem
+                  row={row}
+                  rowClass={rowClass?.({ index, row })}
+                  style={style}
+                  index={index}
+                  isScrolling={isScrolling}
+                  key={row.id ?? String(index)}
+                />
+              );
+            }}
+          </FixedSizeList>
         </div>
         <div className="relative">{children}</div>
       </SortableContext>
