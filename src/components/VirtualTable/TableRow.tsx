@@ -158,7 +158,6 @@ const TableRow = <T extends ListType>({
             return (
               <div
                 className={cx('tx-virtual-table__row__cell_wrapper', {
-                  relative: !dragOverlay,
                   'text-center': textLayout === 'center',
                   'tx-virtual-table__row__cell_wrapper--left': !dragOverlay && idx < fixedLeftCount,
                   'tx-virtual-table__row__cell_wrapper--right':

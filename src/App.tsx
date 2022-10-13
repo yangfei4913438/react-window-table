@@ -11,9 +11,9 @@ const options: { [key: string]: boolean | number } = {
   canDragOrder: true,
   canFilter: true,
   canSort: true,
-  fixedLeftCount: 0,
-  fixedRightCount: 0,
-  fixedTopCount: 0,
+  fixedLeftCount: 1,
+  fixedRightCount: 1,
+  fixedTopCount: 1,
 };
 
 const names = {
