@@ -115,7 +115,7 @@ const TableRow = <T extends ListType>({
 
   return (
     <div
-      className={cx('tx-virtual-table_row_wrapper', rowClass)}
+      className={cx('tx-virtual-table__row', rowClass)}
       style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}
     >
@@ -157,13 +157,13 @@ const TableRow = <T extends ListType>({
 
             return (
               <div
-                className={cx('tx-virtual-table_row_cell_wrapper', {
+                className={cx('tx-virtual-table__row__cell_wrapper', {
                   relative: !dragOverlay,
                   'text-center': textLayout === 'center',
-                  'tx-virtual-table_row_cell_wrapper_left': !dragOverlay && idx < fixedLeftCount,
-                  'tx-virtual-table_row_cell_wrapper_right':
+                  'tx-virtual-table__row__cell_wrapper--left': !dragOverlay && idx < fixedLeftCount,
+                  'tx-virtual-table__row__cell_wrapper--right':
                     !dragOverlay && idx > labels.length - fixedRightCount - 1,
-                  'tx-virtual-table_row_cell_wrapper_drag': dragOverlay,
+                  'tx-virtual-table__row__cell_wrapper__drag': dragOverlay,
                 })}
                 style={style}
                 key={idx}

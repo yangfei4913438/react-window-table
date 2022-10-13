@@ -438,7 +438,7 @@ const VirtualTable = <T extends ListType>({
             </FixedSizeList>
             {list.length === 0 && (
               <div
-                className="tx-virtual-table_empty"
+                className="tx-virtual-table--empty"
                 style={{
                   width,
                   top:

@@ -14,7 +14,6 @@ interface IDragResizeProps {
   handleChangeWidth: (x: number) => void;
   onDragEnd: () => void;
 }
-
 const DragResize: FC<IDragResizeProps> = ({ id, handleChangeWidth, onDragEnd }) => {
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   return (
@@ -36,5 +35,7 @@ interface DraggableItemProps {
 }
 function DraggableItem({ id }: DraggableItemProps) {
   const { listeners, setNodeRef } = useDraggable({ id });
-  return <div ref={setNodeRef} className="tx-virtual-table_header_drag_resize" {...listeners} />;
+  return (
+    <div ref={setNodeRef} className="tx-virtual-table__header__cell--drag_resize" {...listeners} />
+  );
 }

@@ -115,17 +115,12 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     };
 
     return (
-      <div
-        ref={ref}
-        {...rest}
-        className={cx('tx-virtual-table_wrapper', wrapperClass)}
-        style={{ ...rest.style, ...wrapperStyle }}
-      >
+      <div ref={ref} {...rest} className={wrapperClass} style={{ ...rest.style, ...wrapperStyle }}>
         {headerList.map((cols, idx) => {
           if (idx === headerList.length - 1) return;
           return (
             <div
-              className={cx('tx-virtual-table_wrapper_header_parent', headerClass)}
+              className={cx('tx-virtual-table__header__parent', headerClass)}
               style={{
                 width: realWidth,
                 height: titleHeight,
@@ -137,13 +132,13 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               {cols.map((col, idx2) => {
                 return (
                   <div
-                    className="tx-virtual-table_wrapper_header_parent_cell_wrapper"
+                    className="tx-virtual-table__header__parent__cellwrapper"
                     key={col}
                     style={{ width: headerColumnWidth(col) + 8 }}
                   >
                     {headRenders[col]}
                     {idx2 !== cols.length - 1 && (
-                      <div className="tx-virtual-table_wrapper_header_parent_cell_wrapper_border" />
+                      <div className="tx-virtual-table__header__parent__cellwrapper--border" />
                     )}
                   </div>
                 );
@@ -152,7 +147,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           );
         })}
         <div
-          className={cx('tx-virtual-table_wrapper_header', headerClass)}
+          className={cx('tx-virtual-table__header', headerClass)}
           style={{
             top: headerTrees.length && (headerList.length - 1) * titleHeight,
             height: titleHeight,
@@ -197,10 +192,10 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             <SortableContext items={list} strategy={horizontalListSortingStrategy}>
               {canDragSortRow && (
                 <div
-                  className="tx-virtual-table_wrapper_header_drag_icon_none"
+                  className="tx-virtual-table__header__drag_icon"
                   style={{ width: dragIconWidth }}
                 >
-                  <span>&nbsp;</span>
+                  <span> &nbsp;</span>
                 </div>
               )}
               {canChecked && (
@@ -229,10 +224,9 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
 
                 return (
                   <div
-                    className={cx('tx-virtual-table_wrapper_header_cell_wrapper', {
-                      'tx-virtual-table_wrapper_header_cell_wrapper_fixed_left':
-                        idx < fixedLeftCount!,
-                      'tx-virtual-table_wrapper_header_cell_wrapper_fixed_right':
+                    className={cx('tx-virtual-table__header__cellwrapper', {
+                      'tx-virtual-table__header__cellwrapper--fixed_left': idx < fixedLeftCount!,
+                      'tx-virtual-table__header__cellwrapper--fixed_right':
                         idx > labels.length - fixedRightCount - 1,
                     })}
                     style={style}
@@ -246,7 +240,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               })}
             </SortableContext>
             {
-              // 拖拽对象渲染
+              // 拖拽对象渲染å
               canDragSortColumn &&
                 createPortal(
                   <DragOverlay adjustScale={false}>

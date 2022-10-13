@@ -49,17 +49,16 @@ const TableHead: FC<ITableHead> = ({
   return (
     <div
       ref={setNodeRef}
-      className="tx-virtual-table_header_drag_wrapper"
       {...attributes}
       style={{ transform: CSS.Transform.toString(transform), transition }}
     >
       <div
         className={cx(
-          'tx-virtual-table_header_drag',
-          !canDragSortColumn && 'tx-virtual-table_header_drag_default',
-          canDragSortColumn && isDragging && 'tx-virtual-table_header_drag_dragging',
-          canDragSortColumn && dragOverlay && 'tx-virtual-table_header_drag_over',
-          canDragSortColumn && !dragOverlay && 'tx-virtual-table_header_drag_source',
+          'tx-virtual-table__header__cell',
+          !canDragSortColumn && 'tx-virtual-table__header__cell--default',
+          canDragSortColumn && isDragging && 'tx-virtual-table__header__cell--dragging',
+          canDragSortColumn && dragOverlay && 'tx-virtual-table__header__cell--over',
+          canDragSortColumn && !dragOverlay && 'tx-virtual-table__header__cell--source',
           {
             'justify-start': textLayout === 'left',
             'justify-center': textLayout === 'center',
@@ -73,7 +72,7 @@ const TableHead: FC<ITableHead> = ({
         {!!sortRenders && !dragOverlay && sortRenders[id] && (
           <div
             className={cx(
-              'tx-virtual-table_header_cell_sort_wrapper',
+              'tx-virtual-table__header__cell--sort_wrapper',
               filterRenders?.[id] && '!right-5'
             )}
             onMouseDown={(e) => e.stopPropagation()}
@@ -83,7 +82,7 @@ const TableHead: FC<ITableHead> = ({
         )}
         {!!filterRenders && !dragOverlay && filterRenders[id] && (
           <div
-            className="tx-virtual-table_header_cell_filter_wrapper"
+            className={'tx-virtual-table__header__cell--filter_wrapper'}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {filterRenders[id]}
@@ -98,7 +97,7 @@ const TableHead: FC<ITableHead> = ({
             />
           </span>
         )}
-        {!canResize && !endCol && <div className="tx-virtual-table_header_drag_end" />}
+        {!canResize && !endCol && <div className="tx-virtual-table__header__cell--drag_end" />}
       </div>
     </div>
   );

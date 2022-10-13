@@ -573,7 +573,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     >
       <SortableContext items={list} strategy={verticalListSortingStrategy}>
         <div
-          className="tx-virtual-table_fixed_top"
+          className="tx-virtual-table__fixed_top"
           style={{
             top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
             width: realWidth,
@@ -596,7 +596,7 @@ const DragRows = ({ children }: DragRowsProps) => {
         activeRow &&
         createPortal(
           <DragOverlay>
-            <div className="tx-virtual-table_row_drag_wrapper">
+            <div className="tx-virtual-table__row_drag_wrapper">
               <TableRow
                 row={activeRow}
                 index={list.map((o) => o.id).indexOf(activeRow.id)}

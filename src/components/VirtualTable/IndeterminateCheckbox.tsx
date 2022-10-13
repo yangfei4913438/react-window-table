@@ -25,8 +25,8 @@ const IndeterminateCheckbox = React.forwardRef(
     return (
       <div
         className={cx(
-          'indeterminate_checkbox_wrapper',
-          fixedLeftCount === 0 && 'indeterminate_checkbox_wrapper_shadow'
+          'tx-virtual-table__checkbox_wrapper',
+          fixedLeftCount === 0 && 'tx-virtual-table__checkbox_wrapper--shadow'
         )}
         style={{
           width: checkBoxWidth,
@@ -35,7 +35,7 @@ const IndeterminateCheckbox = React.forwardRef(
       >
         <input
           type="checkbox"
-          className="indeterminate_checkbox"
+          className="checkbox checkbox-sm"
           ref={resolvedRef}
           onChange={() => undefined}
           {...rest}
