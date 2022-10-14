@@ -4,6 +4,7 @@
 
 /* 表格的默认样式 */
 .tx-virtual-table {
+  @apply flex flex-col;
   &__header__parent {
     z-index: 51;
     @apply sticky flex items-center border-b border-b-[#eee] bg-[#f8f8f8];
@@ -34,6 +35,9 @@
     @apply sticky;
     z-index: 51;
     box-shadow: 0 2px 4px 0 #eee;
+  }
+  &__body {
+    @apply relative flex-1 overflow-auto;
   }
 }
 

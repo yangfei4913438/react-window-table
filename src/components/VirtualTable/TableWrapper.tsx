@@ -4,6 +4,8 @@ import cx from 'classnames';
 import {
   closestCenter,
   DndContext,
+  DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   MouseSensor,
   TouchSensor,
@@ -114,8 +116,37 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
       return result;
     };
 
+    // 表头列拖拽响应
+    const headDrag = ({ over, active }: DragOverEvent | DragEndEvent) => {
+      if (!over) return;
+      // 如果标题存在树形关系，需要检查是否属于同一个父对象
+      if (headerTrees.length) {
+        const res = sameParent(String(active.id), String(over.id));
+        if (!res) return;
+      }
+      const overIndex = getIndex(String(over.id));
+      if (activeIndex !== overIndex) {
+        // 交换 label 元素的位置
+        const arr = arrayMove(labels, activeIndex, overIndex);
+        // 更新label
+        changeLabels?.(arr);
+        // 新的宽度
+        const widthObj: IWidths = {};
+        arr.forEach((label) => {
+          widthObj[label] = widths[label];
+        });
+        // 更新宽度
+        changeWidths?.(widthObj);
+      }
+    };
+
     return (
-      <div ref={ref} {...rest} className={wrapperClass} style={{ ...rest.style, ...wrapperStyle }}>
+      <div
+        ref={ref}
+        {...rest}
+        className={cx('tx-virtual-table', wrapperClass)}
+        style={{ ...rest.style, ...wrapperStyle }}
+      >
         {headerList.map((cols, idx) => {
           if (idx === headerList.length - 1) return;
           return (
@@ -163,29 +194,11 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               if (!active) return;
               setActiveLabel(String(active.id));
             }}
-            onDragEnd={({ over, active }) => {
-              if (!over) return;
-              // 如果标题存在树形关系，需要检查是否属于同一个父对象
-              if (headerTrees.length) {
-                const res = sameParent(String(active.id), String(over.id));
-                if (!res) return;
-              }
-              // 这里是异步执行的，所以不影响后面的代码执行。
+            onDragOver={headDrag}
+            onDragEnd={(event) => {
+              headDrag(event);
+              // 清理数据
               setActiveLabel(null);
-              const overIndex = getIndex(String(over.id));
-              if (activeIndex !== overIndex) {
-                // 交换 label 元素的位置
-                const arr = arrayMove(labels, activeIndex, overIndex);
-                // 更新label
-                changeLabels?.(arr);
-                // 新的宽度
-                const widthObj: IWidths = {};
-                arr.forEach((label) => {
-                  widthObj[label] = widths[label];
-                });
-                // 更新宽度
-                changeWidths?.(widthObj);
-              }
             }}
             onDragCancel={() => setActiveLabel(null)}
           >

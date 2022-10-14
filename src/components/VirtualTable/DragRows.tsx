@@ -88,7 +88,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     setActiveRow(row);
   };
 
-  // 响应拖拽结束操作
+  // 响应拖拽结束操作(这里不要使用over响应，否则动画会很难看。)
   const handleDragEnd = ({ over, active }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
 
@@ -140,8 +140,6 @@ const DragRows = ({ children }: DragRowsProps) => {
     ) {
       // 更新列表数据
       setList?.(sameParent(list));
-      // 清空数据
-      setActiveRow(null);
       return;
     }
 
@@ -154,8 +152,6 @@ const DragRows = ({ children }: DragRowsProps) => {
       if (!sourceOpen && !targetOpen) {
         // 更新列表数据
         setList?.(arrayMove(list, sourceIndex, targetIndex));
-        // 清空数据
-        setActiveRow(null);
         return;
       }
     }
@@ -224,8 +220,6 @@ const DragRows = ({ children }: DragRowsProps) => {
             const dirIndex = allRenderIds.indexOf(row.parent_id);
             // 更新列表数据
             setList?.(arrayMove(list, sourceIndex, dirIndex));
-            // 清空数据
-            setActiveRow(null);
             return;
           }
           // 拖拽目录在目标子元素的上面
@@ -234,8 +228,6 @@ const DragRows = ({ children }: DragRowsProps) => {
             const nextDirIndex = getNextDirIndex(list, targetIndex);
             // 更新列表数据
             setList?.(arrayMove(list, sourceIndex, nextDirIndex - 1));
-            // 清空数据
-            setActiveRow(null);
             return;
           }
         }
@@ -245,8 +237,6 @@ const DragRows = ({ children }: DragRowsProps) => {
           if (inNext) {
             // 更新列表数据
             setList?.(arrayMove(list, sourceIndex, targetIndex));
-            // 清空数据
-            setActiveRow(null);
             return;
           }
           // 拖拽目录在目标子元素的上面
@@ -255,8 +245,6 @@ const DragRows = ({ children }: DragRowsProps) => {
             const nextDirIndex = getNextDirIndex(list, targetIndex);
             // 更新列表数据
             setList?.(arrayMove(list, sourceIndex, nextDirIndex - 1));
-            // 清空数据
-            setActiveRow(null);
             return;
           }
         }
@@ -288,8 +276,6 @@ const DragRows = ({ children }: DragRowsProps) => {
           newArr = moveChildren(newArr, activeRow);
           // 更新列表数据
           setList!(newArr);
-          // 清空数据
-          setActiveRow(null);
           return;
         }
         // 目标对象是目录
@@ -305,8 +291,6 @@ const DragRows = ({ children }: DragRowsProps) => {
             newArr = moveChildren(newArr, activeRow);
             // 更新列表数据
             setList!(newArr);
-            // 清空数据
-            setActiveRow(null);
             return;
           }
           // 目标对象是已经展开的目录
@@ -319,8 +303,6 @@ const DragRows = ({ children }: DragRowsProps) => {
               newArr = moveChildren(newArr, activeRow);
               // 更新列表数据
               setList!(newArr);
-              // 清空数据
-              setActiveRow(null);
               return;
             }
             // 如果是从目标目录的上面下来的。
@@ -333,8 +315,6 @@ const DragRows = ({ children }: DragRowsProps) => {
               newArr = moveChildren(newArr, activeRow);
               // 更新列表数据
               setList!(newArr);
-              // 清空数据
-              setActiveRow(null);
               return;
             }
           }
@@ -406,8 +386,6 @@ const DragRows = ({ children }: DragRowsProps) => {
 
         // 更新列表数据
         setList!(newArr);
-        // 清空数据
-        setActiveRow(null);
         return;
       }
       // 目标是一个目录
@@ -502,8 +480,6 @@ const DragRows = ({ children }: DragRowsProps) => {
 
             // 更新列表数据
             setList!(newArr);
-            // 清空数据
-            setActiveRow(null);
             return;
           }
         }
@@ -555,8 +531,6 @@ const DragRows = ({ children }: DragRowsProps) => {
 
           // 更新列表数据
           setList!(newArr);
-          // 清空数据
-          setActiveRow(null);
           return;
         }
       }
@@ -570,7 +544,11 @@ const DragRows = ({ children }: DragRowsProps) => {
       modifiers={[restrictToVerticalAxis, restrictToFirstScrollableAncestor]}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      onDragEnd={(event) => {
+        handleDragEnd(event);
+        // 清空数据
+        setActiveRow(null);
+      }}
       onDragCancel={() => setActiveRow(null)}
     >
       <SortableContext items={list} strategy={verticalListSortingStrategy}>
@@ -582,7 +560,6 @@ const DragRows = ({ children }: DragRowsProps) => {
           }}
         >
           <FixedSizeList
-            style={{ overflow: 'unset' }}
             itemData={list.slice(0, fixedTopCount)}
             itemCount={fixedTopCount}
             height={fixedTopCount * rowHeight}
@@ -605,7 +582,7 @@ const DragRows = ({ children }: DragRowsProps) => {
             }}
           </FixedSizeList>
         </div>
-        <div className="relative">{children}</div>
+        <div className="tx-virtual-table__body">{children}</div>
       </SortableContext>
       {canDragSortRow &&
         activeRow &&

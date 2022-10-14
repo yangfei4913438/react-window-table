@@ -12,7 +12,6 @@ import {
   type ListOnItemsRenderedProps,
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import cx from 'classnames';
 import TableWrapper from './TableWrapper';
 import DragRowsItem from './DragRowsItem';
 import {
@@ -404,7 +403,7 @@ const VirtualTable = <T extends ListType>({
           >
             <FixedSizeList
               innerElementType={TableWrapper}
-              className={cx('tx-virtual-table', tableClass)}
+              className={tableClass}
               style={tableStyle}
               itemData={
                 list.length > fixedTopCount
