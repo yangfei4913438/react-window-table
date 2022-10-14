@@ -560,6 +560,7 @@ const DragRows = ({ children }: DragRowsProps) => {
           }}
         >
           <FixedSizeList
+            style={{ overflow: 'unset' }}
             itemData={list.slice(0, fixedTopCount)}
             itemCount={fixedTopCount}
             height={fixedTopCount * rowHeight}

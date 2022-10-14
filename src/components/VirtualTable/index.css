@@ -37,7 +37,7 @@
     box-shadow: 0 2px 4px 0 #eee;
   }
   &__body {
-    @apply relative flex-1 overflow-auto;
+    @apply relative flex-1;
   }
 }
 
