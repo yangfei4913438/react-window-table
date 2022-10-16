@@ -7,7 +7,9 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import { FC } from 'react';
+import { FC, useContext, useEffect } from 'react';
+import cx from 'classnames';
+import { VirtualTableContext } from './consts';
 
 interface IDragResizeProps {
   id: string;
@@ -34,8 +36,22 @@ interface DraggableItemProps {
   id: string;
 }
 function DraggableItem({ id }: DraggableItemProps) {
-  const { listeners, setNodeRef } = useDraggable({ id });
+  const { setColResizing } = useContext(VirtualTableContext);
+
+  const { listeners, setNodeRef, isDragging } = useDraggable({ id });
+
+  useEffect(() => {
+    setColResizing(isDragging);
+  }, [isDragging]);
+
   return (
-    <div ref={setNodeRef} className="tx-virtual-table__header__cell--drag_resize" {...listeners} />
+    <div
+      ref={setNodeRef}
+      className={cx(
+        'tx-virtual-table__separator',
+        isDragging && 'tx-virtual-table__separator--resizing'
+      )}
+      {...listeners}
+    />
   );
 }

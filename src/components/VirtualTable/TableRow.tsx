@@ -129,6 +129,7 @@ const TableRow = <T extends ListType>({
       )}
       {!isScrolling && canChecked && (
         <IndeterminateCheckbox
+          value={row.id}
           indeterminate={isIndeterminate()}
           checked={isChecked()}
           onClick={() => handleCheckBox(row, checked, setChecked)}
@@ -147,22 +148,16 @@ const TableRow = <T extends ListType>({
               if (idx > labels.length - fixedRightCount - 1) {
                 style['right'] = getRightWidth(idx);
               }
-              if (idx === fixedLeftCount - 1) {
-                style['boxShadow'] = '2px 0 4px 0 #eee';
-              }
-              if (idx === labels.length - fixedRightCount) {
-                style['boxShadow'] = '-2px 0 4px 0 #eee';
-              }
             }
 
             return (
               <div
-                className={cx('tx-virtual-table__row__cell_wrapper', {
+                className={cx('tx-virtual-table__cell', {
                   'text-center': textLayout === 'center',
-                  'tx-virtual-table__row__cell_wrapper--left': !dragOverlay && idx < fixedLeftCount,
-                  'tx-virtual-table__row__cell_wrapper--right':
+                  'tx-virtual-table__cell--left': !dragOverlay && idx < fixedLeftCount,
+                  'tx-virtual-table__cell--right':
                     !dragOverlay && idx > labels.length - fixedRightCount - 1,
-                  'tx-virtual-table__row__cell_wrapper__drag': dragOverlay,
+                  'tx-virtual-table__cell__drag': dragOverlay,
                 })}
                 style={style}
                 key={idx}

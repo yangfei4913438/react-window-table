@@ -58,7 +58,7 @@ const DragRows = ({ children }: DragRowsProps) => {
 
   // 获取行数据
   const getRow = (id: UniqueIdentifier) => {
-    for (let item of list) {
+    for (const item of list) {
       if (item.id === id) {
         return {
           ...item,
@@ -66,7 +66,7 @@ const DragRows = ({ children }: DragRowsProps) => {
         };
       }
       if (item?.children && item.children.length > 0) {
-        for (let item2 of item.children) {
+        for (const item2 of item.children) {
           if (item2.id === id) {
             return {
               ...item2,
@@ -89,6 +89,8 @@ const DragRows = ({ children }: DragRowsProps) => {
   };
 
   // 响应拖拽结束操作(这里不要使用over响应，否则动画会很难看。)
+  // 注意：
+  //    只有展开的目录，才能放东西进去，没展开的不能放进去。
   const handleDragEnd = ({ over, active }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
 
@@ -98,6 +100,33 @@ const DragRows = ({ children }: DragRowsProps) => {
     // 取出实时渲染的索引
     const sourceIndex = allRenderIds.indexOf(active.id);
     const targetIndex = allRenderIds.indexOf(over.id);
+
+    // 判断目标目录有没有展开
+    const targetOpen = Object.keys(groups!).includes(row.id);
+    // 判断当前的有没有展开
+    const sourceOpen = Object.keys(groups!).includes(activeRow.id);
+
+    // 拖拽对象是一级普通元素
+    const sourceIsFirstLevelObject = !activeRow.parent_id && !activeRow.children;
+    // 拖拽对象是二级普通元素
+    const sourceIsSecondLevelObject = activeRow.parent_id && !activeRow.children;
+    // 目标对象是一级普通元素
+    const targetIsFirstLevelObject = !row.parent_id && !row.children;
+    // 目标对象是二级普通元素
+    const targetIsSecondLevelObject = row.parent_id && !row.children;
+
+    // 拖拽的是没展开的目录
+    const sourceIsDirClose = !activeRow.parent_id && activeRow.children && !sourceOpen;
+    // 拖拽的是展开的目录
+    const sourceIsDirOpen = !activeRow.parent_id && activeRow.children && sourceOpen;
+
+    // 目标是没展开的目录
+    const targetIsDirClose = !row.parent_id && row.children && !targetOpen;
+    // 目标是展开的目录
+    const targetIsDirOpen = !row.parent_id && row.children && targetOpen;
+
+    // 拖拽对象是否在目标对象的下面
+    const inNext = sourceIndex > targetIndex;
 
     // 相同目录下的交换
     const sameParent = (arr: typeof activeRow[]) => {
@@ -143,47 +172,124 @@ const DragRows = ({ children }: DragRowsProps) => {
       return;
     }
 
-    // 两个目录，都没有展开的情况切换
-    if (!row.parent_id && !!row.children && !activeRow.parent_id && !!activeRow.children) {
-      // 目录的判断，分组数据肯定是有的。
-      const sourceOpen = Object.keys(groups!).includes(row.id);
-      const targetOpen = Object.keys(groups!).includes(activeRow.id);
-      // 确保都是没有展开的情况
-      if (!sourceOpen && !targetOpen) {
-        // 更新列表数据
+    // 一级元素对象 移动到 一级元素对象
+    // 一级元素对象 移动到 未展开的目录
+    // 未展开的目录 移动到 一级元素对象
+    // 未展开的目录 移动到 未展开的目录
+    if (
+      (sourceIsFirstLevelObject && targetIsFirstLevelObject) ||
+      (sourceIsFirstLevelObject && targetIsDirClose) ||
+      (sourceIsDirClose && targetIsFirstLevelObject) ||
+      (sourceIsDirClose && targetIsDirClose)
+    ) {
+      setList?.(arrayMove(list, sourceIndex, targetIndex));
+      return;
+    }
+
+    // 将对象放到和目标相同的数组中去（目标不是目录）
+    const insertIntoTarget = (arr: typeof activeRow[] = list) => {
+      return arr.map((item) => {
+        // 找到目标对象，往里面加
+        if (item.id === row.parent_id) {
+          // 目标对象的二级索引
+          const targetIndex = item.children.map((o: any) => o.id).indexOf(over.id);
+          // 插入数据
+          if (inNext) {
+            item.children.splice(targetIndex - 1, 0, activeRow);
+          } else {
+            item.children.splice(targetIndex, 0, activeRow);
+          }
+          // 如果存在分组就更新分组内部
+          if (Object.keys(groups!).includes(row.parent_id)) {
+            setGroups?.((prevState) => {
+              return {
+                ...prevState,
+                [row.parent_id]: item.children,
+              };
+            });
+          }
+        }
+        return item;
+      });
+    };
+
+    // 普通对象到目录里面
+    if (sourceIsFirstLevelObject && targetIsSecondLevelObject) {
+      // 处理数据
+      setList?.(arrayMove(insertIntoTarget(), sourceIndex, targetIndex));
+      // 处理完返回
+      return;
+    }
+
+    // 将对象放入到目标列表中，同时更新分组数据，返回新的数组（目标是一个目录）
+    const insertIntoTargetDir = (arr: typeof activeRow[] = list) => {
+      return arr.map((item) => {
+        // 找到目标对象，往里面加
+        if (item.id === row.id) {
+          // 插入最前面
+          item.children.unshift(activeRow);
+          // 如果存在分组就更新分组内部
+          if (Object.keys(groups!).includes(row.id)) {
+            // 更新分组内部
+            setGroups?.((prevState) => {
+              return {
+                ...prevState,
+                [row.id]: item.children,
+              };
+            });
+          }
+        }
+        return item;
+      });
+    };
+
+    // 一级元素对象 移动到 展开的目录（上面，下面）
+    if (sourceIsFirstLevelObject && targetIsDirOpen) {
+      // 下面来的放到上面
+      if (inNext) {
+        // 直接交换位置
         setList?.(arrayMove(list, sourceIndex, targetIndex));
+        return;
+      }
+      // 上面下去的，放到数组的第一个
+      else {
+        // 处理数据
+        setList?.(arrayMove(insertIntoTargetDir(), sourceIndex, targetIndex));
+        // 处理完返回
         return;
       }
     }
 
-    // 获取下个目录的索引
-    const getNextDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
-      // 检查是从下一个元素开始的。
-      const checkIndex = startIndex + 1;
-      // 判断是不是目录
-      // 是目录的情况
-      if (!!arr[checkIndex]?.children) {
-        return checkIndex;
-      }
-      // 递归处理
-      return getNextDirIndex(arr, checkIndex);
+    // 清理拖拽元素所属的对象，返回一个新的数组，同时更新分组数据
+    const cleanDragParent = () => {
+      return list.map((item) => {
+        // 注意是拖拽对象
+        if (item.id === activeRow.parent_id) {
+          // 移除数据
+          item.children = item.children.filter((o: any) => o.id !== activeRow.id);
+          // 如果存在分组就更新分组内部
+          if (Object.keys(groups!).includes(activeRow.parent_id)) {
+            // 更新分组内部
+            setGroups?.((prevState) => {
+              return {
+                ...prevState,
+                [activeRow.parent_id]: item.children,
+              };
+            });
+          }
+        }
+        return item;
+      });
     };
 
-    // 获取上个目录的索引
-    const getPrevDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
-      // 检查是从上一个元素开始的。
-      const checkIndex = startIndex - 1;
-      // 判断是不是目录
-      // 是目录的情况
-      if (!!arr[checkIndex]?.children) {
-        return checkIndex;
-      }
-      // 递归处理
-      return getPrevDirIndex(arr, checkIndex);
-    };
-
-    // 拖拽对象是否在目标对象的下面
-    const inNext = sourceIndex > targetIndex;
+    // 第二层子元素 移动到 一级元素对象
+    // 第二层子元素 移动到 未展开的目录
+    if (sourceIsSecondLevelObject && (targetIsFirstLevelObject || targetIsDirClose)) {
+      // 处理数据
+      setList?.(arrayMove(cleanDragParent(), sourceIndex, targetIndex));
+      // 处理完返回
+      return;
+    }
 
     // 展开目录的子元素，跟随目录对象移动
     const moveChildren = (
@@ -206,8 +312,46 @@ const DragRows = ({ children }: DragRowsProps) => {
       return arr;
     };
 
+    // 展开目录到普通对象
+    if (sourceIsDirOpen && targetIsFirstLevelObject) {
+      // 第一部切换位置
+      let tmpArr = arrayMove(list, sourceIndex, targetIndex);
+      // 处理拖拽目录的下级数据
+      tmpArr = moveChildren(tmpArr, activeRow);
+      // 更新列表数据
+      setList?.(tmpArr);
+      // 处理完返回
+      return;
+    }
+
+    // 获取下个目录的索引
+    const getNextDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
+      // 检查是从下一个元素开始的。
+      const checkIndex = startIndex + 1;
+      // 判断是不是目录
+      // 是目录的情况
+      if (arr[checkIndex]?.children) {
+        return checkIndex;
+      }
+      // 递归处理
+      return getNextDirIndex(arr, checkIndex);
+    };
+
+    // 获取上个目录的索引
+    const getPrevDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
+      // 检查是从上一个元素开始的。
+      const checkIndex = startIndex - 1;
+      // 判断是不是目录
+      // 是目录的情况
+      if (arr[checkIndex]?.children) {
+        return checkIndex;
+      }
+      // 递归处理
+      return getPrevDirIndex(arr, checkIndex);
+    };
+
     // 如果拖拽对象是一个目录
-    if (!!activeRow?.children) {
+    if (activeRow?.children) {
       // 判断拖拽目录有没有展开
       const sourceOpen = Object.keys(groups!).includes(activeRow.id);
       // 如果拖拽目录没有展开
@@ -325,214 +469,25 @@ const DragRows = ({ children }: DragRowsProps) => {
     else {
       // 目标是一个子元素 -- 肯定是不同目录下的子元素，相同目录的上面已经处理了。
       if (!row?.children) {
-        // 实时渲染内容变更(这里的移动不影响目录内部的数据)
-        // 新的数组
-        let newArr = arrayMove(list, sourceIndex, targetIndex);
-
-        // 清理数据
-        // 1、找到2个上层目录对象
-        const sourceObj = list.find((o) => o.id === activeRow.parent_id);
-        const targetObj = list.find((o) => o.id === row.parent_id);
-
-        // 2、计算2个对象在目录中的索引位置
-        const inSourceIndex = sourceObj.children.map((o: any) => o.id).indexOf(activeRow.id);
-        const inTargetIndex = targetObj.children.map((o: any) => o.id).indexOf(row.id);
-
-        // 3、将对象放进去
-        if (inNext) {
-          // 如果是文件类型，且是从下来拿上来的
-          // 插入前面
-          targetObj.children.splice(inTargetIndex - 1, 0, activeRow);
-        } else {
-          // 插入后面
-          targetObj.children.splice(inTargetIndex + 1, 0, activeRow);
-        }
-        // 移除对象
-        sourceObj.children.splice(inSourceIndex, 1);
-
-        // 4、替换数据
-        newArr = newArr.map((item) => {
-          if (item.id === row.parent_id) {
-            // 返回新的数据
-            return {
-              ...item,
-              children: targetObj.children,
-            };
-          }
-          if (item.id === activeRow.parent_id) {
-            // 返回新的数据
-            return {
-              ...item,
-              children: sourceObj.children,
-            };
-          }
-          return item;
-        });
-
-        // 5、更新目标分组
-        setGroups!((prevState) => {
-          if (targetObj.children.length > 0) {
-            prevState[row.parent_id] = targetObj.children;
-          } else {
-            delete prevState[row.parent_id];
-          }
-          if (targetObj.children.length > 0) {
-            prevState[activeRow.parent_id] = sourceObj.children;
-          } else {
-            delete prevState[activeRow.parent_id];
-          }
-          return prevState;
-        });
-
-        // 更新列表数据
-        setList!(newArr);
+        // 先把拖拽数据从来源移除，再把拖拽数据插入目标, 最后更新数据
+        setList?.(arrayMove(insertIntoTarget(cleanDragParent()), sourceIndex, targetIndex));
+        // 处理完成返回
         return;
       }
-      // 目标是一个目录
+      // 目标是一个目录（这里只能是展开的目录，没展开的已经在上面被处理了）
       else {
-        // 判断目标目录有没有展开
-        const targetOpen = Object.keys(groups!).includes(row.id);
-        // 目标是一个展开的目录
-        if (targetOpen) {
-          // 看得见的地方, 新的数组
-          let newArr: typeof activeRow[];
-
-          // 拿到目标目录的索引
-          const targetDirIndex = list.map((o) => o.id).indexOf(row.id);
-
-          // 如果目标目录已经是第一个元素了，那么就直接返回，不处理
-          if (targetDirIndex === fixedTopCount) {
-            return;
-          }
-          // 其他情况，放到上一个目录的最后一个位置
-          else {
-            // 看不见的地方处理
-            // 1、找到2个上层目录对象
-            const sourceObj = list.find((o) => o.id === activeRow.parent_id);
-            // 2、计算2个对象在目录中的索引位置
-            const inSourceIndex = sourceObj.children.map((o: any) => o.id).indexOf(activeRow.id);
-            // 4、 移除对象
-            sourceObj.children.splice(inSourceIndex, 1);
-
-            let targetObj: typeof activeRow;
-            if (inNext) {
-              // 从上一个索引位置开始找，找上一个目录的索引
-              const prevDirIndex = getPrevDirIndex(list, targetIndex);
-              // 找到真正的目标对象
-              targetObj = list[prevDirIndex];
-              // 3、将对象追加到最后一个
-              targetObj.children.push(activeRow);
-            } else {
-              // 上面下来的，放在第一个
-              targetObj = list.find((o) => o.id === row.id);
-              targetObj.children.unshift(activeRow);
-            }
-
-            // 5、替换数据
-            newArr = arrayMove(list, sourceIndex, targetDirIndex);
-            // 如果是下面上了的，需要判断上级对象是不是展开的，
-            // 判断目标目录有没有展开
-            const targetObjOpen = Object.keys(groups!).includes(targetObj.id);
-            if (inNext) {
-              // 如果是没展开的，需要将显示的对象干掉。
-              if (!targetObjOpen) {
-                const activeIndex = newArr.map((o) => o.id).indexOf(activeRow.id);
-                newArr.splice(activeIndex, 1);
-              }
-            }
-
-            newArr = newArr.map((item) => {
-              // 这里要同样是上级目录的id
-              if (item.id === targetObj.id) {
-                // 返回新的数据
-                return {
-                  ...item,
-                  children: targetObj.children,
-                };
-              }
-              if (item.id === activeRow.parent_id) {
-                // 返回新的数据
-                return {
-                  ...item,
-                  children: sourceObj.children,
-                };
-              }
-              return item;
-            });
-
-            // 5、更新目标分组
-            setGroups!((prevState) => {
-              // 只有展开的情况，才需要修正分组数据
-              if (inNext && targetObjOpen) {
-                if (targetObj.children.length > 0) {
-                  prevState[targetObj.id] = targetObj.children;
-                } else {
-                  delete prevState[targetObj.id];
-                }
-              }
-              if (sourceObj.children.length > 0) {
-                prevState[activeRow.parent_id] = sourceObj.children;
-              } else {
-                delete prevState[activeRow.parent_id];
-              }
-              return prevState;
-            });
-
-            // 更新列表数据
-            setList!(newArr);
-            return;
-          }
-        }
-        // 目标是一个没有展开的目录
-        else {
-          // 1、找到2个上层目录对象
-          const sourceObj = list.find((o) => o.id === activeRow.parent_id);
-          // 2、计算2个对象在目录中的索引位置
-          const inSourceIndex = sourceObj.children.map((o: any) => o.id).indexOf(activeRow.id);
-          // 4、 移除对象
-          sourceObj.children.splice(inSourceIndex, 1);
-
-          // 将对象追加到，目录的最后一个
-          const targetObj: typeof activeRow = { ...row };
-          targetObj.children.push(activeRow);
-
-          // 移除拖拽的实时渲染对象
-          list.splice(sourceIndex, 1);
-
-          // 更新内部children
-          const newArr = list.map((item) => {
-            if (item.id === row.id) {
-              // 返回新的数据
-              return {
-                ...item,
-                children: targetObj.children,
-              };
-            }
-            if (item.id === activeRow.parent_id) {
-              // 返回新的数据
-              return {
-                ...item,
-                children: sourceObj.children,
-              };
-            }
-            return item;
-          });
-
-          // 5、更新目标分组
-          setGroups!((prevState) => {
-            if (sourceObj.children.length > 0) {
-              // 只需要更新拖拽对象的那个分组即可，目标没有分组数据。
-              prevState[activeRow.parent_id] = sourceObj.children;
-            } else {
-              delete prevState[activeRow.parent_id];
-            }
-            return prevState;
-          });
-
-          // 更新列表数据
-          setList!(newArr);
+        // 如果子元素属于该目录, 或者对象是从下面上来的，就直接扔到上面
+        if (activeRow.parent_id === row.id || inNext) {
+          // 处理数据
+          setList?.(arrayMove(cleanDragParent(), sourceIndex, targetIndex));
+          // 处理完成返回
           return;
         }
+        // 从上面下来的
+        // 先把拖拽数据从来源移除，再把拖拽数据插入目标, 最后更新数据
+        setList?.(arrayMove(insertIntoTargetDir(cleanDragParent()), sourceIndex, targetIndex));
+        // 处理完成返回
+        return;
       }
     }
   };
@@ -553,7 +508,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     >
       <SortableContext items={list} strategy={verticalListSortingStrategy}>
         <div
-          className="tx-virtual-table__fixed_top"
+          className="tx-virtual-table__fixed-top"
           style={{
             top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
             width: realWidth,
@@ -589,7 +544,7 @@ const DragRows = ({ children }: DragRowsProps) => {
         activeRow &&
         createPortal(
           <DragOverlay>
-            <div className="tx-virtual-table__row_drag_wrapper">
+            <div className="tx-virtual-table__row--drag">
               <TableRow
                 row={activeRow}
                 index={list.map((o) => o.id).indexOf(activeRow.id)}

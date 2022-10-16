@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import cx from 'classnames';
 import DragResize from './DragResize';
 import { VirtualTableContext } from './consts';
+import { Button } from '../Button';
 
 interface ITableHead {
   id: string;
@@ -54,14 +55,15 @@ const TableHead: FC<ITableHead> = ({
     >
       <div
         className={cx(
-          'tx-virtual-table__header__cell',
-          !canDragSortColumn && 'tx-virtual-table__header__cell--default',
-          canDragSortColumn && isDragging && 'tx-virtual-table__header__cell--dragging',
-          canDragSortColumn && dragOverlay && 'tx-virtual-table__header__cell--over',
-          canDragSortColumn && !dragOverlay && 'tx-virtual-table__header__cell--source',
+          'tx-virtual-table__header-cell-container',
+          !canDragSortColumn && 'tx-virtual-table__header-cell-container--default',
+          canDragSortColumn && isDragging && 'tx-virtual-table__header-cell-container--dragging',
+          canDragSortColumn && dragOverlay && 'tx-virtual-table__header-cell-container--over',
+          canDragSortColumn && !dragOverlay && 'tx-virtual-table__header-cell-container--source',
           {
             'justify-start': textLayout === 'left',
             'justify-center': textLayout === 'center',
+            'justify-end': textLayout === 'right',
           }
         )}
         style={{ height: titleHeight }}
@@ -70,34 +72,37 @@ const TableHead: FC<ITableHead> = ({
       >
         {children}
         {!!sortRenders && !dragOverlay && sortRenders[id] && (
-          <div
-            className={cx(
-              'tx-virtual-table__header__cell--sort_wrapper',
-              filterRenders?.[id] && '!right-5'
-            )}
-            onMouseDown={(e) => e.stopPropagation()}
+          <Button
+            aria-label="sort"
+            variant="minimal"
+            setSize="xs"
+            onClick={(e) => e.stopPropagation()}
           >
             {sortRenders[id]}
-          </div>
+          </Button>
         )}
         {!!filterRenders && !dragOverlay && filterRenders[id] && (
-          <div
-            className={'tx-virtual-table__header__cell--filter_wrapper'}
-            onMouseDown={(e) => e.stopPropagation()}
+          <Button
+            aria-label="filter"
+            variant="minimal"
+            setSize="xs"
+            onClick={(e) => e.stopPropagation()}
           >
             {filterRenders[id]}
-          </div>
+          </Button>
         )}
         {canChangeWidths && canResize && canRender && !dragOverlay && (
-          <span onMouseDown={(e) => e.stopPropagation()}>
+          <div onMouseDown={(e) => e.stopPropagation()}>
             <DragResize
               id={id}
               handleChangeWidth={(x) => onChangeWidth(id, x)}
               onDragEnd={onDragWidthEnd}
             />
-          </span>
+          </div>
         )}
-        {!canResize && !endCol && <div className="tx-virtual-table__header__cell--drag_end" />}
+        {!canResize && !endCol && (
+          <div className="tx-virtual-table__header-cell-container--drag-end" />
+        )}
       </div>
     </div>
   );

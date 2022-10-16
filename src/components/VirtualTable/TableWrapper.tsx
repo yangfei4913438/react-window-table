@@ -25,6 +25,7 @@ import {
   dragIconWidth,
 } from './consts';
 import DragRows from './DragRows';
+import useTableScroll from './useTableScroll';
 
 const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
   ({ children, ...rest }, ref) => {
@@ -53,7 +54,9 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
       headerColumnWidth,
       wrapperClass,
       wrapperStyle,
+      colResizing,
     } = useContext(VirtualTableContext);
+    const { containerYClass, containerXClass } = useTableScroll();
 
     const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
     const [activeLabel, setActiveLabel] = useState<string | null>(null);
@@ -144,14 +147,24 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
       <div
         ref={ref}
         {...rest}
-        className={cx('tx-virtual-table', wrapperClass)}
+        className={cx(
+          'tx-virtual-table',
+          activeLabel && 'tx-virtual-table--col-dragging',
+          colResizing && 'tx-virtual-table--col-resizing',
+          containerYClass,
+          containerXClass,
+          wrapperClass
+        )}
         style={{ ...rest.style, ...wrapperStyle }}
       >
         {headerList.map((cols, idx) => {
           if (idx === headerList.length - 1) return;
           return (
             <div
-              className={cx('tx-virtual-table__header__parent', headerClass)}
+              className={cx(
+                'tx-virtual-table__header tx-virtual-table__header--parent',
+                headerClass
+              )}
               style={{
                 width: realWidth,
                 height: titleHeight,
@@ -162,21 +175,24 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               <div style={{ width: getMoreWidth }} />
               {cols.map((col, idx2) => {
                 return (
-                  <div
-                    className="tx-virtual-table__header__parent__cellwrapper"
-                    key={col}
-                    style={{ width: headerColumnWidth(col) + 8 }}
-                  >
-                    {headRenders[col]}
+                  <>
+                    <div
+                      className="tx-virtual-table__header-cell"
+                      key={col}
+                      style={{ width: headerColumnWidth(col) + 8 }}
+                    >
+                      {headRenders[col]}
+                    </div>
                     {idx2 !== cols.length - 1 && (
-                      <div className="tx-virtual-table__header__parent__cellwrapper--border" />
+                      <div className="tx-virtual-table__header-border" />
                     )}
-                  </div>
+                  </>
                 );
               })}
             </div>
           );
         })}
+
         <div
           className={cx('tx-virtual-table__header', headerClass)}
           style={{
@@ -204,15 +220,13 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           >
             <SortableContext items={list} strategy={horizontalListSortingStrategy}>
               {canDragSortRow && (
-                <div
-                  className="tx-virtual-table__header__drag_icon"
-                  style={{ width: dragIconWidth }}
-                >
+                <div className="tx-virtual-table__drag-icon" style={{ width: dragIconWidth }}>
                   <span> &nbsp;</span>
                 </div>
               )}
               {canChecked && (
                 <IndeterminateCheckbox
+                  value="all_data"
                   indeterminate={checked.length > 0 && checked.length !== allIds.length}
                   checked={checked.length > 0 && checked.length === allIds.length}
                   onClick={() => handleAllChecked()}
@@ -228,18 +242,12 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
                 if (idx > labels.length - fixedRightCount! - 1) {
                   style['right'] = getRightWidth(idx);
                 }
-                if (idx === fixedLeftCount! - 1) {
-                  style['boxShadow'] = '2px 0 4px 0px #eee';
-                }
-                if (idx === labels.length - fixedRightCount!) {
-                  style['boxShadow'] = '-2px 0 4px 0 #eee';
-                }
 
                 return (
                   <div
-                    className={cx('tx-virtual-table__header__cellwrapper', {
-                      'tx-virtual-table__header__cellwrapper--fixed_left': idx < fixedLeftCount!,
-                      'tx-virtual-table__header__cellwrapper--fixed_right':
+                    className={cx('tx-virtual-table__header-cell', {
+                      'tx-virtual-table__header-cell--fixed-left': idx < fixedLeftCount!,
+                      'tx-virtual-table__header-cell--fixed-right':
                         idx > labels.length - fixedRightCount - 1,
                     })}
                     style={style}

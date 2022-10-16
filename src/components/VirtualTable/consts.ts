@@ -7,9 +7,9 @@ import React, {
 } from 'react';
 
 // 勾选框的宽度
-export const checkBoxWidth = 44;
+export const checkBoxWidth = 40;
 // 拖拽对象的宽度
-export const dragIconWidth = 48;
+export const dragIconWidth = 40;
 
 // 标题行的树形结构
 export interface IHeaderTree {
@@ -59,7 +59,7 @@ interface VirtualTableContextProps<T extends ListType> {
     row: any;
   }) => void;
   // 文字布局
-  textLayout?: 'left' | 'center';
+  textLayout?: 'left' | 'center' | 'right';
   // 列名的国际化变量, 如: { name: strings.NAME, description: strings.DESCRIPTION }
   labels: string[];
   // 改变列的顺序，也可以修改多语言（当前组件内，只用于改变列的显示顺序）
@@ -114,6 +114,10 @@ interface VirtualTableContextProps<T extends ListType> {
   activeRow?: T;
   // 更新拖拽的行
   setActiveRow: Dispatch<SetStateAction<T | undefined>>;
+  // 列在被拖拽
+  colResizing: boolean;
+  // 设置列被拖拽
+  setColResizing: Dispatch<SetStateAction<boolean>>;
 }
 
 const initContext: VirtualTableContextProps<any> = {
@@ -125,8 +129,8 @@ const initContext: VirtualTableContextProps<any> = {
   fixedTopCount: 0,
   fixedLeftCount: 0,
   fixedRightCount: 0,
-  titleHeight: 50,
-  rowHeight: 45,
+  titleHeight: 48,
+  rowHeight: 40,
   textLayout: 'left',
   canDragSortColumn: true,
   canChecked: true,
@@ -150,6 +154,8 @@ const initContext: VirtualTableContextProps<any> = {
   rowClass: () => '',
   rowClick: () => undefined,
   setActiveRow: () => undefined,
+  colResizing: false,
+  setColResizing: () => undefined,
 };
 
 export const VirtualTableContext = createContext(initContext);

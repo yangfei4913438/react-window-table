@@ -25,8 +25,8 @@ const IndeterminateCheckbox = React.forwardRef(
     return (
       <div
         className={cx(
-          'tx-virtual-table__checkbox_wrapper',
-          fixedLeftCount === 0 && 'tx-virtual-table__checkbox_wrapper--shadow'
+          'tx-virtual-table__checkbox-container tx-virtual-table__cell',
+          fixedLeftCount === 0 && 'tx-virtual-table__cell--left'
         )}
         style={{
           width: checkBoxWidth,

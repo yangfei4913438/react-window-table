@@ -67,5 +67,13 @@ export function makeData(lens: number): IPerson[] {
   };
   const result = Mockjs.mock(mock_data);
 
-  return result.data;
+  const num = Math.ceil(Math.random() * 5);
+
+  return result.data.map((item: IPerson, index: number) => {
+    if (index % num === 0) {
+      delete item.children;
+      return item;
+    }
+    return item;
+  });
 }

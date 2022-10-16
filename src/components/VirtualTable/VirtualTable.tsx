@@ -12,6 +12,7 @@ import {
   type ListOnItemsRenderedProps,
 } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import cx from 'classnames';
 import TableWrapper from './TableWrapper';
 import DragRowsItem from './DragRowsItem';
 import {
@@ -82,7 +83,7 @@ export interface VirtualTableProps<T> {
   // 表格外部的内联样式
   wrapperStyle?: Partial<React.CSSProperties>;
   // 表格的类名
-  tableClass?: string;
+  className?: string;
   // 表格的内联样式
   tableStyle?: Partial<React.CSSProperties>;
   // 表头的行类名
@@ -147,7 +148,7 @@ const VirtualTable = <T extends ListType>({
 
   wrapperStyle,
   wrapperClass,
-  tableClass,
+  className,
   tableStyle,
 
   titleHeight = 50,
@@ -172,6 +173,9 @@ const VirtualTable = <T extends ListType>({
   const [changeKey, setChangeKey] = useState<string>('');
   // 临时变化的宽度
   const [changeWidth, setChangeWidth] = useState(0);
+
+  // 列的宽度拖拽状态
+  const [colResizing, setColResizing] = useState(false);
 
   // 拖拽的行对象
   const [activeRow, setActiveRow] = useState<T>();
@@ -399,11 +403,13 @@ const VirtualTable = <T extends ListType>({
               wrapperClass,
               activeRow,
               setActiveRow,
+              colResizing,
+              setColResizing,
             }}
           >
             <FixedSizeList
               innerElementType={TableWrapper}
-              className={tableClass}
+              className={cx('tx-virtual-table__container', className)}
               style={tableStyle}
               itemData={
                 list.length > fixedTopCount

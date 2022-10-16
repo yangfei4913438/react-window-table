@@ -1,7 +1,7 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
-import { VirtualTable } from 'src/components/VirtualTable';
-import { inArray } from 'src/components/VirtualTable';
+import { VirtualTable } from '../VirtualTable';
+import cx from 'classnames';
 
 export interface TableProps {
   // 是否开启滚动
@@ -54,7 +54,9 @@ const Table: FC<TableProps> = ({
   // 选中的对象
   const [checked, setChecked] = useState<string[]>([]);
   // 列排序
-  const [sort, setSort] = useState<{ [key: string]: 'asc' | 'desc' | undefined }>({});
+  const [sort, setSort] = useState<{
+    [key: string]: 'asc' | 'desc' | undefined;
+  }>({});
   // 列筛选
   const [filter, setFilter] = useState<{ [key: string]: any }>({});
   // 分组信息
@@ -143,19 +145,37 @@ const Table: FC<TableProps> = ({
   // 分组响应
   const handleGroup = (item: IPerson, index: number) => {
     // 没有下级属性的返回
-    if (!item?.children || item.children.length === 0) return;
+    if (!item?.children) return;
 
+    // 拷贝数据
     const data = Array.from(list);
-    if (groups[item.id]) {
-      data.splice(index + 1, groups[item.id].length);
-      setGroups((prevState) => {
-        delete prevState[item.id];
-        return prevState;
-      });
+
+    // 子元素为0的情况
+    if (item.children.length === 0) {
+      if (groups[item.id]) {
+        // 有就移除
+        setGroups((prevState) => {
+          delete prevState[item.id];
+          return prevState;
+        });
+      } else {
+        // 没有就加进去
+        setGroups((prevState) => ({ ...prevState, [item.id]: [] }));
+      }
     } else {
-      setGroups((prevState) => ({ ...prevState, [item.id]: item.children! }));
-      data.splice(index + 1, 0, ...item.children);
+      if (groups[item.id]) {
+        data.splice(index + 1, groups[item.id].length);
+        setGroups((prevState) => {
+          delete prevState[item.id];
+          return prevState;
+        });
+      } else {
+        setGroups((prevState) => ({ ...prevState, [item.id]: item.children! }));
+        data.splice(index + 1, 0, ...item.children);
+      }
     }
+
+    // 更新数据
     setList(data);
   };
 
@@ -214,66 +234,18 @@ const Table: FC<TableProps> = ({
 
   // 标题列的渲染方法
   const headRenders = {
-    root: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.root}
-      </div>
-    ),
-    base: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.base}
-      </div>
-    ),
-    more: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.more}
-      </div>
-    ),
-    name: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 pl-16 text-lg font-bold">
-        {PersonLabels.name}
-      </div>
-    ),
-    age: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.age}
-      </div>
-    ),
-    status: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.status}
-      </div>
-    ),
-    region: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.region}
-      </div>
-    ),
-    city: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.city}
-      </div>
-    ),
-    email: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.email}
-      </div>
-    ),
-    phone: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.phone}
-      </div>
-    ),
-    visits: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.visits}
-      </div>
-    ),
-    last_visit: (
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3 text-lg font-bold">
-        {PersonLabels.last_visit}
-      </div>
-    ),
+    root: <span className="truncate">{PersonLabels.root}</span>,
+    base: <span className="truncate">{PersonLabels.base}</span>,
+    more: <span className="truncate">{PersonLabels.more}</span>,
+    name: <span className="truncate">{PersonLabels.name}</span>,
+    age: <span className="truncate">{PersonLabels.age}</span>,
+    status: <span className="truncate">{PersonLabels.status}</span>,
+    region: <span className="truncate">{PersonLabels.region}</span>,
+    city: <span className="truncate">{PersonLabels.city}</span>,
+    email: <span className="truncate">{PersonLabels.email}</span>,
+    phone: <span className="truncate">{PersonLabels.phone}</span>,
+    visits: <span className="truncate">{PersonLabels.visits}</span>,
+    last_visit: <span className="truncate">{PersonLabels.last_visit}</span>,
   };
 
   // 更新排序数据
@@ -300,9 +272,9 @@ const Table: FC<TableProps> = ({
     name: (
       <div className="" onClick={() => getFilterData('name', filter['name'] ? undefined : 'aa')}>
         {filter['name'] ? (
-          <span className="iconfont">&#xe87b;</span>
+          <div className="i-[datasheet/filter-solid] h-3 w-3 text-accent" />
         ) : (
-          <span className="iconfont">&#xe9ce;</span>
+          <div className="i-[datasheet/filter-regular] h-3 w-3 text-secondary" />
         )}
       </div>
     ),
@@ -329,11 +301,11 @@ const Table: FC<TableProps> = ({
   // 渲染排序ICON
   const renderSortIcon = (sortIcon: 'asc' | 'desc' | undefined) => {
     if (sortIcon === 'asc') {
-      return <span className="iconfont">&#xe674;</span>;
+      return <div className="i-[datasheet/arrow-down-small-big-solid] h-3 w-3 text-accent" />;
     } else if (sortIcon === 'desc') {
-      return <span className="iconfont">&#xe671;</span>;
+      return <div className="i-[datasheet/arrow-down-big-small-solid] h-3 w-3 text-accent" />;
     } else {
-      return <span className="iconfont">&#xe625;</span>;
+      return <div className="i-[datasheet/arrow-down-arrow-up-regular] h-3 w-3 text-secondary" />;
     }
   };
 
@@ -383,23 +355,39 @@ const Table: FC<TableProps> = ({
     ),
   };
 
+  const hasParnet = (id: string) => {
+    for (const item of list) {
+      if (item?.children && item.children.length > 0) {
+        const data = item.children.find((o) => o.id === id);
+        if (data) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   // 所有列的渲染方法
-  const cellRenders: { [key: string]: (row: IPerson, index: number) => ReactNode } = {
+  const cellRenders: {
+    [key: string]: (row: IPerson, index: number) => ReactNode;
+  } = {
     name: (item, index) => {
       const renderIcon = () => {
         if (!item?.children) {
           return (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-file-earmark-text"
-              viewBox="0 0 16 16"
-            >
-              <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
-              <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
-            </svg>
+            <i className={cx(hasParnet(item.id) && 'ml-6')}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-file-earmark-text"
+                viewBox="0 0 16 16"
+              >
+                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+              </svg>
+            </i>
           );
         } else {
           if (item.children.length === 0 || !groups[item.id]) {
@@ -431,45 +419,52 @@ const Table: FC<TableProps> = ({
         }
       };
       const renderPointer = () => {
-        if (!item?.children || item.children.length === 0) {
-          return <span className="w-4" />;
+        if (!item?.children) {
+          return <div className="h-3 w-3" />;
         }
         if (!groups[item.id]) {
           return (
+            <i className="h-3 w-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-caret-right-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+              </svg>
+            </i>
+          );
+        }
+        return (
+          <i className="h-3 w-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
-              className="bi bi-caret-right-fill"
+              className="bi bi-caret-down-fill"
               viewBox="0 0 16 16"
             >
-              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+              <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
             </svg>
-          );
-        }
-        return (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-caret-down-fill"
-            viewBox="0 0 16 16"
-          >
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-          </svg>
+          </i>
         );
       };
       return (
         <div
-          className="flex items-center space-x-2 overflow-hidden text-ellipsis whitespace-nowrap px-3"
+          className={cx('tx-virtual-table__cell-content', {
+            'tx-virtual-table__cell-content--root': !item?.children,
+          })}
           onClick={() => handleGroup(item, index)}
         >
           {renderPointer()}
           {renderIcon()}
-          <span>
-            {item.name} - {index}
+          <span className="truncate">
+            {item.name}
+            {item?.children && `(${item.children.length})`}- {index}
           </span>
         </div>
       );
@@ -477,52 +472,35 @@ const Table: FC<TableProps> = ({
     age: (item) => {
       return (
         <div
-          className="overflow-hidden text-ellipsis whitespace-nowrap px-3"
           onClick={(e) => {
             e.stopPropagation();
             console.log('-------e:', e);
           }}
         >
-          {item.age}
+          <span className="truncate">{item.age}</span>
         </div>
       );
     },
     status: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.status}</div>
-      );
+      return <span className="truncate">{item.status}</span>;
     },
     region: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.region}</div>
-      );
+      return <span className="truncate">{item.region}</span>;
     },
     city: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.city}</div>
-      );
+      return <span className="truncate">{item.city}</span>;
     },
     email: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.email}</div>
-      );
+      return <span className="truncate">{item.email}</span>;
     },
     phone: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.phone}</div>
-      );
+      return <span className="truncate">{item.phone}</span>;
     },
     visits: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">{item.visits}</div>
-      );
+      return <span className="truncate">{item.visits}</span>;
     },
     last_visit: (item) => {
-      return (
-        <div className="overflow-hidden text-ellipsis whitespace-nowrap px-3">
-          {item.last_visit}
-        </div>
-      );
+      return <span className="truncate">{item.last_visit}</span>;
     },
   };
 
@@ -534,7 +512,7 @@ const Table: FC<TableProps> = ({
   // 空态图
   const emptyDom = useMemo(
     () => (
-      <div className="flex h-full w-full items-center justify-center bg-[#f6f6f6] text-gray-500">
+      <div className="flex h-full w-full items-center justify-center text-secondary">
         Empty Table
       </div>
     ),
@@ -553,20 +531,8 @@ const Table: FC<TableProps> = ({
       </div>
       <div className="flex-1">
         <VirtualTable
-          titleHeight={50}
-          rowHeight={45}
-          headerClass=""
-          rowClass={({ row }) =>
-            checked.includes(row.id) ||
-            (row.children &&
-              row.children.length > 0 &&
-              inArray(
-                checked,
-                row.children.map((o) => o.id)
-              ))
-              ? '!bg-green-500 hover:bg-green-200'
-              : ''
-          }
+          titleHeight={48}
+          rowHeight={40}
           rowClick={({ event, index, row }) => console.log(index, event, row)}
           list={showEmpty ? [] : list}
           setList={setList}
