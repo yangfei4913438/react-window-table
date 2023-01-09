@@ -1,26 +1,24 @@
-import React, { type Dispatch, useContext } from 'react';
-import { VirtualTableContext, ListType } from './consts';
-import cx from 'classnames';
-import IndeterminateCheckbox from './IndeterminateCheckbox';
-import intersection from 'lodash-es/intersection';
-import difference from 'lodash-es/difference';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import cx from 'classnames';
+import { difference, intersection } from 'lodash';
+import { useContext } from 'react';
+import { ListType, VirtualTableContext } from './consts';
 import DragRowHandle from './DragRowHandle';
+import IndeterminateCheckbox from './IndeterminateCheckbox';
 
 interface TableRowProps<T> {
-  rowClass?: string;
-  index: number;
-  isScrolling?: boolean;
-  row: T;
-  listeners?: Record<string, Function>;
   attributes?: DraggableAttributes;
   dragOverlay?: boolean;
-  isOver?: boolean;
+  index: number;
   isDragging?: boolean;
+  isOver?: boolean;
+  isScrolling?: boolean;
+  listeners?: SyntheticListenerMap;
+  row: T;
 }
 
 const TableRow = <T extends ListType>({
-  rowClass,
   index,
   isScrolling,
   row,
@@ -45,23 +43,21 @@ const TableRow = <T extends ListType>({
     getLeftWidth,
     getRightWidth,
     rowClick,
+    rowClass,
+    cellClass,
   } = useContext(VirtualTableContext);
 
   // 选中行
-  const handleCheckBox = (
-    row: T,
-    checked: string[],
-    setChecked: Dispatch<React.SetStateAction<string[]>>
-  ) => {
+  const handleCheckBox = (row: T, checked: string[], setChecked: (arr: string[]) => void) => {
     // 没有下级
     if (!row?.children || row.children.length === 0) {
       if (checked.includes(row.id)) {
         const idx = checked.indexOf(row.id);
         const list1 = checked.slice(0, idx);
         const list2 = checked.slice(idx + 1, checked.length);
-        setChecked(() => list1.concat(list2));
+        setChecked(list1.concat(list2));
       } else {
-        setChecked((prevState) => prevState.concat([row.id]));
+        setChecked(checked.concat([row.id]));
       }
     }
     // 有下级
@@ -73,7 +69,7 @@ const TableRow = <T extends ListType>({
         // 不存在ids中的所有值
         setChecked(difference(checked, ids));
       } else {
-        setChecked((prevState) => prevState.concat(ids));
+        setChecked(checked.concat(ids));
       }
     }
   };
@@ -115,19 +111,18 @@ const TableRow = <T extends ListType>({
 
   return (
     <div
-      className={cx('tx-virtual-table__row', rowClass)}
+      className={cx(
+        'group/row inline-flex items-center',
+        rowClass?.({ index, row }) ||
+          'border-b border-primary/2 bg-body hover:bg-primary/1 group-data-[sticky-top]/table-row:border-light-100'
+      )}
       style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}
     >
       {canDragSortRow && (
-        <DragRowHandle
-          isDragging={isDragging}
-          dragRowIcon={dragRowIcon}
-          {...attributes}
-          {...listeners}
-        />
+        <DragRowHandle isDragging={isDragging} dragRowIcon={dragRowIcon} {...attributes} {...listeners} />
       )}
-      {!isScrolling && canChecked && (
+      {canChecked && (
         <IndeterminateCheckbox
           value={row.id}
           indeterminate={isIndeterminate()}
@@ -150,15 +145,31 @@ const TableRow = <T extends ListType>({
               }
             }
 
+            // cell
             return (
               <div
-                className={cx('tx-virtual-table__cell', {
-                  'text-center': textLayout === 'center',
-                  'tx-virtual-table__cell--left': !dragOverlay && idx < fixedLeftCount,
-                  'tx-virtual-table__cell--right':
-                    !dragOverlay && idx > labels.length - fixedRightCount - 1,
-                  'tx-virtual-table__cell__drag': dragOverlay,
-                })}
+                role="cell"
+                className={cx(
+                  'bg-body',
+                  {
+                    'justify-start': textLayout === 'left',
+                    'justify-center': textLayout === 'center',
+                    'justify-end': textLayout === 'right',
+                  },
+                  'flex h-full items-center px-3',
+                  {
+                    'sticky left-0 z-2 before:absolute before:-inset-y-px before:right-0 before:w-px group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-body':
+                      !dragOverlay && idx < fixedLeftCount,
+                  },
+                  {
+                    'sticky right-0 z-2 bg-body before:absolute before:-inset-y-px before:left-0 before:w-px before:bg-light-100':
+                      !dragOverlay && idx > labels.length - fixedRightCount - 1,
+                  },
+                  {
+                    'sticky z-2 bg-body': dragOverlay,
+                  },
+                  cellClass
+                )}
                 style={style}
                 key={idx}
               >

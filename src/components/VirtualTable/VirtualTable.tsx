@@ -1,28 +1,31 @@
+import cx from 'classnames';
 import React, {
+  useMemo,
+  useState,
   type Dispatch,
   type MouseEvent,
   type ReactNode,
   type SetStateAction,
-  useMemo,
-  useState,
+  type CSSProperties,
+  useCallback,
 } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   FixedSizeList,
   type ListChildComponentProps,
   type ListOnItemsRenderedProps,
 } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import cx from 'classnames';
-import TableWrapper from './TableWrapper';
-import DragRowsItem from './DragRowsItem';
 import {
+  checkBoxWidth,
+  dragIconWidth,
+  VirtualTableContext,
   type IHeaderTree,
   type IWidths,
   type ListType,
-  VirtualTableContext,
-  checkBoxWidth,
-  dragIconWidth,
 } from './consts';
+import DragRowsItem from './DragRowsItem';
+import TableWrapper from './TableWrapper';
+import useTableScroll from './useTableScroll';
 
 export interface VirtualTableProps<T> {
   // 展示的数据
@@ -32,7 +35,10 @@ export interface VirtualTableProps<T> {
   // 分组数据
   groups?: { [key: string]: T[] };
   // 更新分组信息
-  setGroups?: Dispatch<SetStateAction<{ [key: string]: T[] }>>;
+  setGroups?: (data: { [key: string]: T[] }) => void;
+
+  // 表格是否禁用滚动
+  disableScroll?: boolean;
 
   // 列的显示比例,完整为1，如: { name: 0.3, description: 0.7 }
   widths: IWidths;
@@ -44,8 +50,26 @@ export interface VirtualTableProps<T> {
   canDragSortColumn?: boolean;
   // 能否拖拽行顺序
   canDragSortRow?: boolean;
+  // 放置回掉方法
+  onDragRowEnd?: (
+    source: { row: T; isGroup: boolean; index: number },
+    target: { row: T; isGroup: boolean; index: number },
+    change: {
+      origin: string; // 拖拽对象id
+      target?: string; // 目标对象id
+      action: 'after' | 'before' | 'into' | 'top' | 'bottom';
+      // after 从上往下放
+      // before 从下往上
+      // into 目标是一个组id
+      // top 置顶（暂时没用到）
+      // bottom 置底（暂时没用到）
+    }
+  ) => void;
+
   // 拖拽行的icon class，用于自定义图标
   dragRowIcon?: string;
+  // 拖拽行的类名
+  dragRowsItemClassName?: string;
 
   // 文字布局
   textLayout?: 'left' | 'center';
@@ -84,6 +108,9 @@ export interface VirtualTableProps<T> {
   wrapperStyle?: Partial<React.CSSProperties>;
   // 表格的类名
   className?: string;
+  // 单元格的外部包裹类名
+  cellClass?: string;
+
   // 表格的内联样式
   tableStyle?: Partial<React.CSSProperties>;
   // 表头的行类名
@@ -113,7 +140,7 @@ export interface VirtualTableProps<T> {
   // 选中的对象
   checked?: string[];
   // 更新选中的对象
-  setChecked?: Dispatch<SetStateAction<string[]>>;
+  setChecked?: (checked: string[]) => void;
 
   // 空态图
   emptyNode?: ReactNode;
@@ -123,7 +150,9 @@ const VirtualTable = <T extends ListType>({
   list,
   setList,
   groups,
-  setGroups,
+  setGroups = () => undefined,
+
+  disableScroll = false,
 
   widths,
   labels,
@@ -141,7 +170,10 @@ const VirtualTable = <T extends ListType>({
   canChangeWidths = false,
   canDragSortColumn = false,
   canDragSortRow = false,
+  onDragRowEnd = () => undefined,
+
   dragRowIcon,
+  dragRowsItemClassName = '',
 
   nextPage,
   nextTrigger = 0.55, // 默认值 55%
@@ -149,6 +181,7 @@ const VirtualTable = <T extends ListType>({
   wrapperStyle,
   wrapperClass,
   className,
+  cellClass = '',
   tableStyle,
 
   titleHeight = 50,
@@ -169,6 +202,8 @@ const VirtualTable = <T extends ListType>({
 }: VirtualTableProps<T>) => {
   // 表格宽度
   const [tableWidth, setTableWidth] = useState<number>(0);
+  // 表格高度
+  const [tableHeight, setTableHeight] = useState<number>(0);
   // 临时变化的key
   const [changeKey, setChangeKey] = useState<string>('');
   // 临时变化的宽度
@@ -179,6 +214,9 @@ const VirtualTable = <T extends ListType>({
 
   // 拖拽的行对象
   const [activeRow, setActiveRow] = useState<T>();
+
+  // 拖拽状态
+  const [activeLabel, setActiveLabel] = useState<string | null>(null);
 
   // 标题行的树形层级关系
   const headerList: string[][] = [];
@@ -203,22 +241,14 @@ const VirtualTable = <T extends ListType>({
   const onDragWidthEnd = () => {
     // 当前的宽度
     const currentWidth = widths[changeKey] * tableWidth + changeWidth;
-    // 下一个宽度
-    const index = labels.indexOf(changeKey);
-    const nextDataKey = labels[index + 1];
-    const nextWidth = widths[nextDataKey] * tableWidth - changeWidth;
-
     // 宽度最小不能低于100px
-    if (currentWidth > 100 && nextWidth > 100) {
+    if (currentWidth >= 100) {
       // 计算出百分比
       const currentPercent = currentWidth / tableWidth;
-      // const nextPercent = nextWidth / tableWidth;
       // 更新宽度比例
       changeWidths?.((prev) => ({
         ...prev,
         [changeKey]: currentPercent,
-        // 不改变后面的宽度，有需要再加
-        // [nextDataKey]: nextPercent,
       }));
     }
     // 重置临时宽度
@@ -232,16 +262,10 @@ const VirtualTable = <T extends ListType>({
     if (key === '' || x === 0) {
       return;
     }
-
     // 当前的宽度
     const currentWidth = widths[key] * tableWidth + x;
-    // 下一个宽度
-    const index = labels.indexOf(key);
-    const nextDataKey = labels[index + 1];
-    const nextWidth = widths[nextDataKey] * tableWidth - x;
-
     // 宽度最小不能低于100px
-    if (currentWidth > 100 && nextWidth > 100) {
+    if (currentWidth >= 100) {
       // 改变的宽度
       setChangeWidth(x);
       // 记录哪个列在变化
@@ -262,23 +286,31 @@ const VirtualTable = <T extends ListType>({
   }, [canChecked, canDragSortRow]);
 
   // 获取key的临时宽度
-  const getTempKeyWidth = (key: string): number => {
-    if (key === changeKey) {
-      return widths[key] * tableWidth + changeWidth;
-    }
-    return widths[key] * tableWidth;
-  };
+  const getTempKeyWidth = useCallback(
+    (key: string): number => {
+      if (key === changeKey) {
+        return widths[key] * (tableWidth - getMoreWidth) + changeWidth;
+      }
+      return widths[key] * (tableWidth - getMoreWidth);
+    },
+    [changeKey, widths, tableWidth, getMoreWidth, changeWidth]
+  );
 
   // 实时宽度
-  const realWidth = () => {
+  const realWidth = useMemo(() => {
     // 正常计算
-    const res = labels.map(getTempKeyWidth).reduce((a, b) => a + b);
+    const res = labels.map(getTempKeyWidth).reduce((a, b) => a + b, 0);
     // 返回的总宽度，要带上变化的宽度
     return getMoreWidth + res;
-  };
+  }, [labels, getMoreWidth, getTempKeyWidth]);
 
   // 监听渲染的行索引
   const onItemsRendered = (info: ListOnItemsRenderedProps) => {
+    // 当禁用表格滚动的时候，不处理下一页数据的请求。
+    if (disableScroll) {
+      return;
+    }
+
     // 触发比例范围检查: 10% - 95%
     const nt = nextTrigger > 0.95 ? 0.95 : nextTrigger < 0.1 ? 0.1 : nextTrigger;
 
@@ -299,30 +331,36 @@ const VirtualTable = <T extends ListType>({
     };
   };
 
-  // 获取下层的宽度，作为当前层的宽度
-  const getHeaderWidth = (row: IHeaderTree): number => {
-    if (row?.children) {
-      return row.children.map((r) => getHeaderWidth(r)).reduce((a, b) => (a ?? 0) + (b ?? 0) + 2);
-    }
-    return (widths[row.label] ?? 0) * tableWidth;
-  };
-
   // 获取key的宽度
-  const getKeyWidth = (row: IHeaderTree, key: string): number => {
-    if (row.label === key) {
-      return getHeaderWidth(row);
+  const getKeyWidth = (row: IHeaderTree): number => {
+    // 没有下级标题，表示是最后一层的列，可以直接取到宽度
+    if (!row?.children) {
+      return getTempKeyWidth(row.label);
     }
-    if (row.children) {
-      return row.children.map((r) => getKeyWidth(r, key)).reduce((a, b) => a + b);
-    }
-    return -1;
+    return row.children.map((r) => getKeyWidth(r)).reduce((a, b) => a + b, 0);
   };
 
-  // 渲染标题列
+  // 渲染多行标题列的宽度（不是最后一层真实标题）
   const headerColumnWidth = (key: string): number => {
-    // 找出符合
-    const res = headerTrees.map((r) => getKeyWidth(r, key)).filter((r) => r > -1);
-    return res[0];
+    // 找出对象
+    const getRow = (list: IHeaderTree[], key: string): IHeaderTree | undefined => {
+      for (let i = 0; i < list.length; i++) {
+        const row = list[i];
+        if (row.label === key) {
+          return row;
+        }
+        if (row?.children) {
+          return getRow(row.children, key);
+        }
+      }
+      return undefined;
+    };
+    // 执行这个方法的时候，表示 headerTrees 是肯定存在的，不需要担心数据不存在。
+    const row = getRow(headerTrees, key);
+    if (row) {
+      return getKeyWidth(row);
+    }
+    return 0;
   };
 
   // 生成列数组
@@ -356,9 +394,44 @@ const VirtualTable = <T extends ListType>({
   const emptyRow: { [key: string]: any } = {};
   labels.forEach((o, idx) => (emptyRow[o] = `row_${idx}`));
 
+  // 真实高度计算
+  const realHeight = useMemo(() => {
+    // 顶部高度
+    const top = headerTrees?.length > 0 ? headerList.length * titleHeight : titleHeight;
+
+    // 真实高度
+    return disableScroll ? list.length * rowHeight + top + 7 : tableHeight;
+  }, [
+    headerTrees?.length,
+    headerList?.length,
+    titleHeight,
+    disableScroll,
+    list.length,
+    rowHeight,
+    tableHeight,
+  ]);
+
+  const disableScrollStyle = disableScroll ? { overflowY: 'hidden' } : {};
+  const emptyStyle = list.length === 0 ? { height: '100%' } : {};
+
+  const [tableContainer, setTableContainer] = useState<HTMLDivElement | null>(null);
+  useTableScroll(tableContainer);
+
+  const autoSizeStyle = useMemo(() => {
+    return list.length === 0
+      ? { height: '100%', width: tableWidth }
+      : { height: realHeight, width: tableWidth };
+  }, [list.length, realHeight, tableWidth]);
+
   return (
-    <AutoSizer onResize={({ width }) => setTableWidth(width)}>
-      {({ width, height }: { width: number; height: number }) => {
+    <AutoSizer
+      style={autoSizeStyle}
+      onResize={({ width, height }) => {
+        setTableWidth(width);
+        setTableHeight(height);
+      }}
+    >
+      {({ width }: { width: number; height: number }) => {
         return (
           <VirtualTableContext.Provider
             value={{
@@ -384,6 +457,7 @@ const VirtualTable = <T extends ListType>({
               canDragSortColumn,
               canChecked,
               canDragSortRow,
+              onDragRowEnd,
               dragRowIcon,
               checked,
               setChecked,
@@ -391,7 +465,8 @@ const VirtualTable = <T extends ListType>({
               sortRenders,
               onChangeWidth,
               onDragWidthEnd,
-              realWidth: realWidth(),
+              realWidth,
+              realHeight,
               headerList,
               headerColumnWidth,
               headRenders,
@@ -401,28 +476,42 @@ const VirtualTable = <T extends ListType>({
               scrollingRender,
               wrapperStyle,
               wrapperClass,
+              cellClass,
               activeRow,
               setActiveRow,
               colResizing,
               setColResizing,
+              disableScroll,
+              emptyNode,
+              activeLabel,
+              setActiveLabel,
+              dragRowsItemClassName,
             }}
           >
+            {/* TODO: [FI-45] 拖拽的时候需要禁止掉 Table 的滚动，但是目前加入 overflow-hidden 似乎依然无法禁止掉 Table 的滚动 */}
             <FixedSizeList
               innerElementType={TableWrapper}
-              className={cx('tx-virtual-table__container', className)}
-              style={tableStyle}
+              className={cx(
+                'group/table',
+                disableScroll && '',
+                (activeLabel || colResizing) && '!overflow-hidden',
+                className
+              )}
+              style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
               itemData={
                 list.length > fixedTopCount
                   ? list.slice(fixedTopCount, list.length)
                   : [emptyRow as T]
               }
-              itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1} // 一共有多少行
-              height={height}
+              // 一共有多少行
+              itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
+              height={realHeight}
               width={width}
               itemSize={rowHeight}
-              overscanCount={3} // 比实际多渲染n行元素
+              overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
               onItemsRendered={onItemsRendered} // 渲染进度监听
               useIsScrolling={!!scrollingRender}
+              outerRef={(node) => setTableContainer(node)}
             >
               {(props: ListChildComponentProps) => {
                 const { data, index, style, isScrolling } = props;
@@ -431,7 +520,6 @@ const VirtualTable = <T extends ListType>({
                 return (
                   <DragRowsItem
                     row={row}
-                    rowClass={rowClass({ index: index + fixedTopCount, row })}
                     style={style}
                     index={index + fixedTopCount}
                     isScrolling={isScrolling}
@@ -440,19 +528,6 @@ const VirtualTable = <T extends ListType>({
                 );
               }}
             </FixedSizeList>
-            {list.length === 0 && (
-              <div
-                className="tx-virtual-table--empty"
-                style={{
-                  width,
-                  top:
-                    headerTrees?.length > 0 ? (headerList.length - 1) * titleHeight : titleHeight,
-                  height: height - titleHeight,
-                }}
-              >
-                {emptyNode}
-              </div>
-            )}
           </VirtualTableContext.Provider>
         );
       }}

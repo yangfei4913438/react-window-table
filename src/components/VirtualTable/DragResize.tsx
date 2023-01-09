@@ -42,14 +42,17 @@ function DraggableItem({ id }: DraggableItemProps) {
 
   useEffect(() => {
     setColResizing(isDragging);
-  }, [isDragging]);
+  }, [isDragging, setColResizing]);
 
   return (
     <div
       ref={setNodeRef}
       className={cx(
-        'tx-virtual-table__separator',
-        isDragging && 'tx-virtual-table__separator--resizing'
+        'absolute inset-y-0 -right-2 z-2 flex w-3.75 cursor-ew-resize items-center justify-center',
+        'after:pointer-events-none after:z-5 after:h-3/5 after:w-3px after:rounded hover:after:bg-accent',
+        'before:pointer-events-none before:absolute before:inset-y-2 before:w-px before:rounded before:transition-colors',
+        'group-hover/table-header:before:bg-light-100',
+        isDragging && 'after:bg-accent'
       )}
       {...listeners}
     />

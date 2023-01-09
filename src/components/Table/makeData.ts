@@ -19,6 +19,7 @@ export const PersonLabels = {
 
 export interface IPerson {
   id: string;
+  group: boolean;
   name: string;
   age: number;
   status: '已婚' | '未婚' | '恋爱中';

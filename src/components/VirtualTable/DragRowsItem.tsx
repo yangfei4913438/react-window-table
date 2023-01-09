@@ -7,7 +7,6 @@ import TableRow from './TableRow';
 interface DragRowsItemProps<T> {
   row: T;
   index: number;
-  rowClass?: string;
   dragOverlay?: boolean;
   isScrolling?: boolean;
   style?: React.CSSProperties;
@@ -16,7 +15,6 @@ interface DragRowsItemProps<T> {
 const DragRowsItem = <T extends ListType>({
   row,
   index,
-  rowClass,
   dragOverlay = false,
   isScrolling = false,
   style,
@@ -31,6 +29,9 @@ const DragRowsItem = <T extends ListType>({
 
   return (
     <div
+      role="row"
+      aria-rowindex={index + 1}
+      aria-busy={isDragging}
       ref={setNodeRef}
       style={{
         ...style,
@@ -46,7 +47,6 @@ const DragRowsItem = <T extends ListType>({
           attributes={attributes}
           listeners={listeners}
           row={row}
-          rowClass={rowClass}
           index={index}
           isScrolling={isScrolling}
           key={row.id ?? String(index)}

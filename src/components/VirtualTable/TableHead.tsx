@@ -1,9 +1,9 @@
-import React, { FC, useContext } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import cx from 'classnames';
-import DragResize from './DragResize';
+import React, { FC, useContext } from 'react';
 import { VirtualTableContext } from './consts';
+import DragResize from './DragResize';
 import { Button } from '../Button';
 
 interface ITableHead {
@@ -20,13 +20,7 @@ interface ITableHead {
   children: React.ReactNode;
 }
 
-const TableHead: FC<ITableHead> = ({
-  id,
-  endCol = false,
-  canResize = true,
-  dragOverlay = false,
-  children,
-}) => {
+const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragOverlay = false, children }) => {
   const {
     textLayout,
     labels,
@@ -49,17 +43,22 @@ const TableHead: FC<ITableHead> = ({
 
   return (
     <div
+      className={cx('w-inherit relative flex items-center focus:outline-none focus-visible:bg-accent/10', {
+        'hover:bg-light-50': canDragSortColumn && !dragOverlay,
+      })}
       ref={setNodeRef}
-      {...attributes}
       style={{ transform: CSS.Transform.toString(transform), transition }}
+      {...attributes}
     >
       <div
         className={cx(
-          'tx-virtual-table__header-cell-container',
-          !canDragSortColumn && 'tx-virtual-table__header-cell-container--default',
-          canDragSortColumn && isDragging && 'tx-virtual-table__header-cell-container--dragging',
-          canDragSortColumn && dragOverlay && 'tx-virtual-table__header-cell-container--over',
-          canDragSortColumn && !dragOverlay && 'tx-virtual-table__header-cell-container--source',
+          'w-inherit flex select-none items-center border border-transparent px-3',
+          {
+            'cursor-default': canDragSortColumn,
+            'z-0 opacity-10': isDragging && canDragSortColumn,
+            'border-light-200 bg-body w-inherit cursor-grabbing rounded shadow-lg': canDragSortColumn && dragOverlay,
+            'cursor-grab touch-manipulation': canDragSortColumn && !dragOverlay,
+          },
           {
             'justify-start': textLayout === 'left',
             'justify-center': textLayout === 'center',
@@ -71,39 +70,33 @@ const TableHead: FC<ITableHead> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {children}
-        {!!sortRenders && !dragOverlay && sortRenders[id] && (
-          <Button
-            aria-label="sort"
-            variant="minimal"
-            setSize="xs"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {sortRenders[id]}
-          </Button>
-        )}
-        {!!filterRenders && !dragOverlay && filterRenders[id] && (
-          <Button
-            aria-label="filter"
-            variant="minimal"
-            setSize="xs"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {filterRenders[id]}
-          </Button>
-        )}
         {canChangeWidths && canResize && canRender && !dragOverlay && (
           <div onMouseDown={(e) => e.stopPropagation()}>
-            <DragResize
-              id={id}
-              handleChangeWidth={(x) => onChangeWidth(id, x)}
-              onDragEnd={onDragWidthEnd}
-            />
+            <DragResize id={id} handleChangeWidth={(x) => onChangeWidth(id, x)} onDragEnd={onDragWidthEnd} />
           </div>
         )}
-        {!canResize && !endCol && (
-          <div className="tx-virtual-table__header-cell-container--drag-end" />
-        )}
+        {!canResize && !endCol && <div />}
       </div>
+
+      {!dragOverlay && (
+        <div
+          className={cx('flex h-full items-center gap-2 px-2 empty:hidden', {
+            'z-0 opacity-10': canDragSortColumn && isDragging,
+          })}
+        >
+          {!!sortRenders && sortRenders[id] && (
+            <Button aria-label="sort" variant="minimal" setSize="xs" onClick={(e) => e.stopPropagation()}>
+              {sortRenders[id]}
+            </Button>
+          )}
+
+          {!!filterRenders && filterRenders[id] && (
+            <Button aria-label="filter" variant="minimal" setSize="xs" onClick={(e) => e.stopPropagation()}>
+              {filterRenders[id]}
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

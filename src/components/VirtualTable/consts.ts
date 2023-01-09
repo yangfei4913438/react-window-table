@@ -31,7 +31,7 @@ interface VirtualTableContextProps<T extends ListType> {
   // 分组数据
   groups?: { [key: string]: T[] };
   // 更新分组信息
-  setGroups?: Dispatch<SetStateAction<{ [key: string]: T[] }>>;
+  setGroups: (data: { [key: string]: T[] }) => void;
   // 渲染列
   columns: any[];
   // 顶部固定行数量
@@ -46,6 +46,8 @@ interface VirtualTableContextProps<T extends ListType> {
   rowHeight: number;
   // 表头的行类名
   headerClass?: string;
+  // 单元格的外部包裹类名
+  cellClass?: string;
   // 表格的行类名
   rowClass?: ({ index, row }: { index: number; row: any }) => string;
   // 行点击事件
@@ -74,6 +76,21 @@ interface VirtualTableContextProps<T extends ListType> {
   canChangeWidths: boolean;
   // 能否拖拽行顺序
   canDragSortRow: boolean;
+  // 放置回掉方法
+  onDragRowEnd: (
+    source: { row: T; isGroup: boolean; index: number },
+    target: { row: T; isGroup: boolean; index: number },
+    change: {
+      origin: string; // 拖拽对象id
+      target?: string; // 目标对象id
+      action: 'after' | 'before' | 'into' | 'top' | 'bottom';
+      // after 从上往下放
+      // before 从下往上
+      // into 目标是一个组id
+      // top 置顶（暂时没用到）
+      // bottom 置底（暂时没用到）
+    }
+  ) => void;
   // 拖拽行的icon class，用于自定义图标
   dragRowIcon?: string;
   // 是否启用选中
@@ -81,7 +98,7 @@ interface VirtualTableContextProps<T extends ListType> {
   // 选中的对象
   checked: string[];
   // 更新选中的对象
-  setChecked: Dispatch<SetStateAction<string[]>>;
+  setChecked: (checked: string[]) => void;
   // 列的筛选渲染
   filterRenders?: { [key: string]: ReactNode };
   // 列的排序渲染
@@ -92,6 +109,8 @@ interface VirtualTableContextProps<T extends ListType> {
   onDragWidthEnd: () => void;
   // 表的完整宽度
   realWidth: number;
+  // 真实高度
+  realHeight: number;
   // 获取左侧绝对定位的距离
   getLeftWidth: (idx: number) => number;
   // 获取右侧绝对定位的距离
@@ -118,6 +137,15 @@ interface VirtualTableContextProps<T extends ListType> {
   colResizing: boolean;
   // 设置列被拖拽
   setColResizing: Dispatch<SetStateAction<boolean>>;
+  // 表格是否禁用滚动
+  disableScroll: boolean;
+  // 空态图
+  emptyNode?: ReactNode;
+  // 拖拽状态
+  activeLabel: string | null;
+  setActiveLabel: Dispatch<SetStateAction<string | null>>;
+  // 拖拽行的类名
+  dragRowsItemClassName: string;
 }
 
 const initContext: VirtualTableContextProps<any> = {
@@ -135,6 +163,7 @@ const initContext: VirtualTableContextProps<any> = {
   canDragSortColumn: true,
   canChecked: true,
   canDragSortRow: true,
+  onDragRowEnd: () => undefined,
   checked: [],
   setChecked: () => undefined,
   labels: [],
@@ -145,6 +174,7 @@ const initContext: VirtualTableContextProps<any> = {
   onChangeWidth: () => undefined,
   onDragWidthEnd: () => undefined,
   realWidth: 0,
+  realHeight: 0,
   getLeftWidth: () => 0,
   getRightWidth: () => 0,
   headerList: [],
@@ -156,6 +186,10 @@ const initContext: VirtualTableContextProps<any> = {
   setActiveRow: () => undefined,
   colResizing: false,
   setColResizing: () => undefined,
+  disableScroll: false,
+  activeLabel: null,
+  setActiveLabel: () => undefined,
+  dragRowsItemClassName: '',
 };
 
 export const VirtualTableContext = createContext(initContext);

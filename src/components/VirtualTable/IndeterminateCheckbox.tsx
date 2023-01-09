@@ -1,36 +1,68 @@
-import React, { useContext } from 'react';
 import cx from 'classnames';
-import { VirtualTableContext, checkBoxWidth, dragIconWidth } from './consts';
+import React, { forwardRef, useContext, useEffect, useRef } from 'react';
+import { checkBoxWidth, dragIconWidth, VirtualTableContext } from './consts';
 
-const IndeterminateCheckbox = React.forwardRef(
+interface IndeterminateCheckboxProps {
+  indeterminate: boolean;
+  checked: boolean;
+  value: string;
+  onClick: () => void;
+  className?: string;
+}
+
+const IndeterminateCheckbox = forwardRef(
   (
     {
       indeterminate = false,
+      checked = false,
+      value,
+      className,
+      onClick,
       ...rest
-    }: { indeterminate?: boolean } & React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
-    >,
+    }: IndeterminateCheckboxProps &
+      React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     ref: any
   ) => {
-    const { fixedLeftCount, canDragSortRow } = useContext(VirtualTableContext);
+    const { canDragSortRow } = useContext(VirtualTableContext);
 
-    const defaultRef = React.useRef();
+    const defaultRef = useRef();
     const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
+    useEffect(() => {
       resolvedRef.current.indeterminate = indeterminate;
     }, [resolvedRef, indeterminate]);
 
     return (
       <div
-        className={cx(
-          'tx-virtual-table__checkbox-container tx-virtual-table__cell',
-          fixedLeftCount === 0 && 'tx-virtual-table__cell--left'
-        )}
+        role="cell"
+        className={cx('sticky left-0 z-2 flex h-full items-center justify-center bg-body', className)}
         style={{
-          width: checkBoxWidth,
+          minWidth: checkBoxWidth,
           left: canDragSortRow ? dragIconWidth : 0,
+        }}
+        onClick={(e) => {
+          // 阻止冒泡，避免触发行点击事件。
+          e.stopPropagation();
+          // 执行回掉方法
+          onClick();
+        }}
+        onKeyPress={(e) => {
+          // 空格键响应
+          if (e.code === 'Space') {
+            // 阻止冒泡，避免触发行点击事件。
+            e.stopPropagation();
+            // 执行回掉方法
+            onClick();
+          }
+        }}
+        onKeyDown={(e) => {
+          // 回车响应
+          if (e.key === 'Enter') {
+            // 阻止冒泡，避免触发行点击事件。
+            e.stopPropagation();
+            // 执行回掉方法
+            onClick();
+          }
         }}
       >
         <input

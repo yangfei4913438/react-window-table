@@ -56,7 +56,7 @@ const App = () => {
           ) : (
             <input
               type="number"
-              className="w-1/3"
+              className="input-bordered input w-1/3"
               value={state?.[key] as number}
               min={0}
               onChange={(e) =>
@@ -75,13 +75,13 @@ const App = () => {
   };
 
   return (
-    <div className="flex bg-gray-300">
-      <div className="flex w-1/6 flex-col space-y-4 border-r-gray-300 bg-gray-100 p-4">
+    <div className="flex bg-body">
+      <div className="flex w-1/6 flex-col space-y-4 border-r border-r-gray-100 bg-gray-100 p-4">
         <div className="flex h-6 items-center text-xl font-bold">控制面版</div>
         <div className="divider" />
         {renderOptions()}
       </div>
-      <div className="flex-1 px-2">
+      <div className="flex-1">
         <Table
           canDragSortRow={state?.canDragSortRow as boolean}
           canChecked={state?.canChecked as boolean}

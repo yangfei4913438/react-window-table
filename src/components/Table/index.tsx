@@ -28,6 +28,8 @@ export interface TableProps {
   showEmpty?: boolean;
   // 是否显示多行标题
   multiTitle?: boolean;
+  // 表格是否禁用滚动
+  disableScroll?: boolean;
 }
 
 const Table: FC<TableProps> = ({
@@ -43,12 +45,15 @@ const Table: FC<TableProps> = ({
   canDragSortRow = false,
   showEmpty = false,
   multiTitle = false,
+  disableScroll = false,
 }) => {
   // 表单数据相关
+  // 测试用途，请忽略。
+  const [initListData, setInitListData] = useState<IPerson[]>([]);
   // 第几页
   const [pageOffset, setPageOffset] = useState(0);
   // 每页多少条记录
-  const [pageSize] = useState(100);
+  const [pageSize] = useState(50);
   // 表格数据
   const [list, setList] = useState<IPerson[]>([]);
   // 选中的对象
@@ -205,6 +210,10 @@ const Table: FC<TableProps> = ({
       setList(arr);
       // 更新页码
       setPageOffset(1);
+      // 备份数据
+      if (initListData.length === 0) {
+        setInitListData(arr);
+      }
     }
   };
 
@@ -310,52 +319,20 @@ const Table: FC<TableProps> = ({
   };
 
   const sortRenders = {
-    name: (
-      <div onClick={() => handleChangeSort('name', sort['name'])}>
-        {renderSortIcon(sort['name'])}
-      </div>
-    ),
-    age: (
-      <div onClick={() => handleChangeSort('age', sort['age'])}>{renderSortIcon(sort['age'])}</div>
-    ),
-    status: (
-      <div onClick={() => handleChangeSort('status', sort['status'])}>
-        {renderSortIcon(sort['status'])}
-      </div>
-    ),
-    region: (
-      <div onClick={() => handleChangeSort('region', sort['region'])}>
-        {renderSortIcon(sort['region'])}
-      </div>
-    ),
-    city: (
-      <div onClick={() => handleChangeSort('city', sort['city'])}>
-        {renderSortIcon(sort['city'])}
-      </div>
-    ),
-    email: (
-      <div onClick={() => handleChangeSort('email', sort['email'])}>
-        {renderSortIcon(sort['email'])}
-      </div>
-    ),
-    phone: (
-      <div onClick={() => handleChangeSort('phone', sort['phone'])}>
-        {renderSortIcon(sort['phone'])}
-      </div>
-    ),
-    visits: (
-      <div onClick={() => handleChangeSort('visits', sort['visits'])}>
-        {renderSortIcon(sort['visits'])}
-      </div>
-    ),
+    name: <div onClick={() => handleChangeSort('name', sort['name'])}>{renderSortIcon(sort['name'])}</div>,
+    age: <div onClick={() => handleChangeSort('age', sort['age'])}>{renderSortIcon(sort['age'])}</div>,
+    status: <div onClick={() => handleChangeSort('status', sort['status'])}>{renderSortIcon(sort['status'])}</div>,
+    region: <div onClick={() => handleChangeSort('region', sort['region'])}>{renderSortIcon(sort['region'])}</div>,
+    city: <div onClick={() => handleChangeSort('city', sort['city'])}>{renderSortIcon(sort['city'])}</div>,
+    email: <div onClick={() => handleChangeSort('email', sort['email'])}>{renderSortIcon(sort['email'])}</div>,
+    phone: <div onClick={() => handleChangeSort('phone', sort['phone'])}>{renderSortIcon(sort['phone'])}</div>,
+    visits: <div onClick={() => handleChangeSort('visits', sort['visits'])}>{renderSortIcon(sort['visits'])}</div>,
     last_visit: (
-      <div onClick={() => handleChangeSort('last_visit', sort['last_visit'])}>
-        {renderSortIcon(sort['last_visit'])}
-      </div>
+      <div onClick={() => handleChangeSort('last_visit', sort['last_visit'])}>{renderSortIcon(sort['last_visit'])}</div>
     ),
   };
 
-  const hasParnet = (id: string) => {
+  const hasParent = (id: string) => {
     for (const item of list) {
       if (item?.children && item.children.length > 0) {
         const data = item.children.find((o) => o.id === id);
@@ -375,7 +352,7 @@ const Table: FC<TableProps> = ({
       const renderIcon = () => {
         if (!item?.children) {
           return (
-            <i className={cx(hasParnet(item.id) && 'ml-6')}>
+            <i className={cx(hasParent(item.id) && 'ml-6')}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -455,9 +432,13 @@ const Table: FC<TableProps> = ({
       };
       return (
         <div
-          className={cx('tx-virtual-table__cell-content', {
-            'tx-virtual-table__cell-content--root': !item?.children,
-          })}
+          className={cx(
+            'relative flex cursor-pointer items-center gap-2',
+            'before:absolute before:-inset-y-1 before:-inset-x-2 before:rounded-sm hover:before:bg-fade-50',
+            {
+              'cursor-auto before:hidden': !item?.children,
+            }
+          )}
           onClick={() => handleGroup(item, index)}
         >
           {renderPointer()}
@@ -511,28 +492,42 @@ const Table: FC<TableProps> = ({
 
   // 空态图
   const emptyDom = useMemo(
-    () => (
-      <div className="flex h-full w-full items-center justify-center text-secondary">
-        Empty Table
-      </div>
-    ),
+    () => <div className="flex h-full w-full items-center justify-center text-secondary">Empty Table</div>,
     []
   );
+
+  // 响应行拖拽放置
+  const handleRowDragEnd = (
+    source: { row: IPerson; isGroup: boolean; index: number },
+    target: { row: IPerson; isGroup: boolean; index: number },
+    change: {
+      origin: string; // 拖拽对象id
+      after?: string; //  放置的目的地的对象ID。target id. 从上往下
+      into?: string; // 放进的组的ID.  target id
+      before?: string; // 目的地之前的对象ID.  target id   从下往上
+    }
+  ) => {
+    console.log('source:', source);
+    console.log('target:', target);
+    console.log('change:', change);
+  };
 
   return (
     <div className="flex h-screen w-full flex-col">
       <div className="navbar flex justify-between bg-neutral px-8 text-neutral-content">
         <div className="select-none text-xl">React Window Table</div>
         <div className="gap-2">
-          <a className="btn cursor-pointer" onClick={initData}>
+          <button className="btn-outline btn-info btn cursor-pointer" onClick={initData}>
             刷新数据
-          </a>
+          </button>
         </div>
       </div>
       <div className="flex-1">
         <VirtualTable
           titleHeight={48}
           rowHeight={40}
+          headerClass=""
+          // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
           rowClick={({ event, index, row }) => console.log(index, event, row)}
           list={showEmpty ? [] : list}
           setList={setList}
@@ -546,7 +541,9 @@ const Table: FC<TableProps> = ({
           canChangeWidths={canResize}
           canDragSortColumn={canDragOrder}
           canDragSortRow={canDragSortRow}
+          onDragRowEnd={handleRowDragEnd}
           textLayout="left"
+          disableScroll={disableScroll}
           headRenders={headRenders}
           cellRenders={cellRenders}
           headerTrees={multiTitle ? headerTrees : []}

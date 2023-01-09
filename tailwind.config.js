@@ -1,44 +1,53 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.@(js|jsx|ts|tsx|html)'],
-  theme: {
-    extend: {
-      screens: {
-        sm: '640px',
-        // => @media (min-width: 640px) { ... }
-        md: '768px',
-        // => @media (min-width: 768px) { ... }
-        lg: '1024px',
-        // => @media (min-width: 1024px) { ... }
-        xl: '1280px',
-        // => @media (min-width: 1280px) { ... }
-        '2xl': '1536px',
-        // => @media (min-width: 1536px) { ... }
-      },
-      zIndex: {
-        0: 0,
-        1: 1,
-        2: 2,
-        3: 3,
-        4: 4,
-        5: 5,
-        dropdown: '100',
-        backdrop: '200',
-        fixed: '700',
-        modal: '800',
-        popover: '900',
-        tooltip: '1000',
-      },
-    },
-  },
-  corePlugins: {
-    aspectRatio: false,
-  },
+  darkMode: 'class',
+  theme: require('./theme'),
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/container-queries'),
     require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
     require('daisyui'),
+    plugin(function ({ addBase, theme }) {
+      addBase({
+        body: {
+          backgroundColor: theme('backgroundColor.body'),
+          color: theme('text.primary'),
+        },
+        'body::selection, body *::selection': {
+          backgroundColor: 'hsla(var(--accent), 0.3)',
+        },
+      });
+    }),
+  ],
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
+          primary: 'hsla(0, 0%, 8%)',
+        },
+        dark: {
+          ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
+          primary: 'hsla(0, 0%, 96%)',
+        },
+      },
+    ],
+  },
+  content: ['./src/**/*.@(js|jsx|ts|tsx|html)'],
+  safelist: [
+    'col-span-1',
+    'col-span-2',
+    'col-span-3',
+    'col-span-4',
+    'col-span-5',
+    'col-span-6',
+    'col-span-7',
+    'col-span-8',
+    'col-span-9',
+    'col-span-10',
+    'col-span-11',
+    'col-span-12',
   ],
 };
