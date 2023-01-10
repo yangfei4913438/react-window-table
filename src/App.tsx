@@ -75,9 +75,12 @@ const App = () => {
   };
 
   return (
-    <div className="flex bg-body">
+    <div className="flex">
       <div className="flex w-1/6 flex-col space-y-4 border-r border-r-gray-100 bg-gray-100 p-4">
-        <div className="flex h-6 items-center text-xl font-bold">控制面版</div>
+        <div className="flex h-6 items-center text-xl font-bold">
+          <h1>控制面版</h1>
+          <i className="" />
+        </div>
         <div className="divider" />
         {renderOptions()}
       </div>

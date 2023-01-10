@@ -170,11 +170,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ ch
         return (
           <div
             role="row"
-            className={cx(
-              'sticky z-4 flex items-center border-b border-b-light-100 bg-body',
-              'border-b border-light-100',
-              headerClass
-            )}
+            className={cx('sticky z-4 flex items-center border-b border-b-secondary bg-body', headerClass)}
             style={{
               width: realWidth,
               height: titleHeight,
@@ -206,7 +202,10 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ ch
       <div
         role="row"
         aria-busy={activeLabel ? 'true' : undefined}
-        className={cx('group/table-header sticky z-4 flex items-center border-b border-light-100 bg-body', headerClass)}
+        className={cx(
+          'group/table-header sticky z-4 flex items-center border-b border-b-secondary bg-white',
+          headerClass
+        )}
         style={{
           top: headerTrees.length && (headerList.length - 1) * titleHeight,
           height: titleHeight,
@@ -234,11 +233,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ ch
             {canDragSortRow && (
               <div
                 role="columnheader"
-                className={cx(
-                  'flex-center h-full overflow-hidden',
-                  'sticky left-0 z-2 group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-body',
-                  'before:absolute before:-inset-y-px before:right-0 before:w-px before:bg-light-100 before:opacity-0 before:transition-opacity'
-                )}
+                className={cx('sticky left-0 z-2 flex h-full items-center bg-white')}
                 style={{ minWidth: dragIconWidth }}
               />
             )}
@@ -256,23 +251,24 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ ch
               };
               if (idx < fixedLeftCount!) {
                 style['left'] = getLeftWidth(idx);
+                style['box-shadow'] = '1px 0 0 0 #eee';
               }
               if (idx > labels.length - fixedRightCount! - 1) {
                 style['right'] = getRightWidth(idx);
+                style['box-shadow'] = '-1px 0 0 0 #eee';
               }
 
               return (
                 <div
                   role="columnheader"
                   className={cx(
-                    'relative flex h-full items-center bg-body',
+                    'flex h-full items-center truncate bg-white',
                     {
-                      'sticky left-0 z-2 before:absolute before:-inset-y-px before:right-0 before:w-px before:bg-light-100 before:opacity-0 before:transition-opacity group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-body':
+                      'sticky left-0 z-2 group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-white':
                         idx < fixedLeftCount!,
                     },
                     {
-                      'sticky right-0 z-2 bg-body before:absolute before:-inset-y-px before:left-0 before:w-px before:bg-light-100':
-                        idx > labels.length - fixedRightCount! - 1,
+                      'sticky right-0 z-2': idx > labels.length - fixedRightCount! - 1,
                     }
                   )}
                   style={style}

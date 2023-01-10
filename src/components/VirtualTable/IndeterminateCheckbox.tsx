@@ -35,7 +35,10 @@ const IndeterminateCheckbox = forwardRef(
     return (
       <div
         role="cell"
-        className={cx('sticky left-0 z-2 flex h-full items-center justify-center bg-body', className)}
+        className={cx(
+          'relative sticky left-0 z-2 flex h-full items-center bg-white before:absolute before:-inset-y-px before:right-0 before:w-px before:bg-light-100 before:opacity-0 before:transition-opacity group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-white',
+          className
+        )}
         style={{
           minWidth: checkBoxWidth,
           left: canDragSortRow ? dragIconWidth : 0,

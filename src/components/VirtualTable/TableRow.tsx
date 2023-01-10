@@ -112,9 +112,8 @@ const TableRow = <T extends ListType>({
   return (
     <div
       className={cx(
-        'group/row inline-flex items-center',
-        rowClass?.({ index, row }) ||
-          'border-b border-primary/2 bg-body hover:bg-primary/1 group-data-[sticky-top]/table-row:border-light-100'
+        'group/row inline-flex items-center bg-white hover:bg-primary/3',
+        rowClass?.({ index, row }) || 'border-b border-b-secondary'
       )}
       style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}
@@ -139,9 +138,11 @@ const TableRow = <T extends ListType>({
             if (!dragOverlay) {
               if (idx < fixedLeftCount) {
                 style['left'] = getLeftWidth(idx);
+                style['box-shadow'] = '1px 0 0 0 #eee';
               }
               if (idx > labels.length - fixedRightCount - 1) {
                 style['right'] = getRightWidth(idx);
+                style['box-shadow'] = '-1px 0 0 0 #eee';
               }
             }
 
@@ -150,23 +151,21 @@ const TableRow = <T extends ListType>({
               <div
                 role="cell"
                 className={cx(
-                  'bg-body',
+                  'flex h-full items-center bg-white px-3',
                   {
                     'justify-start': textLayout === 'left',
                     'justify-center': textLayout === 'center',
                     'justify-end': textLayout === 'right',
                   },
-                  'flex h-full items-center px-3',
                   {
-                    'sticky left-0 z-2 before:absolute before:-inset-y-px before:right-0 before:w-px group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-body':
+                    'sticky left-0 z-2 group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-white':
                       !dragOverlay && idx < fixedLeftCount,
                   },
                   {
-                    'sticky right-0 z-2 bg-body before:absolute before:-inset-y-px before:left-0 before:w-px before:bg-light-100':
-                      !dragOverlay && idx > labels.length - fixedRightCount - 1,
+                    'sticky right-0 z-2': !dragOverlay && idx > labels.length - fixedRightCount - 1,
                   },
                   {
-                    'sticky z-2 bg-body': dragOverlay,
+                    'sticky z-2 bg-white': dragOverlay,
                   },
                   cellClass
                 )}

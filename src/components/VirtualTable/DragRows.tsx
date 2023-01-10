@@ -262,10 +262,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 将对象放入到目标列表中，同时更新分组数据，返回新的数组（目标是一个目录）
-    const insertIntoTargetDir = (
-      arr: typeof activeRow[] = list,
-      target: typeof activeRow = row
-    ) => {
+    const insertIntoTargetDir = (arr: typeof activeRow[] = list, target: typeof activeRow = row) => {
       return arr.map((item) => {
         // 找到目标对象，往里面加
         if (item.id === target.id) {
@@ -377,9 +374,7 @@ const DragRows = ({ children }: DragRowsProps) => {
       if (prevObjIsOpenDir) {
         // 放到目标对象下
         // 处理数据
-        setList?.(
-          arrayMove(insertIntoTargetDir(cleanDragParent(), prevObj), sourceIndex, targetIndex)
-        );
+        setList?.(arrayMove(insertIntoTargetDir(cleanDragParent(), prevObj), sourceIndex, targetIndex));
 
         change.target = prevObj.id;
         change.action = 'into';
@@ -513,10 +508,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 展开目录的子元素，跟随目录对象移动
-    const moveChildren = (
-      arr: typeof activeRow[],
-      dirObj: typeof activeRow
-    ): typeof activeRow[] => {
+    const moveChildren = (arr: typeof activeRow[], dirObj: typeof activeRow): typeof activeRow[] => {
       // 如果下级没有子元素了，就不用处理
       if (dirObj.children.length === 0) {
         return arr;
@@ -761,10 +753,7 @@ const DragRows = ({ children }: DragRowsProps) => {
 
     // 拖拽 未展开目录 到 展开目录, 这里肯定是从上往下拖拽的
     // 拖拽 未展开目录 到 二级元素对象, 从上往下
-    if (
-      (sourceIsDirClose && targetIsDirOpen) ||
-      (sourceIsDirClose && targetIsSecondLevelObject && !inNext)
-    ) {
+    if ((sourceIsDirClose && targetIsDirOpen) || (sourceIsDirClose && targetIsSecondLevelObject && !inNext)) {
       // 找到目录下面，第一层级的对象
       const nextFirstLevelIndex = getNextFirstLevelIndex(list, targetIndex);
       // 更新列表数据
@@ -926,7 +915,7 @@ const DragRows = ({ children }: DragRowsProps) => {
         {fixedTopCount > 0 && (
           <div
             data-sticky-top="true"
-            className={cx({ 'bg-body sticky z-4': fixedTopCount > 0 }, 'group/table-row')}
+            className={cx({ 'sticky z-4 bg-white shadow hover:bg-primary/3': fixedTopCount > 0 }, 'group/table-row')}
             style={{
               top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
               width: realWidth,
@@ -966,16 +955,11 @@ const DragRows = ({ children }: DragRowsProps) => {
           <DragOverlay>
             <div
               className={cx(
-                'bg-body relative w-full overflow-hidden shadow-lg ring-1 ring-accent',
+                'relative w-full overflow-hidden bg-body shadow-lg ring-1 ring-accent',
                 dragRowsItemClassName
               )}
             >
-              <TableRow
-                row={activeRow}
-                index={list.map((o) => o.id).indexOf(activeRow.id)}
-                isDragging
-                dragOverlay
-              />
+              <TableRow row={activeRow} index={list.map((o) => o.id).indexOf(activeRow.id)} isDragging dragOverlay />
             </div>
           </DragOverlay>,
           document.body

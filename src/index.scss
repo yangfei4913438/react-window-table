@@ -15,14 +15,10 @@
   }
 }
 
-html {
-  /* Font Family */
+:root {
   --font-zh-cn: 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif;
   --font-zh-tw: 'MHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'Verdana';
-  --font-ja-jp: 'Apple TP', 'Helvetica Neue', 'Helvetica', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'メイリオ',
-    'Meiryo', 'ＭＳ Ｐゴシック', 'Arial', 'Verdana', sans-serif;
   --font-en-us: 'inter', 'Myriad Set Pro', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  --font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   --gray-50: '0, 0%, 98%';
   --gray-100: '0, 0%, 96%';
@@ -55,76 +51,60 @@ html {
   --rounded-2xl: '1rem';
   --rounded-3xl: '1.5rem';
   --rounded-full: '100rem';
+}
 
-  [data-contrast='lightness'] {
-    --foreground-dynamic: '0, 0%, 100%';
-  }
+[data-theme='light'] {
+  --primary: '0, 0%, 8%';
+  --primary-invert: '0, 0%, 96%';
+  --secondary: '0, 0%, 64%';
+  --accent: '220, 100%, 50%';
 
-  [data-contrast='dimness'] {
-    --foreground-dynamic: '0, 0%, 0%';
-  }
+  --fade-25: 'hsla(var(--gray-900), 0.025)';
+  --fade-50: 'hsla(var(--gray-900), 0.05)';
+  --fade-100: 'hsla(var(--gray-900), 0.1)';
+  --fade-200: 'hsla(var(--gray-900), 0.15)';
+  --fade-300: 'hsla(var(--gray-900), 0.2)';
 
-  .light {
-    --primary: '0, 0%, 8%';
-    --primary-invert: '0, 0%, 96%';
-    --secondary: '0, 0%, 64%';
-    --accent: '220, 100%, 50%';
+  --light-50: 'hsl(var(--gray-50))';
+  --light-100: 'hsl(var(--gray-100))';
+  --light-200: 'hsl(var(--gray-200))';
+  --light-300: 'hsl(var(--gray-300))';
+  --light-400: 'hsl(var(--gray-400))';
+  --light-500: 'hsl(var(--gray-500))';
 
-    --fade-25: 'hsla(var(--gray-900), 0.025)';
-    --fade-50: 'hsla(var(--gray-900), 0.05)';
-    --fade-100: 'hsla(var(--gray-900), 0.1)';
-    --fade-200: 'hsla(var(--gray-900), 0.15)';
-    --fade-300: 'hsla(var(--gray-900), 0.2)';
+  --body: '0, 0%, 100%';
+  --body-invert: '0, 0%, 16%';
+  --block: '0, 0%, 98%';
+}
 
-    --light-50: 'hsl(var(--gray-50))';
-    --light-100: 'hsl(var(--gray-100))';
-    --light-200: 'hsl(var(--gray-200))';
-    --light-300: 'hsl(var(--gray-300))';
-    --light-400: 'hsl(var(--gray-400))';
-    --light-500: 'hsl(var(--gray-500))';
+[data-theme='dark'] {
+  --primary: '0, 0%, 96%';
+  --primary-invert: '0, 0%, 8%';
+  --secondary: '0, 0%, 48%';
+  --accent: '220, 100%, 58%';
 
-    --body: '0, 0%, 100%';
-    --body-invert: '0, 0%, 16%';
-    --block: '0, 0%, 98%';
-  }
+  --fade-25: 'hsla(var(--primary), 0.05)';
+  --fade-50: 'hsla(var(--primary), 0.1)';
+  --fade-100: 'hsla(var(--primary), 0.2)';
+  --fade-200: 'hsla(var(--primary), 0.3)';
+  --fade-300: 'hsla(var(--primary), 0.4)';
 
-  .dark {
-    --primary: '0, 0%, 96%';
-    --primary-invert: '0, 0%, 8%';
-    --secondary: '0, 0%, 48%';
-    --accent: '220, 100%, 58%';
+  --light-50: 'hsl(var(--gray-700))';
+  --light-100: 'hsl(var(--gray-700))';
+  --light-200: 'hsl(var(--gray-600))';
+  --light-300: 'hsl(var(--gray-500))';
+  --light-400: 'hsl(var(--gray-400))';
+  --light-500: 'hsl(var(--gray-400))';
 
-    --fade-25: 'hsla(var(--primary), 0.05)';
-    --fade-50: 'hsla(var(--primary), 0.1)';
-    --fade-100: 'hsla(var(--primary), 0.2)';
-    --fade-200: 'hsla(var(--primary), 0.3)';
-    --fade-300: 'hsla(var(--primary), 0.4)';
-
-    --light-50: 'hsl(var(--gray-700))';
-    --light-100: 'hsl(var(--gray-700))';
-    --light-200: 'hsl(var(--gray-600))';
-    --light-300: 'hsl(var(--gray-500))';
-    --light-400: 'hsl(var(--gray-400))';
-    --light-500: 'hsl(var(--gray-400))';
-
-    --body: '0, 0%, 16%';
-    --body-invert: '0, 0%, 100%';
-    --block: '0, 0%, 24%';
-  }
+  --body: '0, 0%, 16%';
+  --body-invert: '0, 0%, 100%';
+  --block: '0, 0%, 24%';
 }
 
 body {
   @apply bg-body text-primary;
   @apply selection:bg-accent/30;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -moz-font-feature-settings: 'liga', 'kern';
-  font-feature-settings: 'liga', 'kern';
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
 }
 
 @font-face {

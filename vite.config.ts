@@ -12,6 +12,7 @@ export default ({ mode }: UserConfig) => {
     },
     server: {
       proxy: {},
+      port: 3001,
     },
     plugins: [react()],
     resolve: {

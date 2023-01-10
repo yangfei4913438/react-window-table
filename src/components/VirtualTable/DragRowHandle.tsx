@@ -9,14 +9,10 @@ interface DragRowHandleProps {
 
 const DragRowHandle = ({ dragRowIcon, isDragging, className, ...rest }: DragRowHandleProps) => {
   return (
-    <div role="cell" className={cx('sticky left-0 z-2 flex h-full items-center justify-center bg-body', className)}>
+    <div role="cell" className={cx('sticky left-0 z-2 flex h-full items-center bg-white', className)}>
       <div
         aria-label="Drag handle"
-        className={cx(
-          'group/handle focus:outline-none',
-          'flex h-full items-center overflow-hidden',
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        )}
+        className={cx('group/handle focus:outline-none', isDragging ? 'cursor-grabbing' : 'cursor-grab')}
         style={{ width: dragIconWidth }}
         {...rest}
       >

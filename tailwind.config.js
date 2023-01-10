@@ -9,28 +9,20 @@ module.exports = {
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/typography'),
     require('daisyui'),
-    plugin(function ({ addBase, theme }) {
-      addBase({
-        body: {
-          backgroundColor: theme('backgroundColor.body'),
-          color: theme('text.primary'),
-        },
-        'body::selection, body *::selection': {
-          backgroundColor: 'hsla(var(--accent), 0.3)',
-        },
-      });
-    }),
   ],
   daisyui: {
     themes: [
       {
         light: {
-          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
-          primary: 'hsla(0, 0%, 8%)',
-        },
-        dark: {
-          ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
-          primary: 'hsla(0, 0%, 96%)',
+          primary: '#111827',
+          secondary: '#f3f4f6',
+          accent: '#37CDBE',
+          neutral: '#3D4451',
+          'base-100': '#FFFFFF',
+          info: '#3ABFF8',
+          success: '#22c55e',
+          warning: '#FBBD23',
+          error: '#e11d48',
         },
       },
     ],

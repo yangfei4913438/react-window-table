@@ -43,7 +43,7 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
 
   return (
     <div
-      className={cx('w-inherit relative flex items-center focus:outline-none focus-visible:bg-accent/10', {
+      className={cx('relative flex w-inherit items-center', {
         'hover:bg-light-50': canDragSortColumn && !dragOverlay,
       })}
       ref={setNodeRef}
@@ -52,11 +52,11 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
     >
       <div
         className={cx(
-          'w-inherit flex select-none items-center border border-transparent px-3',
+          'flex w-full select-none items-center gap-2 border border-transparent px-3',
           {
-            'cursor-default': canDragSortColumn,
+            'cursor-default': !canDragSortColumn,
             'z-0 opacity-10': isDragging && canDragSortColumn,
-            'border-light-200 bg-body w-inherit cursor-grabbing rounded shadow-lg': canDragSortColumn && dragOverlay,
+            'cursor-grabbing rounded border-gray-200 bg-white shadow-lg': canDragSortColumn && dragOverlay,
             'cursor-grab touch-manipulation': canDragSortColumn && !dragOverlay,
           },
           {
