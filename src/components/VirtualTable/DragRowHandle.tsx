@@ -1,5 +1,6 @@
 import cx from 'classnames';
-import { dragIconWidth } from './consts';
+import { dragIconWidth, VirtualTableContext } from './consts';
+import { useContext, useMemo } from 'react';
 
 interface DragRowHandleProps {
   dragRowIcon?: string;
@@ -8,12 +9,26 @@ interface DragRowHandleProps {
 }
 
 const DragRowHandle = ({ dragRowIcon, isDragging, className, ...rest }: DragRowHandleProps) => {
+  const { canChecked, fixedLeftCount } = useContext(VirtualTableContext);
+
+  const leftStyle = useMemo(() => {
+    if (fixedLeftCount === 0 && !canChecked) {
+      return {
+        boxShadow: '1px 0 0 0 #eee',
+      };
+    }
+    return {};
+  }, [fixedLeftCount]);
+
   return (
     <div role="cell" className={cx('sticky left-0 z-2 flex h-full items-center bg-white', className)}>
       <div
         aria-label="Drag handle"
-        className={cx('group/handle focus:outline-none', isDragging ? 'cursor-grabbing' : 'cursor-grab')}
-        style={{ width: dragIconWidth }}
+        className={cx(
+          'group/handle flex h-full items-center justify-center focus:outline-none',
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        )}
+        style={{ width: dragIconWidth, ...leftStyle }}
         {...rest}
       >
         <div className="rounded-sm p-0.5 ring-primary/50 group-focus/handle:ring-2">

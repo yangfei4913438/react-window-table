@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import React, { forwardRef, useContext, useEffect, useRef } from 'react';
+import React, { forwardRef, useContext, useEffect, useRef, useMemo } from 'react';
 import { checkBoxWidth, dragIconWidth, VirtualTableContext } from './consts';
 
 interface IndeterminateCheckboxProps {
@@ -23,7 +23,7 @@ const IndeterminateCheckbox = forwardRef(
       React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     ref: any
   ) => {
-    const { canDragSortRow } = useContext(VirtualTableContext);
+    const { canDragSortRow, fixedLeftCount } = useContext(VirtualTableContext);
 
     const defaultRef = useRef();
     const resolvedRef = ref || defaultRef;
@@ -32,16 +32,23 @@ const IndeterminateCheckbox = forwardRef(
       resolvedRef.current.indeterminate = indeterminate;
     }, [resolvedRef, indeterminate]);
 
+    const leftStyle = useMemo(() => {
+      if (fixedLeftCount === 0) {
+        return {
+          boxShadow: '1px 0 0 0 #eee',
+        };
+      }
+      return {};
+    }, [fixedLeftCount]);
+
     return (
       <div
         role="cell"
-        className={cx(
-          'relative sticky left-0 z-2 flex h-full items-center bg-white before:absolute before:-inset-y-px before:right-0 before:w-px before:bg-light-100 before:opacity-0 before:transition-opacity group-data-[horizontal-scroll]/table:z-3 group-data-[horizontal-scroll]/table:bg-white',
-          className
-        )}
+        className={cx('relative sticky left-0 z-2 flex h-full items-center justify-center bg-white', className)}
         style={{
           minWidth: checkBoxWidth,
           left: canDragSortRow ? dragIconWidth : 0,
+          ...leftStyle,
         }}
         onClick={(e) => {
           // 阻止冒泡，避免触发行点击事件。
