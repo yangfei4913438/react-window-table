@@ -4,8 +4,6 @@ import { checkBoxWidth, dragIconWidth, VirtualTableContext } from './consts';
 
 interface IndeterminateCheckboxProps {
   indeterminate: boolean;
-  checked: boolean;
-  value: string;
   onClick: () => void;
   className?: string;
 }
@@ -14,8 +12,6 @@ const IndeterminateCheckbox = forwardRef(
   (
     {
       indeterminate = false,
-      checked = false,
-      value,
       className,
       onClick,
       ...rest

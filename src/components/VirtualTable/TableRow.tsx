@@ -2,7 +2,7 @@ import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import cx from 'classnames';
 import { difference, intersection } from 'lodash';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { ListType, VirtualTableContext } from './consts';
 import DragRowHandle from './DragRowHandle';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
@@ -75,7 +75,7 @@ const TableRow = <T extends ListType>({
   };
 
   // 判断是否选中
-  const isChecked = () => {
+  const isChecked = useMemo(() => {
     // 没有下级
     if (!row?.children || row.children.length === 0) {
       return checked.includes(row.id);
@@ -87,10 +87,10 @@ const TableRow = <T extends ListType>({
       const inners = intersection(checked, ids);
       return inners.length === ids.length;
     }
-  };
+  }, [row?.children, checked]);
 
   // 判断是否选择一部分
-  const isIndeterminate = () => {
+  const isIndeterminate = useMemo(() => {
     // 没有下级
     if (!row?.children || row.children.length === 0) {
       return false;
@@ -107,7 +107,7 @@ const TableRow = <T extends ListType>({
       // 不等就是对的
       return inners.length !== ids.length;
     }
-  };
+  }, [row?.children, checked]);
 
   return (
     <div
@@ -123,9 +123,8 @@ const TableRow = <T extends ListType>({
       )}
       {canChecked && (
         <IndeterminateCheckbox
-          value={row.id}
-          indeterminate={isIndeterminate()}
-          checked={isChecked()}
+          indeterminate={isIndeterminate}
+          checked={isChecked}
           onClick={() => handleCheckBox(row, checked, setChecked)}
         />
       )}

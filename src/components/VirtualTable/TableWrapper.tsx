@@ -239,10 +239,9 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ ch
             )}
             {canChecked && (
               <IndeterminateCheckbox
-                value="all_data"
                 indeterminate={checked.length > 0 && checked.length !== allIds.length}
                 checked={checked.length > 0 && checked.length === allIds.length}
-                onClick={() => handleAllChecked()}
+                onClick={handleAllChecked}
               />
             )}
             {columns.map((item, idx) => {
