@@ -24,7 +24,8 @@
     "baseUrl": ".", // 指定跟路径
     "paths": {
       // 路径映射
-      "src/*": ["src/*"] // 具体的别名映射 webpack: 'src': path.join(__dirname, 'src'),
+      "src/*": ["src/*"], // 具体的别名映射 webpack: 'src': path.join(__dirname, 'src'),
+      "components/*": ["src/components/*"]
     }
   },
   "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],

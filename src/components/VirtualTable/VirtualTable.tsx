@@ -10,11 +10,7 @@ import React, {
   useCallback,
 } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {
-  FixedSizeList,
-  type ListChildComponentProps,
-  type ListOnItemsRenderedProps,
-} from 'react-window';
+import { FixedSizeList, type ListChildComponentProps, type ListOnItemsRenderedProps } from 'react-window';
 import {
   checkBoxWidth,
   dragIconWidth,
@@ -118,15 +114,7 @@ export interface VirtualTableProps<T> {
   // 表格的行类名
   rowClass?: ({ index, row }: { index: number; row: T }) => string;
   // 行点击事件
-  rowClick?: ({
-    event,
-    index,
-    row,
-  }: {
-    event: MouseEvent<HTMLDivElement>;
-    index: number;
-    row: T;
-  }) => void;
+  rowClick?: ({ event, index, row }: { event: MouseEvent<HTMLDivElement>; index: number; row: T }) => void;
 
   // 顶部固定行数量
   fixedTopCount?: number;
@@ -401,15 +389,7 @@ const VirtualTable = <T extends ListType>({
 
     // 真实高度
     return disableScroll ? list.length * rowHeight + top + 7 : tableHeight;
-  }, [
-    headerTrees?.length,
-    headerList?.length,
-    titleHeight,
-    disableScroll,
-    list.length,
-    rowHeight,
-    tableHeight,
-  ]);
+  }, [headerTrees?.length, headerList?.length, titleHeight, disableScroll, list.length, rowHeight, tableHeight]);
 
   const disableScrollStyle = disableScroll ? { overflowY: 'hidden' } : {};
   const emptyStyle = list.length === 0 ? { height: '100%' } : {};
@@ -418,9 +398,7 @@ const VirtualTable = <T extends ListType>({
   useTableScroll(tableContainer);
 
   const autoSizeStyle = useMemo(() => {
-    return list.length === 0
-      ? { height: '100%', width: tableWidth }
-      : { height: realHeight, width: tableWidth };
+    return list.length === 0 ? { height: '100%', width: tableWidth } : { height: realHeight, width: tableWidth };
   }, [list.length, realHeight, tableWidth]);
 
   return (
@@ -488,7 +466,6 @@ const VirtualTable = <T extends ListType>({
               dragRowsItemClassName,
             }}
           >
-            {/* TODO: [FI-45] 拖拽的时候需要禁止掉 Table 的滚动，但是目前加入 overflow-hidden 似乎依然无法禁止掉 Table 的滚动 */}
             <FixedSizeList
               innerElementType={TableWrapper}
               className={cx(
@@ -498,11 +475,7 @@ const VirtualTable = <T extends ListType>({
                 className
               )}
               style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
-              itemData={
-                list.length > fixedTopCount
-                  ? list.slice(fixedTopCount, list.length)
-                  : [emptyRow as T]
-              }
+              itemData={list.length > fixedTopCount ? list.slice(fixedTopCount, list.length) : [emptyRow as T]}
               // 一共有多少行
               itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
               height={realHeight}

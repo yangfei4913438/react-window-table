@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import cx from 'classnames';
 import React, { FC, useContext } from 'react';
 import { VirtualTableContext } from './consts';
-import DragResize from './DragResize';
+import DragResize from 'components/DragResize';
 import { Button } from '../Button';
 
 interface ITableHead {
@@ -31,6 +31,8 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
     titleHeight,
     onChangeWidth,
     onDragWidthEnd,
+    setColResizing,
+    colResizing,
   } = useContext(VirtualTableContext);
 
   const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
@@ -45,6 +47,7 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
     <div
       className={cx('relative flex w-inherit items-center', {
         'hover:bg-light-50': canDragSortColumn && !dragOverlay,
+        'cursor-ew-resize': colResizing,
       })}
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
@@ -54,10 +57,11 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
         className={cx(
           'flex w-full select-none items-center gap-2 border border-transparent px-3',
           {
-            'cursor-default': !canDragSortColumn,
+            'cursor-default': !canDragSortColumn && !colResizing,
             'z-0 opacity-10': isDragging && canDragSortColumn,
-            'cursor-grabbing rounded border-gray-200 bg-white shadow-lg': canDragSortColumn && dragOverlay,
-            'cursor-grab touch-manipulation': canDragSortColumn && !dragOverlay,
+            'cursor-grabbing rounded border-gray-200 bg-white shadow-lg':
+              canDragSortColumn && dragOverlay && !colResizing,
+            'cursor-grab touch-manipulation': canDragSortColumn && !dragOverlay && !colResizing,
           },
           {
             'justify-start': textLayout === 'left',
@@ -72,7 +76,12 @@ const TableHead: FC<ITableHead> = ({ id, endCol = false, canResize = true, dragO
         {children}
         {canChangeWidths && canResize && canRender && !dragOverlay && (
           <div onMouseDown={(e) => e.stopPropagation()}>
-            <DragResize id={id} handleChangeWidth={(x) => onChangeWidth(id, x)} onDragEnd={onDragWidthEnd} />
+            <DragResize
+              id={id}
+              handleChangeWidth={(x) => onChangeWidth(id, x)}
+              onDragEnd={onDragWidthEnd}
+              onDragging={setColResizing}
+            />
           </div>
         )}
         {!canResize && !endCol && <div />}

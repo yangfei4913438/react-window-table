@@ -915,7 +915,7 @@ const DragRows = ({ children }: DragRowsProps) => {
         {fixedTopCount > 0 && (
           <div
             data-sticky-top="true"
-            className={cx({ 'sticky z-4 bg-white shadow hover:bg-primary/3': fixedTopCount > 0 }, 'group/table-row')}
+            className={cx({ 'sticky z-4 bg-white shadow': fixedTopCount > 0 }, 'group/table-row')}
             style={{
               top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
               width: realWidth,

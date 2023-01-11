@@ -1,5 +1,5 @@
-import Table from 'src/components/Table';
 import { useState } from 'react';
+import Example from './example';
 
 const options: { [key: string]: boolean | number } = {
   multiTitle: false,
@@ -85,7 +85,7 @@ const App = () => {
         {renderOptions()}
       </div>
       <div className="flex-1">
-        <Table
+        <Example
           canDragSortRow={state?.canDragSortRow as boolean}
           canChecked={state?.canChecked as boolean}
           canResize={state?.canResize as boolean}

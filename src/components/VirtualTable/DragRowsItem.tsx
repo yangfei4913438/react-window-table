@@ -21,11 +21,10 @@ const DragRowsItem = <T extends ListType>({
 }: DragRowsItemProps<T>) => {
   const { canDragSortRow, rowHeight } = useContext(VirtualTableContext);
 
-  const { attributes, isDragging, listeners, setNodeRef, transform, transition, isOver } =
-    useSortable({
-      id: row.id,
-      disabled: !canDragSortRow,
-    });
+  const { attributes, isDragging, listeners, setNodeRef, transform, transition, isOver } = useSortable({
+    id: row.id,
+    disabled: !canDragSortRow,
+  });
 
   return (
     <div

@@ -1,9 +1,9 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
-import { VirtualTable } from '../VirtualTable';
+import { VirtualTable } from 'components/VirtualTable';
 import cx from 'classnames';
 
-export interface TableProps {
+export interface ExampleProps {
   // 是否开启滚动
   showScrolling?: boolean;
   // 顶部锁定多少行
@@ -32,7 +32,7 @@ export interface TableProps {
   disableScroll?: boolean;
 }
 
-const Table: FC<TableProps> = ({
+const Example: FC<ExampleProps> = ({
   showScrolling = false,
   fixedTopCount = 0,
   fixedLeftCount = 0,
@@ -433,7 +433,7 @@ const Table: FC<TableProps> = ({
       return (
         <div
           className={cx(
-            'relative flex cursor-pointer items-center gap-2',
+            'relative box-border flex cursor-pointer items-center gap-2 overflow-hidden',
             'before:absolute before:-inset-y-1 before:-inset-x-2 before:rounded-sm hover:before:bg-fade-50',
             {
               'cursor-auto before:hidden': !item?.children,
@@ -443,10 +443,10 @@ const Table: FC<TableProps> = ({
         >
           {renderPointer()}
           {renderIcon()}
-          <span className="truncate">
+          <div className="truncate">
             {item.name}
             {item?.children && `(${item.children.length})`}- {index}
-          </span>
+          </div>
         </div>
       );
     },
@@ -563,4 +563,4 @@ const Table: FC<TableProps> = ({
   );
 };
 
-export default Table;
+export default Example;

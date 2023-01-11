@@ -18,6 +18,7 @@ export default ({ mode }: UserConfig) => {
     resolve: {
       alias: {
         src: '/src', // 映射的目录必须以/开头，表示根目录
+        components: '/src/components',
       },
     },
   });

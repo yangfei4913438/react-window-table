@@ -1,10 +1,4 @@
-import React, {
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-  type MouseEvent,
-  createContext,
-} from 'react';
+import React, { type Dispatch, type ReactNode, type SetStateAction, type MouseEvent, createContext } from 'react';
 
 // 勾选框的宽度
 export const checkBoxWidth = 40;
@@ -51,15 +45,7 @@ interface VirtualTableContextProps<T extends ListType> {
   // 表格的行类名
   rowClass?: ({ index, row }: { index: number; row: any }) => string;
   // 行点击事件
-  rowClick?: ({
-    event,
-    index,
-    row,
-  }: {
-    event: MouseEvent<HTMLDivElement>;
-    index: number;
-    row: any;
-  }) => void;
+  rowClick?: ({ event, index, row }: { event: MouseEvent<HTMLDivElement>; index: number; row: any }) => void;
   // 文字布局
   textLayout?: 'left' | 'center' | 'right';
   // 列名的国际化变量, 如: { name: strings.NAME, description: strings.DESCRIPTION }
