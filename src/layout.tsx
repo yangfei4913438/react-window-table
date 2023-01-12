@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Input, Checkbox } from '@material-tailwind/react';
 import Example from './example';
 
 const options: { [key: string]: boolean | number } = {
@@ -37,12 +38,11 @@ const Layout = () => {
   const renderOptions = () => {
     return Object.entries(names).map(([key, name]) => {
       return (
-        <div className="flex items-center justify-between gap-2" key={key}>
-          <span>{name}</span>
+        <div className="!mt-0 flex items-center justify-between space-x-1" key={key}>
           {typeof state[key] === 'boolean' ? (
-            <input
-              type="checkbox"
-              className="checkbox checkbox-sm"
+            <Checkbox
+              id={key}
+              label={name}
               checked={state?.[key] as boolean}
               onChange={(e) =>
                 setState((prevState) => {
@@ -54,9 +54,10 @@ const Layout = () => {
               }
             />
           ) : (
-            <input
+            <Input
+              id={key}
+              label={name}
               type="number"
-              className="input-bordered input w-1/3"
               value={state?.[key] as number}
               min={0}
               onChange={(e) =>
@@ -75,8 +76,8 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="flex w-1/6 flex-col space-y-4 border-r border-r-gray-100 bg-gray-100 p-4">
+    <div className="flex h-screen w-screen overflow-hidden">
+      <div className="flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4">
         <div className="flex h-6 items-center text-xl font-bold">
           <h1>控制面版</h1>
           <i className="" />
