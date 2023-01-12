@@ -38,3 +38,9 @@ yarn dev
 
 - 支持纯数据结构的参数传入，生成表格，降低使用难度。
 - 预置若干功能不同的内部单元格，用户可以自定义指定行列的单元格进行替换，也可以使用之前的模式，自定义每个单元格。
+
+
+#### 开发资源
+
+- [icons](https://icons.bootcss.com/)
+- [ui](https://www.material-tailwind.com/)

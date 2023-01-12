@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+@layer components {
+  /* 隐藏 table border */
+  .virtual-table-border-none {
+    [role='row'] {
+      @apply border-none;
+    }
+    [role='row'] > div {
+      @apply border-none;
+    }
+  }
+}

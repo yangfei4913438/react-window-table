@@ -280,11 +280,7 @@ const Example: FC<ExampleProps> = ({
   const filterRenders = {
     name: (
       <div className="" onClick={() => getFilterData('name', filter['name'] ? undefined : 'aa')}>
-        {filter['name'] ? (
-          <div className="i-[datasheet/filter-solid] h-3 w-3 text-accent" />
-        ) : (
-          <div className="i-[datasheet/filter-regular] h-3 w-3 text-secondary" />
-        )}
+        {filter['name'] ? <i className="bi bi-funnel-fill"></i> : <i className="bi bi-funnel"></i>}
       </div>
     ),
   };
@@ -310,11 +306,11 @@ const Example: FC<ExampleProps> = ({
   // 渲染排序ICON
   const renderSortIcon = (sortIcon: 'asc' | 'desc' | undefined) => {
     if (sortIcon === 'asc') {
-      return <div className="i-[datasheet/arrow-down-small-big-solid] h-3 w-3 text-accent" />;
+      return <i className="bi bi-chevron-down"></i>;
     } else if (sortIcon === 'desc') {
-      return <div className="i-[datasheet/arrow-down-big-small-solid] h-3 w-3 text-accent" />;
+      return <i className="bi bi-chevron-up"></i>;
     } else {
-      return <div className="i-[datasheet/arrow-down-arrow-up-regular] h-3 w-3 text-secondary" />;
+      return <i className="bi bi-chevron-expand"></i>;
     }
   };
 
@@ -353,46 +349,14 @@ const Example: FC<ExampleProps> = ({
         if (!item?.children) {
           return (
             <i className={cx(hasParent(item.id) && 'ml-6')}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-file-earmark-text"
-                viewBox="0 0 16 16"
-              >
-                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
-                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
-              </svg>
+              <i className="bi bi-file-earmark-text"></i>
             </i>
           );
         } else {
           if (item.children.length === 0 || !groups[item.id]) {
-            return (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-folder-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z" />
-              </svg>
-            );
+            return <i className="bi bi-folder-fill"></i>;
           }
-          return (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-folder2-open"
-              viewBox="0 0 16 16"
-            >
-              <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z" />
-            </svg>
-          );
+          return <i className="bi bi-folder2-open"></i>;
         }
       };
       const renderPointer = () => {
@@ -402,31 +366,13 @@ const Example: FC<ExampleProps> = ({
         if (!groups[item.id]) {
           return (
             <i className="h-3 w-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-caret-right-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
-              </svg>
+              <i className="bi bi-caret-right-fill"></i>
             </i>
           );
         }
         return (
           <i className="h-3 w-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-caret-down-fill"
-              viewBox="0 0 16 16"
-            >
-              <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-            </svg>
+            <i className="bi bi-caret-down-fill"></i>
           </i>
         );
       };
@@ -434,7 +380,7 @@ const Example: FC<ExampleProps> = ({
         <div
           className={cx(
             'relative box-border flex cursor-pointer items-center gap-2 overflow-hidden',
-            'before:absolute before:-inset-y-1 before:-inset-x-2 before:rounded-sm hover:before:bg-fade-50',
+            'hover:before:bg-fade-50 before:absolute before:-inset-y-1 before:-inset-x-2 before:rounded-sm',
             {
               'cursor-auto before:hidden': !item?.children,
             }
@@ -492,7 +438,7 @@ const Example: FC<ExampleProps> = ({
 
   // 空态图
   const emptyDom = useMemo(
-    () => <div className="flex h-full w-full items-center justify-center text-secondary">Empty Table</div>,
+    () => <div className="text-secondary flex h-full w-full items-center justify-center">Empty Table</div>,
     []
   );
 
@@ -514,7 +460,7 @@ const Example: FC<ExampleProps> = ({
 
   return (
     <div className="flex h-screen w-full flex-col">
-      <div className="navbar flex justify-between bg-neutral px-8 text-neutral-content">
+      <div className="navbar bg-neutral text-neutral-content flex justify-between px-8">
         <div className="select-none text-xl">React Window Table</div>
         <div className="gap-2">
           <button className="btn-outline btn-info btn cursor-pointer" onClick={initData}>
