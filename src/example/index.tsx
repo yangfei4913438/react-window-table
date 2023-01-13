@@ -364,17 +364,9 @@ const Example: FC<ExampleProps> = ({
           return <div className="h-3 w-3" />;
         }
         if (!groups[item.id]) {
-          return (
-            <i className="h-3 w-3">
-              <i className="bi bi-caret-right-fill"></i>
-            </i>
-          );
+          return <i className="bi bi-caret-right-fill"></i>;
         }
-        return (
-          <i className="h-3 w-3">
-            <i className="bi bi-caret-down-fill"></i>
-          </i>
-        );
+        return <i className="bi bi-caret-down-fill"></i>;
       };
       return (
         <div
