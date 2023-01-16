@@ -49,6 +49,13 @@ module.exports = withMT({
       height: widthHeightConfig,
       minHeight: widthHeightConfig,
       maxHeight: widthHeightConfig,
+      zIndex: {
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+      },
     },
   },
 });

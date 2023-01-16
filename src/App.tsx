@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@material-tailwind/react';
-import Layout from './layout';
+import Example from './example';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const App = () => {
   return (
     <ThemeProvider>
-      <Layout />
+      <Example />
     </ThemeProvider>
   );
 };

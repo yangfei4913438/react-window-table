@@ -1,52 +1,11 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
+import { Navbar, Typography, Button, Checkbox, Input } from '@material-tailwind/react';
 import { type IPerson, makeData, PersonLabels } from './makeData';
 import { VirtualTable } from 'components/VirtualTable';
 import cx from 'classnames';
+import { names, options } from './consts';
 
-export interface ExampleProps {
-  // 是否开启滚动
-  showScrolling?: boolean;
-  // 顶部锁定多少行
-  fixedTopCount?: number;
-  // 左边锁定多少列
-  fixedLeftCount?: number;
-  // 右边锁定多少列
-  fixedRightCount?: number;
-  // 是否使用行选中功能
-  canChecked?: boolean;
-  // 是否使用数据排序功能
-  canSort?: boolean;
-  // 是否使用筛选功能
-  canFilter?: boolean;
-  // 是否使用列宽调整功能
-  canResize?: boolean;
-  // 是否启用列头排序功能
-  canDragOrder?: boolean;
-  // 是否启用行拖拽排序功能
-  canDragSortRow?: boolean;
-  // 是否显示空态图
-  showEmpty?: boolean;
-  // 是否显示多行标题
-  multiTitle?: boolean;
-  // 表格是否禁用滚动
-  disableScroll?: boolean;
-}
-
-const Example: FC<ExampleProps> = ({
-  showScrolling = false,
-  fixedTopCount = 0,
-  fixedLeftCount = 0,
-  fixedRightCount = 0,
-  canChecked = false,
-  canSort = false,
-  canFilter = false,
-  canResize = false,
-  canDragOrder = false,
-  canDragSortRow = false,
-  showEmpty = false,
-  multiTitle = false,
-  disableScroll = false,
-}) => {
+const Example: FC = () => {
   // 表单数据相关
   // 测试用途，请忽略。
   const [initListData, setInitListData] = useState<IPerson[]>([]);
@@ -82,6 +41,48 @@ const Example: FC<ExampleProps> = ({
 
   // 列顺序切换
   const [labels, changeLabels] = useState<string[]>(Object.keys(widths));
+
+  const [state, setState] = useState<{ [key: string]: boolean | number }>(options);
+
+  const renderOptions = () => {
+    return Object.entries(names).map(([key, name]) => {
+      return (
+        <div className="!mt-0 flex items-center justify-between space-x-1" key={key}>
+          {typeof state[key] === 'boolean' ? (
+            <Checkbox
+              id={key}
+              label={name}
+              checked={state?.[key] as boolean}
+              onChange={(e) =>
+                setState((prevState) => {
+                  return {
+                    ...prevState,
+                    [key]: e.target.checked,
+                  };
+                })
+              }
+            />
+          ) : (
+            <Input
+              id={key}
+              label={name}
+              type="number"
+              value={state?.[key] as number}
+              min={0}
+              onChange={(e) =>
+                setState((prevState) => {
+                  return {
+                    ...prevState,
+                    [key]: Number(e.target.value),
+                  };
+                })
+              }
+            />
+          )}
+        </div>
+      );
+    });
+  };
 
   // 获取数据的方式
   const getData = (
@@ -451,51 +452,61 @@ const Example: FC<ExampleProps> = ({
   };
 
   return (
-    <div className="flex h-screen w-full flex-col">
-      <div className="navbar bg-neutral text-neutral-content flex justify-between px-8">
-        <div className="select-none text-xl">React Window Table</div>
-        <div className="gap-2">
-          <button className="btn-outline btn-info btn cursor-pointer" onClick={initData}>
+    <div className="flex h-screen w-screen flex-col space-y-1">
+      <Navbar color="white" fullWidth>
+        <div className="container mx-auto flex items-center justify-between">
+          <Typography variant="small" color="black" className="mr-4 cursor-pointer py-1.5 font-bold">
+            React Window Table
+          </Typography>
+          <Button color="blue" size="sm" onClick={initData}>
             刷新数据
-          </button>
+          </Button>
         </div>
-      </div>
-      <div className="flex-1">
-        <VirtualTable
-          titleHeight={48}
-          rowHeight={40}
-          headerClass=""
-          // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
-          rowClick={({ event, index, row }) => console.log(index, event, row)}
-          list={showEmpty ? [] : list}
-          setList={setList}
-          groups={groups}
-          setGroups={setGroups}
-          widths={widths}
-          labels={labels}
-          changeLabels={changeLabels}
-          nextPage={nextPageData}
-          changeWidths={changeWidths}
-          canChangeWidths={canResize}
-          canDragSortColumn={canDragOrder}
-          canDragSortRow={canDragSortRow}
-          onDragRowEnd={handleRowDragEnd}
-          textLayout="left"
-          disableScroll={disableScroll}
-          headRenders={headRenders}
-          cellRenders={cellRenders}
-          headerTrees={multiTitle ? headerTrees : []}
-          scrollingRender={showScrolling ? scrollingRender : undefined}
-          fixedTopCount={fixedTopCount}
-          fixedLeftCount={fixedLeftCount}
-          fixedRightCount={fixedRightCount}
-          canChecked={canChecked}
-          checked={checked}
-          setChecked={setChecked}
-          sortRenders={canSort ? sortRenders : undefined}
-          filterRenders={canFilter ? filterRenders : undefined}
-          emptyNode={emptyDom}
-        />
+      </Navbar>
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4">
+          <div className="flex h-6 items-center text-xl font-bold">
+            <h1>控制面版</h1>
+          </div>
+          {renderOptions()}
+        </div>
+        <div className="flex-1">
+          <VirtualTable
+            titleHeight={48}
+            rowHeight={40}
+            headerClass=""
+            // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
+            rowClick={({ event, index, row }) => console.log(index, event, row)}
+            list={state?.showEmpty ? [] : list}
+            setList={setList}
+            groups={groups}
+            setGroups={setGroups}
+            widths={widths}
+            labels={labels}
+            changeLabels={changeLabels}
+            nextPage={nextPageData}
+            changeWidths={changeWidths}
+            canChangeWidths={state?.canResize as boolean}
+            canDragSortColumn={state?.canDragOrder as boolean}
+            canDragSortRow={state?.canDragSortRow as boolean}
+            canChecked={state?.canChecked as boolean}
+            fixedLeftCount={state?.fixedLeftCount as number}
+            fixedRightCount={state?.fixedRightCount as number}
+            fixedTopCount={state?.fixedTopCount as number}
+            onDragRowEnd={handleRowDragEnd}
+            textLayout="left"
+            disableScroll={false}
+            headRenders={headRenders}
+            cellRenders={cellRenders}
+            headerTrees={state?.multiTitle ? headerTrees : []}
+            scrollingRender={state?.showScrolling ? scrollingRender : undefined}
+            checked={checked}
+            setChecked={setChecked}
+            sortRenders={state?.canSort ? sortRenders : undefined}
+            filterRenders={state?.canFilter ? filterRenders : undefined}
+            emptyNode={emptyDom}
+          />
+        </div>
       </div>
     </div>
   );
