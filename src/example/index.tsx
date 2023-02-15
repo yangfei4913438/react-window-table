@@ -454,8 +454,8 @@ const Example: FC = () => {
   return (
     <div className="flex h-screen w-screen flex-col space-y-1">
       <Navbar color="white" fullWidth>
-        <div className="container mx-auto flex items-center justify-between">
-          <Typography variant="small" color="black" className="mr-4 cursor-pointer py-1.5 font-bold">
+        <div className="flex-between container mx-auto">
+          <Typography variant="h5" color="black" className="mr-4 cursor-pointer py-1.5">
             React Window Table
           </Typography>
           <Button color="blue" size="sm" onClick={initData}>
