@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+@layer base {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+  .flex-col-between {
+    @apply flex flex-col items-center justify-between;
+  }
+}
+
+@layer components {
+  /* 隐藏 table border */
+  .virtual-table-border-none {
+    [role='row'] {
+      @apply border-none;
+    }
+    [role='row'] > div {
+      @apply border-none;
+    }
+  }
+}
+
+html {
+  /* primary */
+  --primaryH: 220;
+  --primaryS: 100%;
+  --primaryL: 50%;
+  /* success */
+  --successH: 135;
+  --successS: 60%;
+  --successL: 50%;
+  /* warning */
+  --warningH: 45;
+  --warningS: 100%;
+  --warningL: 50%;
+  /* danger */
+  --dangerH: 0;
+  --dangerS: 75%;
+  --dangerL: 50%;
+  /* info */
+  --infoH: 280;
+  --infoS: 100%;
+  --infoL: 50%;
+
+  --primary: hsl(var(--primaryH), var(--primaryS), var(--primaryL));
+  --primary-dark: hsl(var(--primaryH), var(--primaryS), calc(var(--primaryL) - 8%));
+  --primary-darker: hsl(var(--primaryH), var(--primaryS), calc(var(--primaryL) - 16%));
+  --primary-divide: hsl(var(--primaryH), var(--primaryS), 80%);
+  --primary-opacity-05: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.05);
+  --primary-opacity-1: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.1);
+  --primary-opacity-2: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.2);
+  --primary-opacity-3: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.3);
+  --primary-opacity-4: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.4);
+  --primary-opacity-5: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.5);
+  --primary-opacity-6: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.6);
+  --primary-opacity-7: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.7);
+  --primary-opacity-8: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.8);
+  --primary-opacity-9: hsl(var(--primaryH), var(--primaryS), var(--primaryL), 0.9);
+
+  --success: hsl(var(--successH), var(--successS), var(--successL));
+  --success-dark: hsl(var(--successH), var(--successS), calc(var(--successL) - 8%));
+  --success-darker: hsl(var(--successH), var(--successS), calc(var(--successL) - 16%));
+  --success-divide: hsl(var(--successH), var(--successS), 80%);
+  --success-opacity-1: hsl(var(--successH), var(--successS), var(--successL), 0.1);
+  --success-opacity-2: hsl(var(--successH), var(--successS), var(--successL), 0.2);
+  --success-opacity-3: hsl(var(--successH), var(--successS), var(--successL), 0.3);
+  --success-opacity-4: hsl(var(--successH), var(--successS), var(--successL), 0.4);
+  --success-opacity-5: hsl(var(--successH), var(--successS), var(--successL), 0.5);
+  --success-opacity-6: hsl(var(--successH), var(--successS), var(--successL), 0.6);
+  --success-opacity-7: hsl(var(--successH), var(--successS), var(--successL), 0.7);
+  --success-opacity-8: hsl(var(--successH), var(--successS), var(--successL), 0.8);
+  --success-opacity-9: hsl(var(--successH), var(--successS), var(--successL), 0.9);
+
+  --warning: hsl(var(--warningH), var(--warningS), var(--warningL));
+  --warning-dark: hsl(var(--warningH), var(--warningS), calc(var(--warningL) - 8%));
+  --warning-darker: hsl(var(--warningH), var(--warningS), calc(var(--warningL) - 16%));
+  --warning-divide: hsl(var(--warningH), var(--warningS), 80%);
+  --warning-opacity-1: hsl(var(--warningH), var(--warningS), var(--warningL), 0.1);
+  --warning-opacity-2: hsl(var(--warningH), var(--warningS), var(--warningL), 0.2);
+  --warning-opacity-3: hsl(var(--warningH), var(--warningS), var(--warningL), 0.3);
+  --warning-opacity-4: hsl(var(--warningH), var(--warningS), var(--warningL), 0.4);
+  --warning-opacity-5: hsl(var(--warningH), var(--warningS), var(--warningL), 0.5);
+  --warning-opacity-6: hsl(var(--warningH), var(--warningS), var(--warningL), 0.6);
+  --warning-opacity-7: hsl(var(--warningH), var(--warningS), var(--warningL), 0.7);
+  --warning-opacity-8: hsl(var(--warningH), var(--warningS), var(--warningL), 0.8);
+  --warning-opacity-9: hsl(var(--warningH), var(--warningS), var(--warningL), 0.9);
+
+  --danger: hsl(var(--dangerH), var(--dangerS), var(--dangerL));
+  --danger-dark: hsl(var(--dangerH), var(--dangerS), calc(var(--dangerL) - 8%));
+  --danger-darker: hsl(var(--dangerH), var(--dangerS), calc(var(--dangerL) - 16%));
+  --danger-divide: hsl(var(--dangerH), var(--dangerS), 80%);
+  --danger-opacity-1: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.1);
+  --danger-opacity-2: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.2);
+  --danger-opacity-3: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.3);
+  --danger-opacity-4: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.4);
+  --danger-opacity-5: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.5);
+  --danger-opacity-6: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.6);
+  --danger-opacity-7: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.7);
+  --danger-opacity-8: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.8);
+  --danger-opacity-9: hsl(var(--dangerH), var(--dangerS), var(--dangerL), 0.9);
+
+  --info: hsl(var(--infoH), var(--infoS), var(--infoL));
+  --info-dark: hsl(var(--infoH), var(--infoS), calc(var(--infoL) - 8%));
+  --info-darker: hsl(var(--infoH), var(--infoS), calc(var(--infoL) - 16%));
+  --info-opacity-1: hsl(var(--infoH), var(--infoS), var(--infoL), 0.1);
+  --info-opacity-2: hsl(var(--infoH), var(--infoS), var(--infoL), 0.2);
+  --info-opacity-3: hsl(var(--infoH), var(--infoS), var(--infoL), 0.3);
+  --info-opacity-4: hsl(var(--infoH), var(--infoS), var(--infoL), 0.4);
+  --info-opacity-5: hsl(var(--infoH), var(--infoS), var(--infoL), 0.5);
+  --info-opacity-6: hsl(var(--infoH), var(--infoS), var(--infoL), 0.6);
+  --info-opacity-7: hsl(var(--infoH), var(--infoS), var(--infoL), 0.7);
+  --info-opacity-8: hsl(var(--infoH), var(--infoS), var(--infoL), 0.8);
+  --info-opacity-9: hsl(var(--infoH), var(--infoS), var(--infoL), 0.9);
+
+  /* White */
+  --white: #fff;
+  --white-opacity-1: rgba(255, 255, 255, 0.04);
+  --white-opacity-2: rgba(255, 255, 255, 0.08);
+  --white-opacity-3: rgba(255, 255, 255, 0.16);
+  --white-opacity-4: rgba(255, 255, 255, 0.24);
+  --white-opacity-5: rgba(255, 255, 255, 0.32);
+  --white-opacity-6: rgba(255, 255, 255, 0.48);
+  --white-opacity-7: rgba(255, 255, 255, 0.64);
+  --white-opacity-8: rgba(255, 255, 255, 0.8);
+  --white-opacity-9: rgba(255, 255, 255, 0.88);
+  /* Black */
+  --black: #000;
+  --black-opacity-1: rgba(0, 0, 0, 0.04);
+  --black-opacity-2: rgba(0, 0, 0, 0.08);
+  --black-opacity-3: rgba(0, 0, 0, 0.16);
+  --black-opacity-4: rgba(0, 0, 0, 0.24);
+  --black-opacity-5: rgba(0, 0, 0, 0.32);
+  --black-opacity-6: rgba(0, 0, 0, 0.48);
+  --black-opacity-7: rgba(0, 0, 0, 0.64);
+  --black-opacity-8: rgba(0, 0, 0, 0.8);
+  --black-opacity-9: rgba(0, 0, 0, 0.88);
+  /* Gray */
+  --gray-05: hsl(0, 0%, 98%);
+  --gray-1: hsl(0, 0%, 95%);
+  --gray-2: hsl(0, 0%, 90%);
+  --gray-3: hsl(0, 0%, 85%);
+  --gray-4: hsl(0, 0%, 80%);
+  --gray-5: hsl(0, 0%, 60%);
+  --gray-6: hsl(0, 0%, 50%);
+  --gray-7: hsl(0, 0%, 40%);
+  --gray-8: hsl(0, 0%, 30%);
+  --gray-9: hsl(0, 0%, 16%);
+
+  /* Font Family */
+  --font-zh-cn: 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif;
+  --font-zh-tw: 'MHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'Verdana', sans-serif;
+  --font-ja-jp: 'Apple TP', 'Helvetica Neue', 'Helvetica', 'Hiragino Kaku Gothic Pro',
+  'ヒラギノ角ゴ Pro W3', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'Arial', 'Verdana', sans-serif;
+  --font-en-us: 'Myriad Set Pro', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  --font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+  monospace;
+}

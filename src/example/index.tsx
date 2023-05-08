@@ -63,21 +63,24 @@ const Example: FC = () => {
               }
             />
           ) : (
-            <Input
-              id={key}
-              label={name}
-              type="number"
-              value={state?.[key] as number}
-              min={0}
-              onChange={(e) =>
-                setState((prevState) => {
-                  return {
-                    ...prevState,
-                    [key]: Number(e.target.value),
-                  };
-                })
-              }
-            />
+            <div className="mt-6">
+              <Input
+                id={key}
+                variant="static"
+                label={name}
+                type="number"
+                value={state?.[key] as number}
+                min={0}
+                onChange={(e) =>
+                  setState((prevState) => {
+                    return {
+                      ...prevState,
+                      [key]: Number(e.target.value),
+                    };
+                  })
+                }
+              />
+            </div>
           )}
         </div>
       );
@@ -316,16 +319,48 @@ const Example: FC = () => {
   };
 
   const sortRenders = {
-    name: <div onClick={() => handleChangeSort('name', sort['name'])}>{renderSortIcon(sort['name'])}</div>,
-    age: <div onClick={() => handleChangeSort('age', sort['age'])}>{renderSortIcon(sort['age'])}</div>,
-    status: <div onClick={() => handleChangeSort('status', sort['status'])}>{renderSortIcon(sort['status'])}</div>,
-    region: <div onClick={() => handleChangeSort('region', sort['region'])}>{renderSortIcon(sort['region'])}</div>,
-    city: <div onClick={() => handleChangeSort('city', sort['city'])}>{renderSortIcon(sort['city'])}</div>,
-    email: <div onClick={() => handleChangeSort('email', sort['email'])}>{renderSortIcon(sort['email'])}</div>,
-    phone: <div onClick={() => handleChangeSort('phone', sort['phone'])}>{renderSortIcon(sort['phone'])}</div>,
-    visits: <div onClick={() => handleChangeSort('visits', sort['visits'])}>{renderSortIcon(sort['visits'])}</div>,
+    name: (
+      <div onClick={() => handleChangeSort('name', sort['name'])}>
+        {renderSortIcon(sort['name'])}
+      </div>
+    ),
+    age: (
+      <div onClick={() => handleChangeSort('age', sort['age'])}>{renderSortIcon(sort['age'])}</div>
+    ),
+    status: (
+      <div onClick={() => handleChangeSort('status', sort['status'])}>
+        {renderSortIcon(sort['status'])}
+      </div>
+    ),
+    region: (
+      <div onClick={() => handleChangeSort('region', sort['region'])}>
+        {renderSortIcon(sort['region'])}
+      </div>
+    ),
+    city: (
+      <div onClick={() => handleChangeSort('city', sort['city'])}>
+        {renderSortIcon(sort['city'])}
+      </div>
+    ),
+    email: (
+      <div onClick={() => handleChangeSort('email', sort['email'])}>
+        {renderSortIcon(sort['email'])}
+      </div>
+    ),
+    phone: (
+      <div onClick={() => handleChangeSort('phone', sort['phone'])}>
+        {renderSortIcon(sort['phone'])}
+      </div>
+    ),
+    visits: (
+      <div onClick={() => handleChangeSort('visits', sort['visits'])}>
+        {renderSortIcon(sort['visits'])}
+      </div>
+    ),
     last_visit: (
-      <div onClick={() => handleChangeSort('last_visit', sort['last_visit'])}>{renderSortIcon(sort['last_visit'])}</div>
+      <div onClick={() => handleChangeSort('last_visit', sort['last_visit'])}>
+        {renderSortIcon(sort['last_visit'])}
+      </div>
     ),
   };
 
@@ -373,7 +408,7 @@ const Example: FC = () => {
         <div
           className={cx(
             'relative box-border flex cursor-pointer items-center gap-2 overflow-hidden',
-            'hover:before:bg-fade-50 before:absolute before:-inset-y-1 before:-inset-x-2 before:rounded-sm',
+            'hover:before:bg-fade-50 before:absolute before:-inset-x-2 before:-inset-y-1 before:rounded-sm',
             {
               'cursor-auto before:hidden': !item?.children,
             }
@@ -431,7 +466,11 @@ const Example: FC = () => {
 
   // 空态图
   const emptyDom = useMemo(
-    () => <div className="text-secondary flex h-full w-full items-center justify-center">Empty Table</div>,
+    () => (
+      <div className="flex h-full w-full items-center justify-center text-secondary">
+        Empty Table
+      </div>
+    ),
     []
   );
 
