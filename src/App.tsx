@@ -1,7 +1,5 @@
 import Example from './example';
 
-const App = () => {
-  return <Example />;
-};
+const App = () => <Example />;
 
 export default App;

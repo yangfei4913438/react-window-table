@@ -10,7 +10,11 @@ import React, {
   useCallback,
 } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeList, type ListChildComponentProps, type ListOnItemsRenderedProps } from 'react-window';
+import {
+  FixedSizeList,
+  type ListChildComponentProps,
+  type ListOnItemsRenderedProps,
+} from 'react-window';
 import {
   checkBoxWidth,
   dragIconWidth,
@@ -114,7 +118,15 @@ export interface VirtualTableProps<T> {
   // 表格的行类名
   rowClass?: ({ index, row }: { index: number; row: T }) => string;
   // 行点击事件
-  rowClick?: ({ event, index, row }: { event: MouseEvent<HTMLDivElement>; index: number; row: T }) => void;
+  rowClick?: ({
+    event,
+    index,
+    row,
+  }: {
+    event: MouseEvent<HTMLDivElement>;
+    index: number;
+    row: T;
+  }) => void;
 
   // 顶部固定行数量
   fixedTopCount?: number;
@@ -264,13 +276,14 @@ const VirtualTable = <T extends ListType>({
   const getMoreWidth = useMemo(() => {
     if (canChecked && !canDragSortRow) {
       return checkBoxWidth;
-    } else if (!canChecked && canDragSortRow) {
-      return dragIconWidth;
-    } else if (canChecked && canDragSortRow) {
-      return dragIconWidth + checkBoxWidth;
-    } else {
-      return 0;
     }
+    if (!canChecked && canDragSortRow) {
+      return dragIconWidth;
+    }
+    if (canChecked && canDragSortRow) {
+      return dragIconWidth + checkBoxWidth;
+    }
+    return 0;
   }, [canChecked, canDragSortRow]);
 
   // 获取key的临时宽度
@@ -310,14 +323,12 @@ const VirtualTable = <T extends ListType>({
   };
 
   // 渲染列
-  const renderColumn = (dataKey: string) => {
-    return {
-      dataKey,
-      width: getTempKeyWidth(dataKey),
-      headRenders,
-      cellRenders: (rowData: T, index: number) => cellRenders[dataKey](rowData, index),
-    };
-  };
+  const renderColumn = (dataKey: string) => ({
+    dataKey,
+    width: getTempKeyWidth(dataKey),
+    headRenders,
+    cellRenders: (rowData: T, index: number) => cellRenders[dataKey](rowData, index),
+  });
 
   // 获取key的宽度
   const getKeyWidth = (row: IHeaderTree): number => {
@@ -389,7 +400,15 @@ const VirtualTable = <T extends ListType>({
 
     // 真实高度
     return disableScroll ? list.length * rowHeight + top + 7 : tableHeight;
-  }, [headerTrees?.length, headerList?.length, titleHeight, disableScroll, list.length, rowHeight, tableHeight]);
+  }, [
+    headerTrees?.length,
+    headerList?.length,
+    titleHeight,
+    disableScroll,
+    list.length,
+    rowHeight,
+    tableHeight,
+  ]);
 
   const disableScrollStyle = disableScroll ? { overflowY: 'hidden' } : {};
   const emptyStyle = list.length === 0 ? { height: '100%' } : {};
@@ -397,113 +416,121 @@ const VirtualTable = <T extends ListType>({
   const [tableContainer, setTableContainer] = useState<HTMLDivElement | null>(null);
   useTableScroll(tableContainer);
 
-  const autoSizeStyle = useMemo(() => {
-    return list.length === 0 ? { height: '100%', width: tableWidth } : { height: realHeight, width: tableWidth };
-  }, [list.length, realHeight, tableWidth]);
+  const autoSizeStyle = useMemo(
+    () =>
+      list.length === 0
+        ? { height: '100%', width: tableWidth }
+        : { height: realHeight, width: tableWidth },
+    [list.length, realHeight, tableWidth]
+  );
 
   return (
     <AutoSizer
       style={autoSizeStyle}
       onResize={({ width, height }) => {
-        setTableWidth(width);
-        setTableHeight(height);
+        if (width !== undefined) {
+          setTableWidth(width);
+        }
+        if (height !== undefined) {
+          setTableHeight(height);
+        }
       }}
     >
-      {({ width }: { width: number; height: number }) => {
-        return (
-          <VirtualTableContext.Provider
-            value={{
-              fixedTopCount,
-              fixedLeftCount,
-              fixedRightCount,
-              list,
-              setList,
-              groups,
-              setGroups,
-              titleHeight,
-              rowHeight,
-              columns,
-              textLayout,
-              labels,
-              changeLabels,
-              widths,
-              changeWidths,
-              canChangeWidths,
-              headerClass,
-              rowClass,
-              rowClick,
-              canDragSortColumn,
-              canChecked,
-              canDragSortRow,
-              onDragRowEnd,
-              dragRowIcon,
-              checked,
-              setChecked,
-              filterRenders,
-              sortRenders,
-              onChangeWidth,
-              onDragWidthEnd,
-              realWidth,
-              realHeight,
-              headerList,
-              headerColumnWidth,
-              headRenders,
-              headerTrees,
-              getLeftWidth,
-              getRightWidth,
-              scrollingRender,
-              wrapperStyle,
-              wrapperClass,
-              cellClass,
-              activeRow,
-              setActiveRow,
-              colResizing,
-              setColResizing,
-              disableScroll,
-              emptyNode,
-              activeLabel,
-              setActiveLabel,
-              dragRowsItemClassName,
-            }}
+      {({ width }) => (
+        <VirtualTableContext.Provider
+          value={{
+            fixedTopCount,
+            fixedLeftCount,
+            fixedRightCount,
+            list,
+            setList,
+            groups,
+            setGroups,
+            titleHeight,
+            rowHeight,
+            columns,
+            textLayout,
+            labels,
+            changeLabels,
+            widths,
+            changeWidths,
+            canChangeWidths,
+            headerClass,
+            rowClass,
+            rowClick,
+            canDragSortColumn,
+            canChecked,
+            canDragSortRow,
+            onDragRowEnd,
+            dragRowIcon,
+            checked,
+            setChecked,
+            filterRenders,
+            sortRenders,
+            onChangeWidth,
+            onDragWidthEnd,
+            realWidth,
+            realHeight,
+            headerList,
+            headerColumnWidth,
+            headRenders,
+            headerTrees,
+            getLeftWidth,
+            getRightWidth,
+            scrollingRender,
+            wrapperStyle,
+            wrapperClass,
+            cellClass,
+            activeRow,
+            setActiveRow,
+            colResizing,
+            setColResizing,
+            disableScroll,
+            emptyNode,
+            activeLabel,
+            setActiveLabel,
+            dragRowsItemClassName,
+          }}
+        >
+          <FixedSizeList
+            innerElementType={TableWrapper}
+            className={cx(
+              'group/table',
+              disableScroll && '',
+              (activeLabel || colResizing) && '!overflow-hidden',
+              className
+            )}
+            style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
+            itemData={
+              list.length > fixedTopCount ? list.slice(fixedTopCount, list.length) : [emptyRow as T]
+            }
+            // 一共有多少行
+            itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
+            height={realHeight}
+            width={width as number}
+            itemSize={rowHeight}
+            overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
+            onItemsRendered={onItemsRendered} // 渲染进度监听
+            useIsScrolling={!!scrollingRender}
+            outerRef={(node) => setTableContainer(node)}
           >
-            <FixedSizeList
-              innerElementType={TableWrapper}
-              className={cx(
-                'group/table',
-                disableScroll && '',
-                (activeLabel || colResizing) && '!overflow-hidden',
-                className
-              )}
-              style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
-              itemData={list.length > fixedTopCount ? list.slice(fixedTopCount, list.length) : [emptyRow as T]}
-              // 一共有多少行
-              itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
-              height={realHeight}
-              width={width}
-              itemSize={rowHeight}
-              overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
-              onItemsRendered={onItemsRendered} // 渲染进度监听
-              useIsScrolling={!!scrollingRender}
-              outerRef={(node) => setTableContainer(node)}
-            >
-              {(props: ListChildComponentProps) => {
-                const { data, index, style, isScrolling } = props;
-                const row = data[index];
+            {(props: ListChildComponentProps) => {
+              const { data, index, style, isScrolling } = props;
+              const row = data[index];
 
-                return (
-                  <DragRowsItem
-                    row={row}
-                    style={style}
-                    index={index + fixedTopCount}
-                    isScrolling={isScrolling}
-                    key={row.id ?? String(index)}
-                  />
-                );
-              }}
-            </FixedSizeList>
-          </VirtualTableContext.Provider>
-        );
-      }}
+              return (
+                <DragRowsItem
+                  row={row}
+                  style={style}
+                  index={index + fixedTopCount}
+                  isScrolling={isScrolling}
+                  key={row.id ?? String(index)}
+                />
+              );
+            }}
+          </FixedSizeList>
+        </VirtualTableContext.Provider>
+      )}
     </AutoSizer>
   );
 };

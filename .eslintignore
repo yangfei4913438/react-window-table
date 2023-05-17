@@ -1,8 +1,7 @@
 node_modules/
 .idea/
 
-# testing
-/coverage
-
-# production
-/build
+# file
+tailwind.config.js
+postcss.config.cjs
+vite.config.ts

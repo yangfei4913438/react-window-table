@@ -1,4 +1,11 @@
-import { DndContext, useDraggable, useSensor, MouseSensor, TouchSensor, useSensors } from '@dnd-kit/core';
+import {
+  DndContext,
+  useDraggable,
+  useSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 import { FC, useEffect } from 'react';
 import cx from 'classnames';
@@ -45,8 +52,8 @@ function DraggableItem({ id, onDragging }: DraggableItemProps) {
     <div
       ref={setNodeRef}
       className={cx(
-        'z-2 absolute inset-y-0 -right-2 flex cursor-ew-resize items-center justify-center',
-        'after:z-5 after:pointer-events-none after:h-3/5 after:w-3 after:rounded hover:after:bg-green-500',
+        'absolute inset-y-0 -right-2 z-2 flex cursor-ew-resize items-center justify-center',
+        'after:pointer-events-none after:z-5 after:h-3/5 after:w-3 after:rounded hover:after:bg-green-500',
         'before:pointer-events-none before:absolute before:inset-y-2 before:w-px before:rounded before:transition-colors',
         'group-hover/table-header:before:bg-light-100',
         isDragging && 'after:bg-green-500'

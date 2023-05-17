@@ -1,7 +1,7 @@
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import cx from 'classnames';
-import { difference, intersection } from 'lodash';
+import { difference, intersection } from 'lodash-es';
 import { useContext, useMemo } from 'react';
 import { ListType, VirtualTableContext } from './consts';
 import DragRowHandle from './DragRowHandle';
@@ -81,13 +81,11 @@ const TableRow = <T extends ListType>({
       return checked.includes(row.id);
     }
     // 有下级
-    else {
-      const ids = row.children.map((o) => o.id);
-      // ids 中被选中的元素
-      const inners = intersection(checked, ids);
-      return inners.length === ids.length;
-    }
-  }, [row?.children, checked]);
+    const ids = row.children.map((o) => o.id);
+    // ids 中被选中的元素
+    const inners = intersection(checked, ids);
+    return inners.length === ids.length;
+  }, [checked, row.children, row.id]);
 
   // 判断是否选择一部分
   const isIndeterminate = useMemo(() => {
@@ -96,30 +94,33 @@ const TableRow = <T extends ListType>({
       return false;
     }
     // 有下级
-    else {
-      const ids = row.children.map((o) => o.id);
-      // ids 中被选中的元素
-      const inners = intersection(checked, ids);
-      // 空值就是false
-      if (inners.length === 0) {
-        return false;
-      }
-      // 不等就是对的
-      return inners.length !== ids.length;
+    const ids = row.children.map((o) => o.id);
+    // ids 中被选中的元素
+    const inners = intersection(checked, ids);
+    // 空值就是false
+    if (inners.length === 0) {
+      return false;
     }
+    // 不等就是对的
+    return inners.length !== ids.length;
   }, [row?.children, checked]);
 
   return (
     <div
       className={cx(
-        'group/row inline-flex items-center bg-white hover:bg-primary/3',
-        rowClass?.({ index, row }) || 'border-b border-b-secondary'
+        'group/row hover:bg-primary/3 inline-flex items-center bg-white',
+        rowClass?.({ index, row }) || 'border-b-secondary border-b'
       )}
       style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}
     >
       {canDragSortRow && (
-        <DragRowHandle isDragging={isDragging} dragRowIcon={dragRowIcon} {...attributes} {...listeners} />
+        <DragRowHandle
+          isDragging={isDragging}
+          dragRowIcon={dragRowIcon}
+          {...attributes}
+          {...listeners}
+        />
       )}
       {canChecked && (
         <IndeterminateCheckbox
@@ -136,11 +137,11 @@ const TableRow = <T extends ListType>({
             };
             if (!dragOverlay) {
               if (idx < fixedLeftCount) {
-                style['left'] = getLeftWidth(idx);
+                style.left = getLeftWidth(idx);
                 style['box-shadow'] = '1px 0 0 0 #eee';
               }
               if (idx > labels.length - fixedRightCount - 1) {
-                style['right'] = getRightWidth(idx);
+                style.right = getRightWidth(idx);
                 style['box-shadow'] = '-1px 0 0 0 #eee';
               }
             }
@@ -148,7 +149,7 @@ const TableRow = <T extends ListType>({
             // cell
             return (
               <div
-                role="cell"
+                role='cell'
                 className={cx(
                   'flex h-full items-center bg-white px-3',
                   {

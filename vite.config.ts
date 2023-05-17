@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv, type UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
 export default ({ mode }: UserConfig) => {
@@ -14,7 +15,7 @@ export default ({ mode }: UserConfig) => {
       proxy: {},
       port: 3001,
     },
-    plugins: [react()],
+    plugins: [react(), eslint()],
     resolve: {
       alias: {
         src: '/src', // 映射的目录必须以/开头，表示根目录

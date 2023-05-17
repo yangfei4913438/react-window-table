@@ -1,8 +1,8 @@
 import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
 import { Navbar, Typography, Button, Checkbox, Input } from '@material-tailwind/react';
-import { type IPerson, makeData, PersonLabels } from './makeData';
 import { VirtualTable } from 'components/VirtualTable';
 import cx from 'classnames';
+import { type IPerson, makeData, PersonLabels } from './makeData';
 import { names, options } from './consts';
 
 const Example: FC = () => {
@@ -44,48 +44,41 @@ const Example: FC = () => {
 
   const [state, setState] = useState<{ [key: string]: boolean | number }>(options);
 
-  const renderOptions = () => {
-    return Object.entries(names).map(([key, name]) => {
-      return (
-        <div className="!mt-0 flex items-center justify-between space-x-1" key={key}>
-          {typeof state[key] === 'boolean' ? (
-            <Checkbox
+  const renderOptions = () =>
+    Object.entries(names).map(([key, name]) => (
+      <div className='!mt-0 flex items-center justify-between space-x-1' key={key}>
+        {typeof state[key] === 'boolean' ? (
+          <Checkbox
+            id={key}
+            label={name}
+            checked={state?.[key] as boolean}
+            onChange={(e) =>
+              setState((prevState) => ({
+                ...prevState,
+                [key]: e.target.checked,
+              }))
+            }
+          />
+        ) : (
+          <div className='mt-6'>
+            <Input
               id={key}
+              variant='static'
               label={name}
-              checked={state?.[key] as boolean}
+              type='number'
+              value={state?.[key] as number}
+              min={0}
               onChange={(e) =>
-                setState((prevState) => {
-                  return {
-                    ...prevState,
-                    [key]: e.target.checked,
-                  };
-                })
+                setState((prevState) => ({
+                  ...prevState,
+                  [key]: Number(e.target.value),
+                }))
               }
             />
-          ) : (
-            <div className="mt-6">
-              <Input
-                id={key}
-                variant="static"
-                label={name}
-                type="number"
-                value={state?.[key] as number}
-                min={0}
-                onChange={(e) =>
-                  setState((prevState) => {
-                    return {
-                      ...prevState,
-                      [key]: Number(e.target.value),
-                    };
-                  })
-                }
-              />
-            </div>
-          )}
-        </div>
-      );
-    });
-  };
+          </div>
+        )}
+      </div>
+    ));
 
   // 获取数据的方式
   const getData = (
@@ -112,20 +105,21 @@ const Example: FC = () => {
     // 后台需要的请求参数
     const send: { [key: string]: any } = {
       project_id: 'mock',
-      page_offset: page_offset, // 第几页
-      page_size: page_size, // 每页几条记录
+      page_offset, // 第几页
+      page_size, // 每页几条记录
     };
 
     // 判断是否有排序参数
     if (Object.keys(sortObj).length) {
-      send['sort'] = sortObj;
+      send.sort = sortObj;
     }
 
     // 判断是否有筛选参数
     if (Object.keys(filterObj).length) {
-      send['filter'] = filterObj;
+      send.filter = filterObj;
     }
 
+    // eslint-disable-next-line no-console
     console.log('请求数据:', send, ' 选中项:', checked);
 
     // 返回mock数据
@@ -171,17 +165,15 @@ const Example: FC = () => {
         // 没有就加进去
         setGroups((prevState) => ({ ...prevState, [item.id]: [] }));
       }
+    } else if (groups[item.id]) {
+      data.splice(index + 1, groups[item.id].length);
+      setGroups((prevState) => {
+        delete prevState[item.id];
+        return prevState;
+      });
     } else {
-      if (groups[item.id]) {
-        data.splice(index + 1, groups[item.id].length);
-        setGroups((prevState) => {
-          delete prevState[item.id];
-          return prevState;
-        });
-      } else {
-        setGroups((prevState) => ({ ...prevState, [item.id]: item.children! }));
-        data.splice(index + 1, 0, ...item.children);
-      }
+      setGroups((prevState) => ({ ...prevState, [item.id]: item.children! }));
+      data.splice(index + 1, 0, ...item.children);
     }
 
     // 更新数据
@@ -204,6 +196,7 @@ const Example: FC = () => {
 
   useLayoutEffect(() => {
     initData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 初始化
@@ -247,29 +240,27 @@ const Example: FC = () => {
 
   // 标题列的渲染方法
   const headRenders = {
-    root: <span className="truncate">{PersonLabels.root}</span>,
-    base: <span className="truncate">{PersonLabels.base}</span>,
-    more: <span className="truncate">{PersonLabels.more}</span>,
-    name: <span className="truncate">{PersonLabels.name}</span>,
-    age: <span className="truncate">{PersonLabels.age}</span>,
-    status: <span className="truncate">{PersonLabels.status}</span>,
-    region: <span className="truncate">{PersonLabels.region}</span>,
-    city: <span className="truncate">{PersonLabels.city}</span>,
-    email: <span className="truncate">{PersonLabels.email}</span>,
-    phone: <span className="truncate">{PersonLabels.phone}</span>,
-    visits: <span className="truncate">{PersonLabels.visits}</span>,
-    last_visit: <span className="truncate">{PersonLabels.last_visit}</span>,
+    root: <span className='truncate'>{PersonLabels.root}</span>,
+    base: <span className='truncate'>{PersonLabels.base}</span>,
+    more: <span className='truncate'>{PersonLabels.more}</span>,
+    name: <span className='truncate'>{PersonLabels.name}</span>,
+    age: <span className='truncate'>{PersonLabels.age}</span>,
+    status: <span className='truncate'>{PersonLabels.status}</span>,
+    region: <span className='truncate'>{PersonLabels.region}</span>,
+    city: <span className='truncate'>{PersonLabels.city}</span>,
+    email: <span className='truncate'>{PersonLabels.email}</span>,
+    phone: <span className='truncate'>{PersonLabels.phone}</span>,
+    visits: <span className='truncate'>{PersonLabels.visits}</span>,
+    last_visit: <span className='truncate'>{PersonLabels.last_visit}</span>,
   };
 
   // 更新排序数据
   const getFilterData = (key: string, value: any) => {
     // 更新数据
-    setFilter((prevState) => {
-      return {
-        ...prevState,
-        [key]: value,
-      };
-    });
+    setFilter((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
 
     // 排序变化，需要重新请求，第一页的数据
     const res = getData(0, pageSize, sort, { ...filter, [key]: value });
@@ -283,8 +274,8 @@ const Example: FC = () => {
   // 渲染筛选对象
   const filterRenders = {
     name: (
-      <div className="" onClick={() => getFilterData('name', filter['name'] ? undefined : 'aa')}>
-        {filter['name'] ? <i className="bi bi-funnel-fill"></i> : <i className="bi bi-funnel"></i>}
+      <div className='' onClick={() => getFilterData('name', filter.name ? undefined : 'aa')}>
+        {filter.name ? <i className='bi bi-funnel-fill' /> : <i className='bi bi-funnel' />}
       </div>
     ),
   };
@@ -310,56 +301,46 @@ const Example: FC = () => {
   // 渲染排序ICON
   const renderSortIcon = (sortIcon: 'asc' | 'desc' | undefined) => {
     if (sortIcon === 'asc') {
-      return <i className="bi bi-chevron-down"></i>;
-    } else if (sortIcon === 'desc') {
-      return <i className="bi bi-chevron-up"></i>;
-    } else {
-      return <i className="bi bi-chevron-expand"></i>;
+      return <i className='bi bi-chevron-down' />;
     }
+    if (sortIcon === 'desc') {
+      return <i className='bi bi-chevron-up' />;
+    }
+    return <i className='bi bi-chevron-expand' />;
   };
 
   const sortRenders = {
     name: (
-      <div onClick={() => handleChangeSort('name', sort['name'])}>
-        {renderSortIcon(sort['name'])}
-      </div>
+      <div onClick={() => handleChangeSort('name', sort.name)}>{renderSortIcon(sort.name)}</div>
     ),
-    age: (
-      <div onClick={() => handleChangeSort('age', sort['age'])}>{renderSortIcon(sort['age'])}</div>
-    ),
+    age: <div onClick={() => handleChangeSort('age', sort.age)}>{renderSortIcon(sort.age)}</div>,
     status: (
-      <div onClick={() => handleChangeSort('status', sort['status'])}>
-        {renderSortIcon(sort['status'])}
+      <div onClick={() => handleChangeSort('status', sort.status)}>
+        {renderSortIcon(sort.status)}
       </div>
     ),
     region: (
-      <div onClick={() => handleChangeSort('region', sort['region'])}>
-        {renderSortIcon(sort['region'])}
+      <div onClick={() => handleChangeSort('region', sort.region)}>
+        {renderSortIcon(sort.region)}
       </div>
     ),
     city: (
-      <div onClick={() => handleChangeSort('city', sort['city'])}>
-        {renderSortIcon(sort['city'])}
-      </div>
+      <div onClick={() => handleChangeSort('city', sort.city)}>{renderSortIcon(sort.city)}</div>
     ),
     email: (
-      <div onClick={() => handleChangeSort('email', sort['email'])}>
-        {renderSortIcon(sort['email'])}
-      </div>
+      <div onClick={() => handleChangeSort('email', sort.email)}>{renderSortIcon(sort.email)}</div>
     ),
     phone: (
-      <div onClick={() => handleChangeSort('phone', sort['phone'])}>
-        {renderSortIcon(sort['phone'])}
-      </div>
+      <div onClick={() => handleChangeSort('phone', sort.phone)}>{renderSortIcon(sort.phone)}</div>
     ),
     visits: (
-      <div onClick={() => handleChangeSort('visits', sort['visits'])}>
-        {renderSortIcon(sort['visits'])}
+      <div onClick={() => handleChangeSort('visits', sort.visits)}>
+        {renderSortIcon(sort.visits)}
       </div>
     ),
     last_visit: (
-      <div onClick={() => handleChangeSort('last_visit', sort['last_visit'])}>
-        {renderSortIcon(sort['last_visit'])}
+      <div onClick={() => handleChangeSort('last_visit', sort.last_visit)}>
+        {renderSortIcon(sort.last_visit)}
       </div>
     ),
   };
@@ -385,24 +366,23 @@ const Example: FC = () => {
         if (!item?.children) {
           return (
             <i className={cx(hasParent(item.id) && 'ml-6')}>
-              <i className="bi bi-file-earmark-text"></i>
+              <i className='bi bi-file-earmark-text' />
             </i>
           );
-        } else {
-          if (item.children.length === 0 || !groups[item.id]) {
-            return <i className="bi bi-folder-fill"></i>;
-          }
-          return <i className="bi bi-folder2-open"></i>;
         }
+        if (item.children.length === 0 || !groups[item.id]) {
+          return <i className='bi bi-folder-fill' />;
+        }
+        return <i className='bi bi-folder2-open' />;
       };
       const renderPointer = () => {
         if (!item?.children) {
-          return <div className="h-3 w-3" />;
+          return <div className='h-3 w-3' />;
         }
         if (!groups[item.id]) {
-          return <i className="bi bi-caret-right-fill"></i>;
+          return <i className='bi bi-caret-right-fill' />;
         }
-        return <i className="bi bi-caret-down-fill"></i>;
+        return <i className='bi bi-caret-down-fill' />;
       };
       return (
         <div
@@ -417,57 +397,41 @@ const Example: FC = () => {
         >
           {renderPointer()}
           {renderIcon()}
-          <div className="truncate">
+          <div className='truncate'>
             {item.name}
             {item?.children && `(${item.children.length})`}- {index}
           </div>
         </div>
       );
     },
-    age: (item) => {
-      return (
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log('-------e:', e);
-          }}
-        >
-          <span className="truncate">{item.age}</span>
-        </div>
-      );
-    },
-    status: (item) => {
-      return <span className="truncate">{item.status}</span>;
-    },
-    region: (item) => {
-      return <span className="truncate">{item.region}</span>;
-    },
-    city: (item) => {
-      return <span className="truncate">{item.city}</span>;
-    },
-    email: (item) => {
-      return <span className="truncate">{item.email}</span>;
-    },
-    phone: (item) => {
-      return <span className="truncate">{item.phone}</span>;
-    },
-    visits: (item) => {
-      return <span className="truncate">{item.visits}</span>;
-    },
-    last_visit: (item) => {
-      return <span className="truncate">{item.last_visit}</span>;
-    },
+    age: (item) => (
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('-------e:', e);
+        }}
+      >
+        <span className='truncate'>{item.age}</span>
+      </div>
+    ),
+    status: (item) => <span className='truncate'>{item.status}</span>,
+    region: (item) => <span className='truncate'>{item.region}</span>,
+    city: (item) => <span className='truncate'>{item.city}</span>,
+    email: (item) => <span className='truncate'>{item.email}</span>,
+    phone: (item) => <span className='truncate'>{item.phone}</span>,
+    visits: (item) => <span className='truncate'>{item.visits}</span>,
+    last_visit: (item) => <span className='truncate'>{item.last_visit}</span>,
   };
 
   // 渲染滚动行（滚动的时候，不显示原始内容，显示这个替代行内容）
-  const scrollingRender = (index: number) => {
-    return <div className="w-full text-center">Scrolling {index}</div>;
-  };
+  const scrollingRender = (index: number) => (
+    <div className='w-full text-center'>Scrolling {index}</div>
+  );
 
   // 空态图
   const emptyDom = useMemo(
     () => (
-      <div className="flex h-full w-full items-center justify-center text-secondary">
+      <div className='flex h-full w-full items-center justify-center text-secondary'>
         Empty Table
       </div>
     ),
@@ -491,29 +455,29 @@ const Example: FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen flex-col space-y-1">
-      <Navbar color="white" fullWidth>
-        <div className="flex-between container mx-auto">
-          <Typography variant="h5" color="black" className="mr-4 cursor-pointer py-1.5">
+    <div className='flex h-screen w-screen flex-col space-y-1'>
+      <Navbar color='white' fullWidth>
+        <div className='flex-between container mx-auto'>
+          <Typography variant='h5' color='black' className='mr-4 cursor-pointer py-1.5'>
             React Window Table
           </Typography>
-          <Button color="blue" size="sm" onClick={initData}>
+          <Button color='blue' size='sm' onClick={initData}>
             刷新数据
           </Button>
         </div>
       </Navbar>
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4">
-          <div className="flex h-6 items-center text-xl font-bold">
+      <div className='flex flex-1 overflow-hidden'>
+        <div className='flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4'>
+          <div className='flex h-6 items-center text-xl font-bold'>
             <h1>控制面版</h1>
           </div>
           {renderOptions()}
         </div>
-        <div className="flex-1">
+        <div className='flex-1'>
           <VirtualTable
             titleHeight={48}
             rowHeight={40}
-            headerClass=""
+            headerClass=''
             // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
             rowClick={({ event, index, row }) => console.log(index, event, row)}
             list={state?.showEmpty ? [] : list}
@@ -533,7 +497,7 @@ const Example: FC = () => {
             fixedRightCount={state?.fixedRightCount as number}
             fixedTopCount={state?.fixedTopCount as number}
             onDragRowEnd={handleRowDragEnd}
-            textLayout="left"
+            textLayout='left'
             disableScroll={false}
             headRenders={headRenders}
             cellRenders={cellRenders}

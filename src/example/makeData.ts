@@ -34,7 +34,7 @@ export interface IPerson {
 }
 
 export function makeData(lens: number): IPerson[] {
-  const mock_data = {
+  const mockData = {
     [`data|${lens}`]: [
       {
         id: '@id',
@@ -66,14 +66,14 @@ export function makeData(lens: number): IPerson[] {
       },
     ],
   };
-  const result = Mockjs.mock(mock_data);
+  const result = Mockjs.mock(mockData);
 
   const num = Math.ceil(Math.random() * 5);
 
   return result.data.map((item: IPerson, index: number) => {
     if (index % num === 0) {
-      delete item.children;
-      return item;
+      const { children, ...rest } = item;
+      return rest;
     }
     return item;
   });

@@ -143,7 +143,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     const prevObjIsOpenDir = prevObjIsDir && Object.keys(groups!).includes(prevObj.id);
 
     // 相同目录下的交换
-    const sameParent = (arr: typeof activeRow[]) => {
+    const sameParent = (arr: (typeof activeRow)[]) => {
       const tmpArr = arr.map((item) => {
         // 进入目录，这里是看不到的数据，用于保证每次展示都对
         if (item.id === row.parent_id) {
@@ -196,9 +196,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       setList?.(sameParent(list));
 
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       // 执行回掉
@@ -238,9 +238,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       setList?.(arrayMove(list, sourceIndex, targetIndex));
 
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       // 执行回掉
@@ -262,8 +262,11 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 将对象放入到目标列表中，同时更新分组数据，返回新的数组（目标是一个目录）
-    const insertIntoTargetDir = (arr: typeof activeRow[] = list, target: typeof activeRow = row) => {
-      return arr.map((item) => {
+    const insertIntoTargetDir = (
+      arr: (typeof activeRow)[] = list,
+      target: typeof activeRow = row
+    ) =>
+      arr.map((item) => {
         // 找到目标对象，往里面加
         if (item.id === target.id) {
           // 插入最前面
@@ -279,7 +282,6 @@ const DragRows = ({ children }: DragRowsProps) => {
         }
         return item;
       });
-    };
 
     // 一级元素对象 移动到 一级元素对象的上面, 从下往上
     // 一级元素对象 移动到 目录的上面(不论是否展开), 从下往上
@@ -315,8 +317,8 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 清理拖拽元素所属的对象，返回一个新的数组，同时更新分组数据
-    const cleanDragParent = () => {
-      return list.map((item) => {
+    const cleanDragParent = () =>
+      list.map((item) => {
         // 注意是拖拽对象
         if (item.id === activeRow.parent_id) {
           // 移除数据
@@ -332,7 +334,6 @@ const DragRows = ({ children }: DragRowsProps) => {
         }
         return item;
       });
-    };
 
     // 二级元素对象 移动到 一级元素对象的上面, 从下往上
     // 二级元素对象 移动到 目录的上面
@@ -346,9 +347,9 @@ const DragRows = ({ children }: DragRowsProps) => {
         setList?.(arrayMove(cleanDragParent(), sourceIndex, targetIndex));
 
         if (inNext) {
-          change['action'] = 'before';
+          change.action = 'before';
         } else {
-          change['action'] = 'after';
+          change.action = 'after';
         }
 
         // 执行回掉
@@ -374,7 +375,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       if (prevObjIsOpenDir) {
         // 放到目标对象下
         // 处理数据
-        setList?.(arrayMove(insertIntoTargetDir(cleanDragParent(), prevObj), sourceIndex, targetIndex));
+        setList?.(
+          arrayMove(insertIntoTargetDir(cleanDragParent(), prevObj), sourceIndex, targetIndex)
+        );
 
         change.target = prevObj.id;
         change.action = 'into';
@@ -399,8 +402,8 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 将对象放到和目标相同的数组中去（目标不是目录）
-    const insertIntoTarget = (arr: typeof activeRow[] = list) => {
-      return arr.map((item) => {
+    const insertIntoTarget = (arr: (typeof activeRow)[] = list) =>
+      arr.map((item) => {
         // 找到目标对象，往里面加
         if (item.id === row.parent_id) {
           // 目标对象的二级索引
@@ -421,7 +424,6 @@ const DragRows = ({ children }: DragRowsProps) => {
         }
         return item;
       });
-    };
 
     // 普通对象到目录里面
     if (sourceIsFirstLevelObject && targetIsSecondLevelObject) {
@@ -429,9 +431,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       setList?.(arrayMove(insertIntoTarget(), sourceIndex, targetIndex));
 
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       // 执行回掉
@@ -484,9 +486,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       setList?.(arrayMove(cleanDragParent(), sourceIndex, targetIndex));
 
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       // 执行回掉
@@ -508,7 +510,10 @@ const DragRows = ({ children }: DragRowsProps) => {
     }
 
     // 展开目录的子元素，跟随目录对象移动
-    const moveChildren = (arr: typeof activeRow[], dirObj: typeof activeRow): typeof activeRow[] => {
+    const moveChildren = (
+      arr: (typeof activeRow)[],
+      dirObj: typeof activeRow
+    ): (typeof activeRow)[] => {
       // 如果下级没有子元素了，就不用处理
       if (dirObj.children.length === 0) {
         return arr;
@@ -526,7 +531,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     };
 
     // 获取下个目录的索引
-    const getNextDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
+    const getNextDirIndex = (arr: (typeof activeRow)[], startIndex: number): number => {
       // 检查是从下一个元素开始的。
       const checkIndex = startIndex + 1;
       // 判断是不是目录
@@ -539,7 +544,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     };
 
     // 获取上个目录的索引
-    const getPrevDirIndex = (arr: typeof activeRow[], startIndex: number): number => {
+    const getPrevDirIndex = (arr: (typeof activeRow)[], startIndex: number): number => {
       // 检查是从上一个元素开始的。
       const checkIndex = startIndex - 1;
       // 判断是不是目录
@@ -552,7 +557,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     };
 
     // 获取上面第一层级对象的索引
-    const getPrevFirstLevelIndex = (arr: typeof activeRow[], startIndex: number): number => {
+    const getPrevFirstLevelIndex = (arr: (typeof activeRow)[], startIndex: number): number => {
       // 检查是从上一个元素开始的。
       const checkIndex = startIndex - 1;
       // 判断是不是第一层级的
@@ -580,7 +585,7 @@ const DragRows = ({ children }: DragRowsProps) => {
     };
 
     // 获取下面第一层级对象的索引
-    const getNextFirstLevelIndex = (arr: typeof activeRow[], startIndex: number): number => {
+    const getNextFirstLevelIndex = (arr: (typeof activeRow)[], startIndex: number): number => {
       // 检查是从下一个元素开始的。
       const checkIndex = startIndex + 1;
       // 判断是不是第一层级的
@@ -624,9 +629,9 @@ const DragRows = ({ children }: DragRowsProps) => {
       setList?.(tmpArr);
 
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       onDragRowEnd(
@@ -659,9 +664,9 @@ const DragRows = ({ children }: DragRowsProps) => {
 
       change.target = list[nextFirstLevelIndex - 1].id;
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       onDragRowEnd(
@@ -696,9 +701,9 @@ const DragRows = ({ children }: DragRowsProps) => {
 
         change.target = list[pIndex].id;
         if (inNext) {
-          change['action'] = 'before';
+          change.action = 'before';
         } else {
-          change['action'] = 'after';
+          change.action = 'after';
         }
 
         onDragRowEnd(
@@ -729,9 +734,9 @@ const DragRows = ({ children }: DragRowsProps) => {
 
       change.target = list[nextFirstLevelIndex - 1].id;
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       onDragRowEnd(
@@ -753,7 +758,10 @@ const DragRows = ({ children }: DragRowsProps) => {
 
     // 拖拽 未展开目录 到 展开目录, 这里肯定是从上往下拖拽的
     // 拖拽 未展开目录 到 二级元素对象, 从上往下
-    if ((sourceIsDirClose && targetIsDirOpen) || (sourceIsDirClose && targetIsSecondLevelObject && !inNext)) {
+    if (
+      (sourceIsDirClose && targetIsDirOpen) ||
+      (sourceIsDirClose && targetIsSecondLevelObject && !inNext)
+    ) {
       // 找到目录下面，第一层级的对象
       const nextFirstLevelIndex = getNextFirstLevelIndex(list, targetIndex);
       // 更新列表数据
@@ -761,9 +769,9 @@ const DragRows = ({ children }: DragRowsProps) => {
 
       change.target = list[nextFirstLevelIndex - 1].id;
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       onDragRowEnd(
@@ -792,9 +800,9 @@ const DragRows = ({ children }: DragRowsProps) => {
 
       change.target = list[pIndex - 1].id;
       if (inNext) {
-        change['action'] = 'before';
+        change.action = 'before';
       } else {
-        change['action'] = 'after';
+        change.action = 'after';
       }
 
       onDragRowEnd(
@@ -822,9 +830,9 @@ const DragRows = ({ children }: DragRowsProps) => {
         setList?.(arrayMove(insertIntoTarget(cleanDragParent()), sourceIndex, targetIndex));
 
         if (inNext) {
-          change['action'] = 'before';
+          change.action = 'before';
         } else {
-          change['action'] = 'after';
+          change.action = 'after';
         }
 
         onDragRowEnd(
@@ -841,7 +849,6 @@ const DragRows = ({ children }: DragRowsProps) => {
           change
         );
         // 处理完成返回
-        return;
       }
       // 目标是一个目录（这里只能是展开的目录，没展开的已经在上面被处理了）
       else {
@@ -851,9 +858,9 @@ const DragRows = ({ children }: DragRowsProps) => {
           setList?.(arrayMove(cleanDragParent(), sourceIndex, targetIndex));
 
           if (inNext) {
-            change['action'] = 'before';
+            change.action = 'before';
           } else {
-            change['action'] = 'after';
+            change.action = 'after';
           }
 
           onDragRowEnd(
@@ -892,14 +899,13 @@ const DragRows = ({ children }: DragRowsProps) => {
           change
         );
         // 处理完成返回
-        return;
       }
     }
   };
 
   return (
     <DndContext
-      id="table-row"
+      id='table-row'
       sensors={sensors}
       modifiers={[restrictToVerticalAxis, restrictToFirstScrollableAncestor]}
       collisionDetection={closestCenter}
@@ -914,7 +920,7 @@ const DragRows = ({ children }: DragRowsProps) => {
       <SortableContext items={list} strategy={verticalListSortingStrategy}>
         {fixedTopCount > 0 && (
           <div
-            data-sticky-top="true"
+            data-sticky-top='true'
             className={cx({ 'sticky z-4 bg-white shadow': fixedTopCount > 0 }, 'group/table-row')}
             style={{
               top: headerTrees.length ? headerList.length * titleHeight : titleHeight,
@@ -945,7 +951,7 @@ const DragRows = ({ children }: DragRowsProps) => {
             </FixedSizeList>
           </div>
         )}
-        <div role="rowgroup" className="relative flex-grow">
+        <div role='rowgroup' className='relative flex-grow'>
           {children}
         </div>
       </SortableContext>
@@ -955,11 +961,16 @@ const DragRows = ({ children }: DragRowsProps) => {
           <DragOverlay>
             <div
               className={cx(
-                'relative w-full overflow-hidden bg-body shadow-lg ring-1 ring-accent',
+                'ring-accent relative w-full overflow-hidden bg-body shadow-lg ring-1',
                 dragRowsItemClassName
               )}
             >
-              <TableRow row={activeRow} index={list.map((o) => o.id).indexOf(activeRow.id)} isDragging dragOverlay />
+              <TableRow
+                row={activeRow}
+                index={list.map((o) => o.id).indexOf(activeRow.id)}
+                isDragging
+                dragOverlay
+              />
             </div>
           </DragOverlay>,
           document.body

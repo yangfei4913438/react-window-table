@@ -138,8 +138,8 @@ const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonProps>(
       {
         [paddingClass]: text && variant !== 'link',
         [sizeClass]: variant !== 'link',
-        disabled: disabled,
-        active: active,
+        disabled,
+        active,
         'pointer-events-none': loading,
       },
       className

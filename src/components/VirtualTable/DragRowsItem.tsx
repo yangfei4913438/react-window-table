@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { ListType, VirtualTableContext } from './consts';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { ListType, VirtualTableContext } from './consts';
 import TableRow from './TableRow';
 
 interface DragRowsItemProps<T> {
@@ -21,26 +21,27 @@ const DragRowsItem = <T extends ListType>({
 }: DragRowsItemProps<T>) => {
   const { canDragSortRow, rowHeight } = useContext(VirtualTableContext);
 
-  const { attributes, isDragging, listeners, setNodeRef, transform, transition, isOver } = useSortable({
-    id: row.id,
-    disabled: !canDragSortRow,
-  });
+  const { attributes, isDragging, listeners, setNodeRef, transform, transition, isOver } =
+    useSortable({
+      id: row.id,
+      disabled: !canDragSortRow,
+    });
 
   return (
     <div
-      role="row"
+      role='row'
       aria-rowindex={index + 1}
       aria-busy={isDragging}
       ref={setNodeRef}
       style={{
         ...style,
         transform: CSS.Transform.toString(transform),
-        transition: transition,
+        transition,
       }}
     >
       {isDragging ? (
         // 这里不要填色，留白即可。有颜色在向下滚动到一定位置的时候，颜色会丢失，可能是遇到bug了，但现在没时间排查，以后有空再说。
-        <div className="w-full" style={{ height: rowHeight }} />
+        <div className='w-full' style={{ height: rowHeight }} />
       ) : (
         <TableRow
           attributes={attributes}

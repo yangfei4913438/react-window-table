@@ -39,8 +39,11 @@ const IndeterminateCheckbox = forwardRef(
 
     return (
       <div
-        role="cell"
-        className={cx('relative sticky left-0 z-2 flex h-full items-center justify-center bg-white', className)}
+        role='cell'
+        className={cx(
+          'sticky left-0 z-2 flex h-full items-center justify-center bg-white',
+          className
+        )}
         style={{
           minWidth: checkBoxWidth,
           left: canDragSortRow ? dragIconWidth : 0,
@@ -72,8 +75,8 @@ const IndeterminateCheckbox = forwardRef(
         }}
       >
         <input
-          type="checkbox"
-          className="checkbox checkbox-sm"
+          type='checkbox'
+          className='checkbox checkbox-sm'
           ref={resolvedRef}
           onChange={() => undefined}
           {...rest}
