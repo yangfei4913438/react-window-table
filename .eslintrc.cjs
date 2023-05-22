@@ -1,6 +1,8 @@
+const path = require('path');
+
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2020: true, node: true, commonjs: true },
   extends: [
     'eslint:recommended',
     'airbnb',
@@ -11,7 +13,10 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'prettier',
+    // 1. 继承 .prettierrc.cjs 文件规则
+    // 2. 开启rules的 "prettier/prettier": "error"
+    // 3. eslint fix 的同时执行 prettier 格式化
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -37,9 +42,11 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/require-default-props': 0,
     'react/jsx-no-constructed-context-values': 0,
-    'react/no-unstable-nested-components': 0,
     'react/jsx-props-no-spreading': 0,
     'react/no-array-index-key': 0,
+    'react/no-unknown-property': 0,
+    'react/no-unescaped-entities': 0,
+    'react/no-unstable-nested-components': 0,
 
     'react-hooks/exhaustive-deps': 1,
     'react-refresh/only-export-components': 1,
@@ -60,9 +67,9 @@ module.exports = {
       version: 'detect',
     },
     'import/resolver': {
-      typescript: {},
-      alias: {
-        map: [['*', './src']],
+      typescript: {
+        project: path.join(__dirname, './tsconfig.json'), // 读取ts配置文件
+        alwaysTryTypes: true, // always try to resolve types under
       },
     },
   },

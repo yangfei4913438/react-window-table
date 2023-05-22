@@ -21,6 +21,8 @@
     "noUnusedParameters": false, // 检查未使用的函数参数(只提示不报错)
     "noImplicitReturns": true, // 每个分支都会有返回值
 
+    "types": ["vite/client"], // 静态资源导入支持
+
     // 指定根路径
     "baseUrl": ".",
     /* 配置路径别名 */
