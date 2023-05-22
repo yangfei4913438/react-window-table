@@ -3,5 +3,5 @@ node_modules/
 
 # file
 tailwind.config.js
-postcss.config.cjs
+.postcssrc.js
 vite.config.ts
