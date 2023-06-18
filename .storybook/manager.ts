@@ -16,7 +16,7 @@ addons.setConfig({
   // Storybook Theme, see next section
   theme: undefined,
   // Id to select an addon panel
-  selectedPanel: undefined,
+  selectedPanel: 'addon-controls',
   // Select the default active tab on Mobile
   initialActive: 'canvas',
 });

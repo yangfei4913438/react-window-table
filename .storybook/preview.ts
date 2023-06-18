@@ -1,8 +1,8 @@
-import type { Preview } from '@storybook/react';
+import { withActions } from '@storybook/addon-actions/decorator';
 
-const preview: Preview = {
+const preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: '^on[A-Za-z].*', handles: ['click'] },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -10,6 +10,7 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [withActions],
 };
 
 export default preview;

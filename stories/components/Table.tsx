@@ -16,6 +16,9 @@ import { type IPerson, makeData, PersonLabels } from './makeData';
 const { Header, Content } = Layout;
 
 const Table: FC<TableType> = ({
+  fixedLeftCount = 1,
+  fixedRightCount = 1,
+  fixedTopCount = 3,
   multiTitle = false,
   showEmpty = false,
   showScrolling = false,
@@ -25,9 +28,6 @@ const Table: FC<TableType> = ({
   canDragOrder = true,
   canFilter = true,
   canSort = true,
-  fixedLeftCount = 1,
-  fixedRightCount = 1,
-  fixedTopCount = 3,
 }) => {
   // 表单数据相关
   // 测试用途，请忽略。

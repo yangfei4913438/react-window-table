@@ -27,9 +27,8 @@
     "baseUrl": ".",
     /* 配置路径别名 */
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["stories/*"],
       "lib/*": ["lib/*"],
-      "dist/*": ["dist/*"]
     }
   },
   "include": [

@@ -12,17 +12,13 @@ export default ({ mode }: UserConfig) => {
       jsxFactory: 'h',
       jsxFragment: 'Fragment',
     },
-    server: {
-      proxy: {},
-      port: 3001,
-    },
     plugins: [react(), eslint()],
     build: {
       outDir: 'dist2',
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, '.', 'src'),
+        '@': resolve(__dirname, '.', 'stories'),
         lib: resolve(__dirname, '.', 'lib'),
       },
     },

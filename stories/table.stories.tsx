@@ -1,15 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { options } from '@/stories/components/consts';
-import Table from '@/stories/components/Table';
+import { options } from '@/components/consts';
+import Table from '@/components/Table';
 
 const meta: Meta<typeof Table> = {
-  title: 'table',
+  title: 'Table',
   component: Table,
   parameters: {
     layout: 'fullscreen',
   },
   argTypes: {
+    fixedLeftCount: {
+      name: '左边锁定多少列',
+      description: '左边锁定多少列',
+      defaultValue: options.fixedLeftCount,
+      control: { type: 'number', min: 0, max: 10 },
+    },
+    fixedRightCount: {
+      name: '右边锁定多少列',
+      description: '右边锁定多少列',
+      defaultValue: options.fixedRightCount,
+      control: { type: 'number', min: 0, max: 10 },
+    },
+    fixedTopCount: {
+      name: '顶部锁定多少行',
+      description: '顶部锁定多少行',
+      defaultValue: options.fixedTopCount,
+      control: { type: 'number', min: 0, max: 10 },
+    },
     multiTitle: {
       name: '是否显示多行标题',
       description: '是否开启多行标题',
@@ -63,24 +81,6 @@ const meta: Meta<typeof Table> = {
       description: '是否使用数据排序功能',
       defaultValue: options.canSort,
       control: { type: 'boolean' },
-    },
-    fixedLeftCount: {
-      name: '左边锁定多少列',
-      description: '左边锁定多少列',
-      defaultValue: options.fixedLeftCount,
-      control: { type: 'number', min: 0, max: 10 },
-    },
-    fixedRightCount: {
-      name: '右边锁定多少列',
-      description: '右边锁定多少列',
-      defaultValue: options.fixedRightCount,
-      control: { type: 'number', min: 0, max: 10 },
-    },
-    fixedTopCount: {
-      name: '顶部锁定多少行',
-      description: '顶部锁定多少行',
-      defaultValue: options.fixedTopCount,
-      control: { type: 'number', min: 0, max: 10 },
     },
   },
 };

@@ -16,7 +16,7 @@ const distance = {
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx,scss}', './lib/**/*.{js,ts,jsx,tsx,mdx,scss}'],
+  content: ['./{stories,lib}/**/*.{js,ts,jsx,tsx,mdx,scss}'],
   safelist: [],
   theme: {
     extend: {

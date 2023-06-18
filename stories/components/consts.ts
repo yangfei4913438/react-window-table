@@ -1,4 +1,7 @@
 export const options: TableType = {
+  fixedLeftCount: 1,
+  fixedRightCount: 1,
+  fixedTopCount: 2,
   multiTitle: false,
   showEmpty: false,
   showScrolling: false,
@@ -8,12 +11,12 @@ export const options: TableType = {
   canDragOrder: true,
   canFilter: true,
   canSort: true,
-  fixedLeftCount: 1,
-  fixedRightCount: 1,
-  fixedTopCount: 2,
 };
 
 export interface TableType {
+  fixedLeftCount?: number;
+  fixedRightCount?: number;
+  fixedTopCount?: number;
   multiTitle?: boolean;
   showEmpty?: boolean;
   showScrolling?: boolean;
@@ -23,7 +26,4 @@ export interface TableType {
   canDragOrder?: boolean;
   canFilter?: boolean;
   canSort?: boolean;
-  fixedLeftCount?: number;
-  fixedRightCount?: number;
-  fixedTopCount?: number;
 }

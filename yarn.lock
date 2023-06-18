@@ -2378,7 +2378,7 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.25.24.tgz#8c7688559979f7079aacaf31aa881c3aa410b718"
   integrity sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==
 
-"@storybook/addon-actions@^7.0.21":
+"@storybook/addon-actions@7.0.22":
   version "7.0.22"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-7.0.22.tgz#8179991de84b127f1bf34f438a08154d41806c0a"
   integrity sha512-liHeHflDuJz+iAye387L0Dw5sSSZ/qSa0uhSrB5zPvilbZj7vAgEc+Uonqvl21nKm3jlu9KuXn7SNVUhdY3R6g==
@@ -2400,7 +2400,23 @@
     ts-dedent "^2.0.0"
     uuid "^9.0.0"
 
-"@storybook/addon-controls@^7.0.21":
+"@storybook/addon-backgrounds@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-backgrounds/-/addon-backgrounds-7.0.22.tgz#554f81201147bc35250331a0228ac9a52b5c9b1a"
+  integrity sha512-+iycBDgLeFuziiyLPLOpUZmpvsjODSzrVv5RNs8s6OCeM0NvbBsfv2h7YiORQ5NcNdo0pry8SMEl8fUdDXUU5w==
+  dependencies:
+    "@storybook/client-logger" "7.0.22"
+    "@storybook/components" "7.0.22"
+    "@storybook/core-events" "7.0.22"
+    "@storybook/global" "^5.0.0"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    "@storybook/theming" "7.0.22"
+    "@storybook/types" "7.0.22"
+    memoizerific "^1.11.3"
+    ts-dedent "^2.0.0"
+
+"@storybook/addon-controls@7.0.22":
   version "7.0.22"
   resolved "https://registry.yarnpkg.com/@storybook/addon-controls/-/addon-controls-7.0.22.tgz#9becb8da06d6b9b3e4b1708bd1c4dbafb1259f89"
   integrity sha512-8nLe53B6GbG+unHQh+ZLkuhRn5gJkXPifqmOi4sjRAJSObBYuJAPUuGEzlwLIfsRwe2hE2Octsu3aMUquYtbXg==
@@ -2417,7 +2433,7 @@
     lodash "^4.17.21"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-docs@^7.0.21":
+"@storybook/addon-docs@7.0.22":
   version "7.0.22"
   resolved "https://registry.yarnpkg.com/@storybook/addon-docs/-/addon-docs-7.0.22.tgz#72ff64ba6167037b3b7567d542c7bae36f468ee0"
   integrity sha512-9aCC2mpVASe6XM0mk2cGO9NXXGoMr0la1QQA5JnKJ90Ko9HedcrX+SBwV2z2PauPNUKok0CxE6tm2TW01R8AJg==
@@ -2444,6 +2460,35 @@
     remark-slug "^6.0.0"
     ts-dedent "^2.0.0"
 
+"@storybook/addon-essentials@^7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-essentials/-/addon-essentials-7.0.22.tgz#76c4a91d3354ef7716dda690c7974c25ca1549cd"
+  integrity sha512-Rk4xfCWXcnGmE71XjhYmXuKCm3eyDgss6vl83JN7Symul3coGFna8WjRSzay0mZhN1l2+02QNJMCp7gIooepWw==
+  dependencies:
+    "@storybook/addon-actions" "7.0.22"
+    "@storybook/addon-backgrounds" "7.0.22"
+    "@storybook/addon-controls" "7.0.22"
+    "@storybook/addon-docs" "7.0.22"
+    "@storybook/addon-highlight" "7.0.22"
+    "@storybook/addon-measure" "7.0.22"
+    "@storybook/addon-outline" "7.0.22"
+    "@storybook/addon-toolbars" "7.0.22"
+    "@storybook/addon-viewport" "7.0.22"
+    "@storybook/core-common" "7.0.22"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/node-logger" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    ts-dedent "^2.0.0"
+
+"@storybook/addon-highlight@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-highlight/-/addon-highlight-7.0.22.tgz#1a02d91db0644eb2e7ed8ae98660e53d990acfe0"
+  integrity sha512-Bwxu86rg5AN+mgPyJ2NaTswx7D0L8BROW3eLvjTDI6B0qqDgkCU5KQ/N5POiYCYIMLlSO88cX/3SEpRendl6Mg==
+  dependencies:
+    "@storybook/core-events" "7.0.22"
+    "@storybook/global" "^5.0.0"
+    "@storybook/preview-api" "7.0.22"
+
 "@storybook/addon-links@^7.0.21":
   version "7.0.22"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-7.0.22.tgz#21701d592582862588b28ef021b78bd26e3de2b2"
@@ -2459,6 +2504,59 @@
     "@storybook/types" "7.0.22"
     prop-types "^15.7.2"
     ts-dedent "^2.0.0"
+
+"@storybook/addon-measure@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-measure/-/addon-measure-7.0.22.tgz#af3cc23569e71868cc1dbb87d9c8b38d2896de31"
+  integrity sha512-RHcaItasMfP9sPi+/S1crLbw+nHVP2oQfBmkRuPuZNiVYJV4vDuAZ6/aONSnhOxhrOKPaVBhWQ8EJRUH9SGTBA==
+  dependencies:
+    "@storybook/client-logger" "7.0.22"
+    "@storybook/components" "7.0.22"
+    "@storybook/core-events" "7.0.22"
+    "@storybook/global" "^5.0.0"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    "@storybook/types" "7.0.22"
+
+"@storybook/addon-outline@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-outline/-/addon-outline-7.0.22.tgz#06eea67adecf5017baa360be847e29f6584603aa"
+  integrity sha512-eT+6+u7M98U1aCKVPGzi/UMnfDucBFrd4hYxWnOW55xdUqSgXoRIU0uYl4r3FFSy5hIdD0COUMsbjrkdyi5aXQ==
+  dependencies:
+    "@storybook/client-logger" "7.0.22"
+    "@storybook/components" "7.0.22"
+    "@storybook/core-events" "7.0.22"
+    "@storybook/global" "^5.0.0"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    "@storybook/types" "7.0.22"
+    ts-dedent "^2.0.0"
+
+"@storybook/addon-toolbars@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-toolbars/-/addon-toolbars-7.0.22.tgz#70b9ceeeeb2914972566372a6257759f65f0a599"
+  integrity sha512-M5R1eEGODaDg+MXwnU4eU0BYXUxY8/bhX2czRR5cox7iDEVi8aBZudBSg30w9ef9Oj/oG630hojlhWatBf+lUw==
+  dependencies:
+    "@storybook/client-logger" "7.0.22"
+    "@storybook/components" "7.0.22"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    "@storybook/theming" "7.0.22"
+
+"@storybook/addon-viewport@7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-7.0.22.tgz#5d91f974688f23a68e16e7a30e1411094a99bb20"
+  integrity sha512-JeS7XppdkozvVr8anVYZ72Qi1qu2pAGLhiHFX25pdfgdRigS7dHnIaxJ/zm0j5TmshgVrOrvRhW2VHan8j6IxQ==
+  dependencies:
+    "@storybook/client-logger" "7.0.22"
+    "@storybook/components" "7.0.22"
+    "@storybook/core-events" "7.0.22"
+    "@storybook/global" "^5.0.0"
+    "@storybook/manager-api" "7.0.22"
+    "@storybook/preview-api" "7.0.22"
+    "@storybook/theming" "7.0.22"
+    memoizerific "^1.11.3"
+    prop-types "^15.7.2"
 
 "@storybook/blocks@7.0.22", "@storybook/blocks@^7.0.21":
   version "7.0.22"
@@ -4168,9 +4266,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001464, caniuse-lite@^1.0.30001503:
-  version "1.0.30001503"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001503.tgz#88b6ff1b2cf735f1f3361dc1a15b59f0561aa398"
-  integrity sha512-Sf9NiF+wZxPfzv8Z3iS0rXM1Do+iOy2Lxvib38glFX+08TCYYYGR5fRJXk4d77C4AYwhUjgYgMsMudbh2TqCKw==
+  version "1.0.30001504"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001504.tgz#eaf77e5c852dfa5f82c4924468c30602ac53744a"
+  integrity sha512-5uo7eoOp2mKbWyfMXnGO9rJWOGU8duvzEiYITW+wivukL7yHH4gX9yuRaobu6El4jPxo6jKZfG+N6fB621GD/Q==
 
 chalk@^2.0.0, chalk@^2.4.2:
   version "2.4.2"

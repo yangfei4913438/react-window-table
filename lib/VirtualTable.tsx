@@ -1,5 +1,3 @@
-import '@/index.scss';
-
 import cx from 'classnames';
 import React, {
   type CSSProperties,
