@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
@@ -13,7 +14,8 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: 'tag',
-    docsMode: true, // 没有click之类的响应，纯组件的参数调试
+    docsMode: false, // 没有click之类的响应，纯组件的参数调试
   },
 };
+
 export default config;

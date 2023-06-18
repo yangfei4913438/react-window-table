@@ -33,21 +33,17 @@
     "package.json"
   ],
   "scripts": {
-    "dev": "vite",
-    "clean:lib": "rimraf dist",
-    "clean:demo": "rimraf dist2",
-    "lib": "npm run clean:lib && rollup --config rollup.config.mjs",
+    "clean": "rimraf dist",
+    "lib": "npm run clean && rollup --config rollup.config.mjs",
     "prepublishOnly": "npm run lib",
     "release": "npm publish",
-    "build": "npm run clean:demo && vite build",
-    "preview": "vite preview",
     "format": "prettier . --cache --write",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prepare": "husky install",
     "commit": "git add . && cz-customizable",
     "changelog": "conventional-changelog -p gitmoji-config -i CHANGELOG.md -s",
-    "storybook": "storybook dev -p 6008",
-    "deploy-storybook": "storybook build -o storybook-static && gh-pages -d storybook-static --branch docs"
+    "dev": "storybook dev -p 6008",
+    "deploy": "storybook build -o storybook-static && gh-pages -d storybook-static --branch docs"
   },
   "config": {
     "commitizen": {

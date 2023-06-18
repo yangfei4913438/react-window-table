@@ -1,12 +1,34 @@
-import { Button, Checkbox, Input, Typography } from 'antd';
+import {
+  FilterFilled,
+  FilterOutlined,
+  LineHeightOutlined,
+  SortAscendingOutlined,
+  SortDescendingOutlined,
+} from '@ant-design/icons';
+import { Button, Layout, Typography } from 'antd';
 import cx from 'classnames';
 import { VirtualTable } from 'lib';
 import { type FC, type ReactNode, useLayoutEffect, useMemo, useState } from 'react';
 
-import { names, options } from './consts';
+import type { TableType } from './consts';
 import { type IPerson, makeData, PersonLabels } from './makeData';
 
-const Example: FC = () => {
+const { Header, Content } = Layout;
+
+const Table: FC<TableType> = ({
+  multiTitle = false,
+  showEmpty = false,
+  showScrolling = false,
+  canDragSortRow = true,
+  canChecked = true,
+  canResize = true,
+  canDragOrder = true,
+  canFilter = true,
+  canSort = true,
+  fixedLeftCount = 1,
+  fixedRightCount = 1,
+  fixedTopCount = 3,
+}) => {
   // 表单数据相关
   // 测试用途，请忽略。
   const [initListData, setInitListData] = useState<IPerson[]>([]);
@@ -42,44 +64,6 @@ const Example: FC = () => {
 
   // 列顺序切换
   const [labels, changeLabels] = useState<string[]>(Object.keys(widths));
-
-  const [state, setState] = useState<{ [key: string]: boolean | number }>(options);
-
-  const renderOptions = () =>
-    Object.entries(names).map(([key, name]) => (
-      <div className='!mt-0 flex items-center justify-between space-x-1' key={key}>
-        {typeof state[key] === 'boolean' ? (
-          <Checkbox
-            id={key}
-            checked={state?.[key] as boolean}
-            onChange={(e) =>
-              setState((prevState) => ({
-                ...prevState,
-                [key]: e.target.checked,
-              }))
-            }
-          >
-            {name}
-          </Checkbox>
-        ) : (
-          <div className='mt-6'>
-            <Input
-              id={key}
-              title={name}
-              type='number'
-              value={state?.[key] as number}
-              min={0}
-              onChange={(e) =>
-                setState((prevState) => ({
-                  ...prevState,
-                  [key]: Number(e.target.value),
-                }))
-              }
-            />
-          </div>
-        )}
-      </div>
-    ));
 
   // 获取数据的方式
   const getData = (
@@ -275,7 +259,7 @@ const Example: FC = () => {
   const filterRenders = {
     name: (
       <div className='' onClick={() => getFilterData('name', filter.name ? undefined : 'aa')}>
-        {filter.name ? <i className='bi bi-funnel-fill' /> : <i className='bi bi-funnel' />}
+        {filter.name ? <FilterFilled /> : <FilterOutlined />}
       </div>
     ),
   };
@@ -301,12 +285,12 @@ const Example: FC = () => {
   // 渲染排序ICON
   const renderSortIcon = (sortIcon: 'asc' | 'desc' | undefined) => {
     if (sortIcon === 'asc') {
-      return <i className='bi bi-chevron-down' />;
+      return <SortAscendingOutlined />;
     }
     if (sortIcon === 'desc') {
-      return <i className='bi bi-chevron-up' />;
+      return <SortDescendingOutlined />;
     }
-    return <i className='bi bi-chevron-expand' />;
+    return <LineHeightOutlined />;
   };
 
   const sortRenders = {
@@ -455,62 +439,54 @@ const Example: FC = () => {
   };
 
   return (
-    <div className='flex h-screen w-screen flex-col space-y-1'>
-      <div className='container mx-auto flex bg-gray-400'>
-        <Typography.Title level={5} color='black' className='mr-4 cursor-pointer py-1.5'>
+    <Layout className='h-screen w-screen'>
+      <Header className='flex h-16 items-center justify-between bg-gray-400'>
+        <Typography.Title level={2} className='mr-4 cursor-pointer py-1.5'>
           React Window Table
         </Typography.Title>
         <Button color='blue' onClick={initData}>
           刷新数据
         </Button>
-      </div>
-      <div className='flex flex-1 overflow-hidden'>
-        <div className='flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4'>
-          <div className='flex h-6 items-center text-xl font-bold'>
-            <h1>控制面版</h1>
-          </div>
-          {renderOptions()}
-        </div>
-        <div className='flex-1'>
-          <VirtualTable
-            titleHeight={48}
-            rowHeight={40}
-            headerClass=''
-            // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
-            rowClick={({ event, index, row }) => console.log(index, event, row)}
-            list={state?.showEmpty ? [] : list}
-            setList={setList}
-            groups={groups}
-            setGroups={setGroups}
-            widths={widths}
-            labels={labels}
-            changeLabels={changeLabels}
-            nextPage={nextPageData}
-            changeWidths={changeWidths}
-            canChangeWidths={state?.canResize as boolean}
-            canDragSortColumn={state?.canDragOrder as boolean}
-            canDragSortRow={state?.canDragSortRow as boolean}
-            canChecked={state?.canChecked as boolean}
-            fixedLeftCount={state?.fixedLeftCount as number}
-            fixedRightCount={state?.fixedRightCount as number}
-            fixedTopCount={state?.fixedTopCount as number}
-            onDragRowEnd={handleRowDragEnd}
-            textLayout='left'
-            disableScroll={false}
-            headRenders={headRenders}
-            cellRenders={cellRenders}
-            headerTrees={state?.multiTitle ? headerTrees : []}
-            scrollingRender={state?.showScrolling ? scrollingRender : undefined}
-            checked={checked}
-            setChecked={setChecked}
-            sortRenders={state?.canSort ? sortRenders : undefined}
-            filterRenders={state?.canFilter ? filterRenders : undefined}
-            emptyNode={emptyDom}
-          />
-        </div>
-      </div>
-    </div>
+      </Header>
+      <Content className=''>
+        <VirtualTable
+          titleHeight={48}
+          rowHeight={40}
+          headerClass=''
+          // rowClass={({ index }) => (index % 2 === 0 ? '!bg-gray-100' : '')}
+          rowClick={({ event, index, row }) => console.log(index, event, row)}
+          list={showEmpty ? [] : list}
+          setList={setList}
+          groups={groups}
+          setGroups={setGroups}
+          widths={widths}
+          labels={labels}
+          changeLabels={changeLabels}
+          nextPage={nextPageData}
+          changeWidths={changeWidths}
+          canChangeWidths={canResize}
+          canDragSortColumn={canDragOrder}
+          canDragSortRow={canDragSortRow}
+          canChecked={canChecked}
+          fixedLeftCount={fixedLeftCount}
+          fixedRightCount={fixedRightCount}
+          fixedTopCount={fixedTopCount}
+          onDragRowEnd={handleRowDragEnd}
+          textLayout='left'
+          disableScroll={false}
+          headRenders={headRenders}
+          cellRenders={cellRenders}
+          headerTrees={multiTitle ? headerTrees : []}
+          scrollingRender={showScrolling ? scrollingRender : undefined}
+          checked={checked}
+          setChecked={setChecked}
+          sortRenders={canSort ? sortRenders : undefined}
+          filterRenders={canFilter ? filterRenders : undefined}
+          emptyNode={emptyDom}
+        />
+      </Content>
+    </Layout>
   );
 };
 
-export default Example;
+export default Table;
