@@ -1,6 +1,18 @@
 ## 项目说明：
 
-#### 启动
+#### 安装
+
+```shell
+npm install @yangfei-ui/react-window-table
+```
+
+或
+
+```shell
+yarn add @yangfei-ui/react-window-table
+```
+
+#### 启动开发环境
 
 ```shell
 yarn 
