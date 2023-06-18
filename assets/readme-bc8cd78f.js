@@ -1,3 +1,0 @@
-import{j as n}from"./jsx-runtime-d673cef9.js";import{M as i}from"./index-d53498cc.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-18844f16.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-40077278.js";function e(t){const o=Object.assign({h1:"h1"},r(),t.components);return n.jsxs(n.Fragment,{children:[n.jsx(i,{title:"react-window-table"}),`
-`,n.jsx(o.h1,{id:"项目说明",children:"项目说明"})]})}function h(t={}){const{wrapper:o}=Object.assign({},r(),t.components);return o?n.jsx(o,Object.assign({},t,{children:n.jsx(e,t)})):e(t)}export{h as default};
-//# sourceMappingURL=readme-bc8cd78f.js.map
