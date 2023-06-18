@@ -1,25 +1,25 @@
-import React, { useContext } from 'react';
-import { createPortal } from 'react-dom';
 import {
   closestCenter,
   DndContext,
+  type DragEndEvent,
   DragOverlay,
+  type DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   UniqueIdentifier,
-  type DragStartEvent,
-  type DragEndEvent,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { restrictToFirstScrollableAncestor, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
-  SortableContext,
-  verticalListSortingStrategy,
-  sortableKeyboardCoordinates,
   arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers';
 import cx from 'classnames';
+import React, { useContext } from 'react';
+import { createPortal } from 'react-dom';
 import { FixedSizeList, type ListChildComponentProps } from 'react-window';
 
 import { VirtualTableContext } from './consts';

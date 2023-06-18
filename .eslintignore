@@ -1,7 +1,2 @@
 node_modules/
 .idea/
-
-# file
-tailwind.config.js
-.postcssrc.js
-vite.config.ts

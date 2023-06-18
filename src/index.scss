@@ -1,9 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind screens;
+
+// 自定义样式初始化
+@import 'normalize.css';
+@import 'sanitize.css';
 
 @layer base {
+  // dnd-kit 样式优化
+  div[role='button'] {
+    outline: 0;
+  }
+
+  // 消除 tailwindcss 对 antd 图标位置的影响
+  svg {
+    display: inline;
+    vertical-align: baseline;
+  }
+  .ant-typography {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .ant-tabs-content-holder {
+    flex: 1 !important;
+    overflow: auto;
+  }
+  .ant-table-footer {
+    padding: 24px 16px !important;
+    background: inherit !important;
+  }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
@@ -155,13 +181,4 @@ html {
   --gray-7: hsl(0, 0%, 40%);
   --gray-8: hsl(0, 0%, 30%);
   --gray-9: hsl(0, 0%, 16%);
-
-  /* Font Family */
-  --font-zh-cn: 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif;
-  --font-zh-tw: 'MHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'Verdana', sans-serif;
-  --font-ja-jp: 'Apple TP', 'Helvetica Neue', 'Helvetica', 'Hiragino Kaku Gothic Pro',
-  'ヒラギノ角ゴ Pro W3', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'Arial', 'Verdana', sans-serif;
-  --font-en-us: 'Myriad Set Pro', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  --font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-  monospace;
 }

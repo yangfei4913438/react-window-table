@@ -1,5 +1,3 @@
-const withMT = require('@material-tailwind/react/utils/withMT');
-
 const distance = {
   inherit: 'inherit',
   d2: '2px',
@@ -18,25 +16,8 @@ const distance = {
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}',
-  ],
-  safelist: [
-    'col-span-1',
-    'col-span-2',
-    'col-span-3',
-    'col-span-4',
-    'col-span-5',
-    'col-span-6',
-    'col-span-7',
-    'col-span-8',
-    'col-span-9',
-    'col-span-10',
-    'col-span-11',
-    'col-span-12',
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx,scss}', './lib/**/*.{js,ts,jsx,tsx,mdx,scss}'],
+  safelist: [],
   theme: {
     extend: {
       colors: {
@@ -199,7 +180,10 @@ const config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  corePlugins: {
+    preflight: false, // 避免和antd冲突
+  },
+  plugins: [],
 };
 
-module.exports = withMT(config);
+module.exports = config;

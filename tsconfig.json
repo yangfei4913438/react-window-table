@@ -13,7 +13,7 @@
     "module": "esnext", // 指定生成哪个模块系统代码
     "moduleResolution": "node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
     "resolveJsonModule": true, // 直接加载json文件
-    "esModuleInterop": true, // 可以直接使用 import react from react, 否则要 import * as react from react
+    "esModuleInterop": true, // 可以直接使用 import react from React, 否则要 import * as react from React
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx", // jsx 支持 react 风格
@@ -27,9 +27,22 @@
     "baseUrl": ".",
     /* 配置路径别名 */
     "paths": {
-      "*": ["src/*"]
+      "@/*": ["src/*"],
+      "lib/*": ["lib/*"],
+      "dist/*": ["dist/*"]
     }
   },
-  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "rollup.config.mjs",
+    "vite.config.ts",
+    ".eslintrc.cjs",
+    ".postcssrc.cjs",
+    ".commitlintrc.cjs",
+    "tailwind.config.cjs",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.json",
+    "**/*.html"
+  ],
   "exclude": ["node_modules"]
 }

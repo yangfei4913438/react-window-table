@@ -6,6 +6,7 @@
 # production
 /build
 /dist
+/dist2
 
 # testing
 /coverage
@@ -14,6 +15,13 @@
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# build info
+/analyse.html
+/tsconfig.tsbuildinfo
+
+# build storybook
+/storybook-static/
 
 # misc
 .DS_Store

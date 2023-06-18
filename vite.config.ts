@@ -1,5 +1,6 @@
-import { defineConfig, loadEnv, type UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import { defineConfig, loadEnv, type UserConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
@@ -16,10 +17,13 @@ export default ({ mode }: UserConfig) => {
       port: 3001,
     },
     plugins: [react(), eslint()],
+    build: {
+      outDir: 'dist2',
+    },
     resolve: {
       alias: {
-        src: '/src', // 映射的目录必须以/开头，表示根目录
-        components: '/src/components',
+        '@': resolve(__dirname, '.', 'src'),
+        lib: resolve(__dirname, '.', 'lib'),
       },
     },
   });

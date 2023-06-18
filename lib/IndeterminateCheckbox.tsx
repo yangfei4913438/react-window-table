@@ -1,5 +1,6 @@
 import cx from 'classnames';
-import React, { forwardRef, useContext, useEffect, useRef, useMemo } from 'react';
+import React, { forwardRef, useContext, useEffect, useMemo, useRef } from 'react';
+
 import { checkBoxWidth, dragIconWidth, VirtualTableContext } from './consts';
 
 interface IndeterminateCheckboxProps {

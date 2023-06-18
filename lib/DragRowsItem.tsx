@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import React, { useContext } from 'react';
+
 import { ListType, VirtualTableContext } from './consts';
 import TableRow from './TableRow';
 

@@ -1,14 +1,14 @@
 import {
   DndContext,
-  useDraggable,
-  useSensor,
   MouseSensor,
   TouchSensor,
+  useDraggable,
+  useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import { FC, useEffect } from 'react';
 import cx from 'classnames';
+import { FC, useEffect } from 'react';
 
 interface IDragResizeProps {
   // 拖拽对象的id

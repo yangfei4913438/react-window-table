@@ -1,9 +1,10 @@
-import { type FC, type ReactNode, useState, useLayoutEffect, useMemo } from 'react';
-import { Navbar, Typography, Button, Checkbox, Input } from '@material-tailwind/react';
-import { VirtualTable } from 'components/VirtualTable';
+import { Button, Checkbox, Input, Typography } from 'antd';
 import cx from 'classnames';
-import { type IPerson, makeData, PersonLabels } from './makeData';
+import { VirtualTable } from 'lib';
+import { type FC, type ReactNode, useLayoutEffect, useMemo, useState } from 'react';
+
 import { names, options } from './consts';
+import { type IPerson, makeData, PersonLabels } from './makeData';
 
 const Example: FC = () => {
   // 表单数据相关
@@ -50,7 +51,6 @@ const Example: FC = () => {
         {typeof state[key] === 'boolean' ? (
           <Checkbox
             id={key}
-            label={name}
             checked={state?.[key] as boolean}
             onChange={(e) =>
               setState((prevState) => ({
@@ -58,13 +58,14 @@ const Example: FC = () => {
                 [key]: e.target.checked,
               }))
             }
-          />
+          >
+            {name}
+          </Checkbox>
         ) : (
           <div className='mt-6'>
             <Input
               id={key}
-              variant='static'
-              label={name}
+              title={name}
               type='number'
               value={state?.[key] as number}
               min={0}
@@ -119,7 +120,6 @@ const Example: FC = () => {
       send.filter = filterObj;
     }
 
-    // eslint-disable-next-line no-console
     console.log('请求数据:', send, ' 选中项:', checked);
 
     // 返回mock数据
@@ -456,16 +456,14 @@ const Example: FC = () => {
 
   return (
     <div className='flex h-screen w-screen flex-col space-y-1'>
-      <Navbar color='white' fullWidth>
-        <div className='flex-between container mx-auto'>
-          <Typography variant='h5' color='black' className='mr-4 cursor-pointer py-1.5'>
-            React Window Table
-          </Typography>
-          <Button color='blue' size='sm' onClick={initData}>
-            刷新数据
-          </Button>
-        </div>
-      </Navbar>
+      <div className='container mx-auto flex bg-gray-400'>
+        <Typography.Title level={5} color='black' className='mr-4 cursor-pointer py-1.5'>
+          React Window Table
+        </Typography.Title>
+        <Button color='blue' onClick={initData}>
+          刷新数据
+        </Button>
+      </div>
       <div className='flex flex-1 overflow-hidden'>
         <div className='flex w-1/6 flex-col space-y-4 overflow-auto border-r border-r-gray-100 bg-gray-100 p-4'>
           <div className='flex h-6 items-center text-xl font-bold'>

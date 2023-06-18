@@ -1,5 +1,6 @@
 import cx from 'classnames';
 import { useContext, useMemo } from 'react';
+
 import { dragIconWidth, VirtualTableContext } from './consts';
 
 interface DragRowHandleProps {

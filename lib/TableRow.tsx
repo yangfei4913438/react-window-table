@@ -3,6 +3,7 @@ import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import cx from 'classnames';
 import { difference, intersection } from 'lodash-es';
 import { useContext, useMemo } from 'react';
+
 import { ListType, VirtualTableContext } from './consts';
 import DragRowHandle from './DragRowHandle';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
@@ -138,11 +139,11 @@ const TableRow = <T extends ListType>({
             if (!dragOverlay) {
               if (idx < fixedLeftCount) {
                 style.left = getLeftWidth(idx);
-                style['box-shadow'] = '1px 0 0 0 #eee';
+                style['boxShadow'] = '1px 0 0 0 #eee';
               }
               if (idx > labels.length - fixedRightCount - 1) {
                 style.right = getRightWidth(idx);
-                style['box-shadow'] = '-1px 0 0 0 #eee';
+                style['boxShadow'] = '-1px 0 0 0 #eee';
               }
             }
 

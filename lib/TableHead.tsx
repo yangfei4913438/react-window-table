@@ -1,9 +1,10 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { IconButton } from '@material-tailwind/react';
 import { CSS } from '@dnd-kit/utilities';
+import Button from 'antd/es/button';
 import cx from 'classnames';
 import React, { FC, useContext } from 'react';
-import DragResize from 'components/DragResize';
+
+import DragResize from './components/DragResize';
 import { VirtualTableContext } from './consts';
 
 interface ITableHead {
@@ -100,25 +101,15 @@ const TableHead: FC<ITableHead> = ({
           })}
         >
           {!!sortRenders && sortRenders[id] && (
-            <IconButton
-              aria-label='sort'
-              variant='text'
-              size='sm'
-              onClick={(e) => e.stopPropagation()}
-            >
+            <Button aria-label='sort' size={'small'} onClick={(e) => e.stopPropagation()}>
               {sortRenders[id]}
-            </IconButton>
+            </Button>
           )}
 
           {!!filterRenders && filterRenders[id] && (
-            <IconButton
-              aria-label='filter'
-              variant='text'
-              size='sm'
-              onClick={(e) => e.stopPropagation()}
-            >
+            <Button aria-label='filter' size={'small'} onClick={(e) => e.stopPropagation()}>
               {filterRenders[id]}
-            </IconButton>
+            </Button>
           )}
         </div>
       )}

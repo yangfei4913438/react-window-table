@@ -11,16 +11,16 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import cx from 'classnames';
-import { uniq } from 'lodash-es';
-import { forwardRef, useContext, useMemo, type HTMLProps, type CSSProperties } from 'react';
+import uniq from 'lodash-es/uniq';
+import { type CSSProperties, forwardRef, type HTMLProps, useContext, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 
 import {
   checkBoxWidth,
   dragIconWidth,
-  VirtualTableContext,
   type IHeaderTree,
   type IWidths,
+  VirtualTableContext,
 } from './consts';
 import DragRows from './DragRows';
 import IndeterminateCheckbox from './IndeterminateCheckbox';
@@ -243,7 +243,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               {canDragSortRow && (
                 <div
                   role='columnheader'
-                  className={cx('sticky left-0 z-2 flex h-full items-center bg-white')}
+                  className='sticky left-0 z-2 flex h-full items-center bg-white'
                   style={{ minWidth: dragIconWidth }}
                 />
               )}
@@ -260,11 +260,11 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
                 };
                 if (idx < fixedLeftCount!) {
                   style.left = getLeftWidth(idx);
-                  style['box-shadow'] = '1px 0 0 0 #eee';
+                  style['boxShadow'] = '1px 0 0 0 #eee';
                 }
                 if (idx > labels.length - fixedRightCount! - 1) {
                   style.right = getRightWidth(idx);
-                  style['box-shadow'] = '-1px 0 0 0 #eee';
+                  style['boxShadow'] = '-1px 0 0 0 #eee';
                 }
 
                 return (

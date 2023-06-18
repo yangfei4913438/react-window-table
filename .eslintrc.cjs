@@ -2,12 +2,9 @@ const path = require('path');
 
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true, node: true, commonjs: true },
+  env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',
-    'airbnb',
-    'airbnb-typescript',
-    'airbnb/hooks',
     'plugin:import/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
@@ -17,6 +14,7 @@ module.exports = {
     // 2. 开启rules的 "prettier/prettier": "error"
     // 3. eslint fix 的同时执行 prettier 格式化
     'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -25,7 +23,7 @@ module.exports = {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh'],
+  plugins: ['simple-import-sort', 'react-refresh'],
   rules: {
     'no-nested-ternary': 0,
     'no-return-assign': 0,
@@ -33,10 +31,15 @@ module.exports = {
     'no-restricted-syntax': 0,
     'no-plusplus': 0,
     'no-console': 0,
+    'no-void': 0,
+    'no-undef': 0,
 
     'consistent-return': 0,
 
+    'tailwindcss/no-custom-classname': 0,
+
     'import/prefer-default-export': 0,
+    'import/no-unresolved': 0,
 
     'react/function-component-definition': 0,
     'react/react-in-jsx-scope': 0,
@@ -49,7 +52,7 @@ module.exports = {
     'react/no-unstable-nested-components': 0,
 
     'react-hooks/exhaustive-deps': 1,
-    'react-refresh/only-export-components': 1,
+    'react-refresh/only-export-components': 0,
 
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-static-element-interactions': 0,
@@ -61,6 +64,13 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/no-var-requires': 0,
+
+    'simple-import-sort/imports': 2,
+    'simple-import-sort/exports': 2,
+    'import/first': 2,
+    'import/newline-after-import': 2,
+    'import/no-duplicates': 2,
   },
   settings: {
     react: {
@@ -72,6 +82,13 @@ module.exports = {
         alwaysTryTypes: true, // always try to resolve types under
       },
     },
+    tailwindcss: {
+      config: 'tailwind.config.cjs',
+      cssFiles: ['**/*.scss', '!**/node_modules', '!**/dist', '!**/build'],
+      removeDuplicates: true,
+      skipClassAttribute: false,
+      whitelist: [],
+    },
   },
-  ignorePatterns: ['.eslintrc.cjs'],
+  ignorePatterns: ['**/*.scss', '**/*.css'],
 };

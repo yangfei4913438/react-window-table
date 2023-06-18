@@ -1,27 +1,31 @@
+import '@/index.scss';
+
 import cx from 'classnames';
 import React, {
-  useMemo,
-  useState,
+  type CSSProperties,
   type Dispatch,
   type MouseEvent,
   type ReactNode,
   type SetStateAction,
-  type CSSProperties,
   useCallback,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   FixedSizeList,
   type ListChildComponentProps,
   type ListOnItemsRenderedProps,
 } from 'react-window';
+import useResizeObserver from 'use-resize-observer';
+
 import {
   checkBoxWidth,
   dragIconWidth,
-  VirtualTableContext,
   type IHeaderTree,
   type IWidths,
   type ListType,
+  VirtualTableContext,
 } from './consts';
 import DragRowsItem from './DragRowsItem';
 import TableWrapper from './TableWrapper';
@@ -201,9 +205,21 @@ const VirtualTable = <T extends ListType>({
   emptyNode,
 }: VirtualTableProps<T>) => {
   // 表格宽度
-  const [tableWidth, setTableWidth] = useState<number>(0);
+  const [tableWidth, setTableWidth] = useState<number>(1);
   // 表格高度
-  const [tableHeight, setTableHeight] = useState<number>(0);
+  const [tableHeight, setTableHeight] = useState<number>(1);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const { width = 1, height = 1 } = useResizeObserver<HTMLDivElement>({
+    ref: ref,
+    box: 'border-box',
+    round: Math.floor,
+    onResize: ({ width, height }) => {
+      setTableWidth(width as number);
+      setTableHeight(height ?? ref.current?.offsetHeight ?? document.body.offsetHeight);
+    },
+  });
+
   // 临时变化的key
   const [changeKey, setChangeKey] = useState<string>('');
   // 临时变化的宽度
@@ -416,122 +432,105 @@ const VirtualTable = <T extends ListType>({
   const [tableContainer, setTableContainer] = useState<HTMLDivElement | null>(null);
   useTableScroll(tableContainer);
 
-  const autoSizeStyle = useMemo(
-    () =>
-      list.length === 0
-        ? { height: '100%', width: tableWidth }
-        : { height: realHeight, width: tableWidth },
-    [list.length, realHeight, tableWidth]
-  );
+  const List: typeof FixedSizeList | { width: number | string; height: number | string } =
+    FixedSizeList;
 
   return (
-    <AutoSizer
-      style={autoSizeStyle}
-      onResize={({ width, height }) => {
-        if (width !== undefined) {
-          setTableWidth(width);
-        }
-        if (height !== undefined) {
-          setTableHeight(height);
-        }
-      }}
-    >
-      {({ width }) => (
-        <VirtualTableContext.Provider
-          value={{
-            fixedTopCount,
-            fixedLeftCount,
-            fixedRightCount,
-            list,
-            setList,
-            groups,
-            setGroups,
-            titleHeight,
-            rowHeight,
-            columns,
-            textLayout,
-            labels,
-            changeLabels,
-            widths,
-            changeWidths,
-            canChangeWidths,
-            headerClass,
-            rowClass,
-            rowClick,
-            canDragSortColumn,
-            canChecked,
-            canDragSortRow,
-            onDragRowEnd,
-            dragRowIcon,
-            checked,
-            setChecked,
-            filterRenders,
-            sortRenders,
-            onChangeWidth,
-            onDragWidthEnd,
-            realWidth,
-            realHeight,
-            headerList,
-            headerColumnWidth,
-            headRenders,
-            headerTrees,
-            getLeftWidth,
-            getRightWidth,
-            scrollingRender,
-            wrapperStyle,
-            wrapperClass,
-            cellClass,
-            activeRow,
-            setActiveRow,
-            colResizing,
-            setColResizing,
-            disableScroll,
-            emptyNode,
-            activeLabel,
-            setActiveLabel,
-            dragRowsItemClassName,
-          }}
+    <div ref={ref} className='h-full w-full'>
+      <VirtualTableContext.Provider
+        value={{
+          fixedTopCount,
+          fixedLeftCount,
+          fixedRightCount,
+          list,
+          setList,
+          groups,
+          setGroups,
+          titleHeight,
+          rowHeight,
+          columns,
+          textLayout,
+          labels,
+          changeLabels,
+          widths,
+          changeWidths,
+          canChangeWidths,
+          headerClass,
+          rowClass,
+          rowClick,
+          canDragSortColumn,
+          canChecked,
+          canDragSortRow,
+          onDragRowEnd,
+          dragRowIcon,
+          checked,
+          setChecked,
+          filterRenders,
+          sortRenders,
+          onChangeWidth,
+          onDragWidthEnd,
+          realWidth,
+          realHeight,
+          headerList,
+          headerColumnWidth,
+          headRenders,
+          headerTrees,
+          getLeftWidth,
+          getRightWidth,
+          scrollingRender,
+          wrapperStyle,
+          wrapperClass,
+          cellClass,
+          activeRow,
+          setActiveRow,
+          colResizing,
+          setColResizing,
+          disableScroll,
+          emptyNode,
+          activeLabel,
+          setActiveLabel,
+          dragRowsItemClassName,
+        }}
+      >
+        <List
+          innerElementType={TableWrapper}
+          className={cx(
+            'group/table',
+            disableScroll && '',
+            (activeLabel || colResizing) && '!overflow-hidden',
+            className
+          )}
+          style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
+          itemData={
+            list.length > fixedTopCount ? list.slice(fixedTopCount, list.length) : [emptyRow as T]
+          }
+          // 一共有多少行
+          itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
+          height={height > 1 ? height : ref.current?.offsetHeight || 0}
+          width={width > 1 ? width : ref.current?.offsetWidth || 0}
+          itemSize={rowHeight}
+          overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
+          onItemsRendered={onItemsRendered} // 渲染进度监听
+          useIsScrolling={!!scrollingRender}
+          outerRef={(node) => setTableContainer(node)}
         >
-          <FixedSizeList
-            innerElementType={TableWrapper}
-            className={cx(
-              'group/table',
-              disableScroll && '',
-              (activeLabel || colResizing) && '!overflow-hidden',
-              className
-            )}
-            style={{ ...tableStyle, ...disableScrollStyle, ...emptyStyle } as CSSProperties}
-            itemData={
-              list.length > fixedTopCount ? list.slice(fixedTopCount, list.length) : [emptyRow as T]
-            }
-            // 一共有多少行
-            itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
-            height={realHeight}
-            width={width as number}
-            itemSize={rowHeight}
-            overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
-            onItemsRendered={onItemsRendered} // 渲染进度监听
-            useIsScrolling={!!scrollingRender}
-            outerRef={(node) => setTableContainer(node)}
-          >
-            {(props: ListChildComponentProps) => {
-              const { data, index, style, isScrolling } = props;
-              const row = data[index];
+          {(props: ListChildComponentProps) => {
+            const { data, index, style, isScrolling } = props;
+            const row = data[index];
 
-              return (
-                <DragRowsItem
-                  row={row}
-                  style={style}
-                  index={index + fixedTopCount}
-                  isScrolling={isScrolling}
-                  key={row.id ?? String(index)}
-                />
-              );
-            }}
-          </FixedSizeList>
-        </VirtualTableContext.Provider>
-      )}
-    </AutoSizer>
+            return (
+              <DragRowsItem
+                row={row}
+                style={style}
+                index={index + fixedTopCount}
+                isScrolling={isScrolling}
+                key={row.id ?? String(index)}
+              />
+            );
+          }}
+        </List>
+      </VirtualTableContext.Provider>
+    </div>
   );
 };
 
