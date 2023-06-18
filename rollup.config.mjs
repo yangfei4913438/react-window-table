@@ -21,6 +21,7 @@ const tsOptions = {
       'dist2',
       'node_modules',
       'src',
+      'stories',
       'vite.config.ts',
       '**/*.md',
       '**/*.mdx',
