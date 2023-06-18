@@ -1,0 +1,31 @@
+name: test for main
+on:
+  pull_request: # 提交PR的时候会触发
+    branches:
+      - main # 触发分支为 main 分支
+    paths:
+      - '.github/workflows/**'
+      - 'lib/**'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+
+      - name: Run test
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint # 暂时没有单元测试，先用eslint占位
+#          cmd: test # will run `yarn test` command
