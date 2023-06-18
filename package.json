@@ -60,11 +60,13 @@
     "not dead"
   ],
   "dependencies": {
+    "@ant-design/icons": "^5.1.4",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
     "@dnd-kit/sortable": "^7.0.2",
     "@dnd-kit/utilities": "^3.2.1",
     "ahooks": "^3.7.7",
+    "antd": "^5.6.1",
     "classnames": "^2.3.2",
     "lodash-es": "^4.17.21",
     "normalize.css": "^8.0.1",
@@ -78,7 +80,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.1.4",
     "@commitlint/cli": "^17.6.5",
     "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-commonjs": "^25.0.1",
@@ -94,12 +95,10 @@
     "@types/node": "^20.3.1",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
-    "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "@vitejs/plugin-react": "^4.0.0",
-    "antd": "^5.6.1",
     "autoprefixer": "^10.4.14",
     "commitlint-config-cz": "^0.13.3",
     "commitlint-config-git-commit-emoji": "^1.0.0",
