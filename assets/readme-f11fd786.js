@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-d673cef9.js";import{M as r}from"./index-87a43b7f.js";import{u as s}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-0575b752.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-40077278.js";function e(l){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},s(),l.components);return n.jsxs(n.Fragment,{children:[n.jsx(r,{title:"react-window-table"}),`
+import{j as n}from"./jsx-runtime-d673cef9.js";import{M as s}from"./index-c4d73724.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-28944c9f.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-40077278.js";function l(e){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},r(),e.components);return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"react-window-table"}),`
 `,n.jsx(i.h2,{id:"项目说明",children:"项目说明："}),`
 `,n.jsx(i.h4,{id:"安装",children:"安装"}),`
 `,n.jsx(i.pre,{children:n.jsx(i.code,{className:"language-shell",children:`npm install @yangfei-ui/react-window-table
@@ -12,9 +12,6 @@ yarn dev
 `})}),`
 `,n.jsx(i.h4,{id:"重构计划",children:"重构计划"}),`
 `,n.jsxs(i.ul,{children:[`
-`,n.jsx(i.li,{children:"基础设施更新"}),`
-`,n.jsx(i.li,{children:"示例代码，单独封装到一个example目录里面"}),`
-`,n.jsx(i.li,{children:"使用canvas渲染表格，替换react-window，整个项目重写，模块化、配置化。列可配置、单元格可配置，表头可配置"}),`
 `,n.jsx(i.li,{children:"抽离拖拽组件，降低耦合度，使用封装好的拖拽组件，进行处理"}),`
 `,n.jsx(i.li,{children:"行选中，使用新的逻辑，默认值行号，hover之后显示checkbox。"}),`
 `,n.jsx(i.li,{children:"增加自定义增删列功能，也就是说，用户可以直接在界面操作增加列，减少列"}),`
@@ -24,6 +21,9 @@ yarn dev
 `,n.jsx(i.li,{children:"支持css全局变量，进行样式调整"}),`
 `,n.jsx(i.li,{children:"开发专业的国际化项目文档站点"}),`
 `]}),`
+`,n.jsx(i.h4,{id:"有可能的计划",children:"有可能的计划"}),`
+`,n.jsx(i.p,{children:"考虑使用canvas渲染表格，替换react-window，整个项目重写，模块化、配置化。列可配置、单元格可配置，表头可配置"}),`
+`,n.jsx(i.p,{children:"应该是重开一个项目做这个事情，替换react-window等于把最底层的逻辑推翻了。"}),`
 `,n.jsx(i.h4,{id:"功能特点",children:"功能特点"}),`
 `,n.jsxs(i.ul,{children:[`
 `,n.jsx(i.li,{children:"表格渲染，使用虚拟列表，支持滚动分页请求数据。"}),`
@@ -46,5 +46,5 @@ yarn dev
 `,n.jsx(i.li,{children:"表格支持多行标题，传参数生效。（注: 多行之间的列存在上下级的树形关系，列拖拽不能跨越父分支）。"}),`
 `,n.jsx(i.li,{children:"表格支持行点击事件，传参数生效。"}),`
 `,n.jsx(i.li,{children:"支持分组展示，需要自己在外部定义渲染逻辑。"}),`
-`]})]})}function u(l={}){const{wrapper:i}=Object.assign({},s(),l.components);return i?n.jsx(i,Object.assign({},l,{children:n.jsx(e,l)})):e(l)}export{u as default};
-//# sourceMappingURL=readme-23840ebc.js.map
+`]})]})}function u(e={}){const{wrapper:i}=Object.assign({},r(),e.components);return i?n.jsx(i,Object.assign({},e,{children:n.jsx(l,e)})):l(e)}export{u as default};
+//# sourceMappingURL=readme-f11fd786.js.map
