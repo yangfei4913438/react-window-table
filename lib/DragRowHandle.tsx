@@ -1,3 +1,4 @@
+import { HolderOutlined } from '@ant-design/icons';
 import cx from 'classnames';
 import { useContext, useMemo } from 'react';
 
@@ -35,7 +36,7 @@ const DragRowHandle = ({ dragRowIcon, isDragging, className, ...rest }: DragRowH
         style={{ width: dragIconWidth, ...leftStyle }}
         {...rest}
       >
-        {dragRowIcon ?? <i className='bi bi-grip-vertical' />}
+        {dragRowIcon ?? <HolderOutlined />}
       </div>
     </div>
   );

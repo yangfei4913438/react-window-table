@@ -53,7 +53,7 @@ const TableHead: FC<ITableHead> = ({
   return (
     <div
       className={cx('relative flex w-inherit items-center', {
-        'hover:bg-light-50': canDragSortColumn && !dragOverlay,
+        'hover:bg-gray-100': canDragSortColumn && !dragOverlay,
         'cursor-ew-resize': colResizing,
       })}
       ref={setNodeRef}

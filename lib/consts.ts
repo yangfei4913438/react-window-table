@@ -21,7 +21,10 @@ export interface IWidths {
   [key: string]: number;
 }
 
-export type ListType = { id: string; children?: { id: string }[] };
+export interface ListType {
+  id: string;
+  children?: { id: string }[];
+}
 
 interface VirtualTableContextProps<T extends ListType> {
   // 展示的数据
