@@ -34,7 +34,6 @@ const TableRow = <T extends ListType>({
     rowHeight,
     canDragSortRow,
     dragRowIcon,
-    canChecked,
     checked,
     setChecked,
     scrollingRender,
@@ -123,13 +122,12 @@ const TableRow = <T extends ListType>({
           {...listeners}
         />
       )}
-      {canChecked && (
-        <IndeterminateCheckbox
-          indeterminate={isIndeterminate}
-          checked={isChecked}
-          onClick={() => handleCheckBox(row, checked, setChecked)}
-        />
-      )}
+      <IndeterminateCheckbox
+        order={index + 1}
+        indeterminate={isIndeterminate}
+        checked={isChecked}
+        onClick={() => handleCheckBox(row, checked, setChecked)}
+      />
       {isScrolling
         ? scrollingRender?.(index + 1)
         : columns.map((item, idx) => {

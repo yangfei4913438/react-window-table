@@ -256,13 +256,11 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
                   style={{ minWidth: dragIconWidth }}
                 />
               )}
-              {canChecked && (
-                <IndeterminateCheckbox
-                  indeterminate={checked.length > 0 && checked.length !== allIds.length}
-                  checked={checked.length > 0 && checked.length === allIds.length}
-                  onClick={handleAllChecked}
-                />
-              )}
+              <IndeterminateCheckbox
+                indeterminate={checked.length > 0 && checked.length !== allIds.length}
+                checked={checked.length > 0 && checked.length === allIds.length}
+                onClick={handleAllChecked}
+              />
               {columns.map((item, idx) => {
                 const style: { [key: string]: number | string } = {
                   width: item.width,

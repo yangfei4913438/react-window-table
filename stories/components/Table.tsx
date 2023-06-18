@@ -388,7 +388,7 @@ const Table: FC<TableType> = ({
           {renderIcon()}
           <div className='truncate'>
             {item.name}
-            {item?.children && `(${item.children.length})`}- {index}
+            {item?.children && `(${item.children.length})`}
           </div>
         </div>
       );
