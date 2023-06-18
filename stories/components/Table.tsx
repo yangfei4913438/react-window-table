@@ -1,6 +1,11 @@
 import {
+  CaretDownOutlined,
+  CaretRightOutlined,
+  FileTextOutlined,
   FilterFilled,
   FilterOutlined,
+  FolderOpenOutlined,
+  FolderOutlined,
   LineHeightOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
@@ -350,23 +355,23 @@ const Table: FC<TableType> = ({
         if (!item?.children) {
           return (
             <i className={cx(hasParent(item.id) && 'ml-6')}>
-              <i className='bi bi-file-earmark-text' />
+              <FileTextOutlined />
             </i>
           );
         }
         if (item.children.length === 0 || !groups[item.id]) {
-          return <i className='bi bi-folder-fill' />;
+          return <FolderOutlined />;
         }
-        return <i className='bi bi-folder2-open' />;
+        return <FolderOpenOutlined />;
       };
       const renderPointer = () => {
         if (!item?.children) {
           return <div className='h-3 w-3' />;
         }
         if (!groups[item.id]) {
-          return <i className='bi bi-caret-right-fill' />;
+          return <CaretRightOutlined />;
         }
-        return <i className='bi bi-caret-down-fill' />;
+        return <CaretDownOutlined />;
       };
       return (
         <div

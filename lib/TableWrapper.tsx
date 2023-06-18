@@ -12,7 +12,14 @@ import {
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import cx from 'classnames';
 import uniq from 'lodash-es/uniq';
-import { type CSSProperties, forwardRef, type HTMLProps, useContext, useMemo } from 'react';
+import {
+  type CSSProperties,
+  forwardRef,
+  Fragment,
+  type HTMLProps,
+  useContext,
+  useMemo,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import {
@@ -147,11 +154,9 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
     // 高度样式
     const heightStyle = list.length > 0 && disableScroll ? { height: realHeight } : {};
 
+    const { height: _, ...params } = rest.style as CSSProperties;
     // 继承来的样式
-    const parentStyle = useMemo(() => {
-      const { height, ...params } = rest.style as CSSProperties;
-      return list.length === 0 ? { ...params, height: '100%' } : rest.style;
-    }, [list.length, rest.style]);
+    const parentStyle = list.length === 0 ? { ...params, height: '100%' } : rest.style;
 
     return (
       <div
@@ -178,7 +183,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
             <div
               role='row'
               className={cx(
-                'border-b-secondary sticky z-4 flex items-center border-b bg-body',
+                'sticky z-4 flex items-center border-b border-l-0 border-t-0 border-solid border-gray-200 bg-white',
                 headerClass
               )}
               style={{
@@ -188,21 +193,25 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
               }}
               key={idx}
             >
-              <div role='columnheader' className='h-full' style={{ width: getMoreWidth }} />
+              <div
+                role='columnheader'
+                className='h-full bg-white'
+                style={{ width: getMoreWidth }}
+              />
               {cols.map((col, idx2) => (
-                <>
+                <Fragment key={col}>
                   <div
                     role='columnheader'
-                    className='relative flex h-full items-center justify-center bg-body px-3'
+                    className='relative flex h-full items-center justify-center bg-white px-3 text-lg font-bold'
                     key={col}
-                    style={{ width: headerColumnWidth(col) + 8 }}
+                    style={{ width: headerColumnWidth(col) }}
                   >
                     {headRenders[col]}
                   </div>
                   {idx2 !== cols.length - 1 && (
-                    <div role='separator' className='bg-light-100 h-full w-px' />
+                    <div role='separator' className='h-full w-px bg-gray-200' />
                   )}
-                </>
+                </Fragment>
               ))}
             </div>
           );
@@ -213,7 +222,7 @@ const TableWrapper = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
           role='row'
           aria-busy={activeLabel ? 'true' : undefined}
           className={cx(
-            'group/table-header border-b-secondary sticky z-4 flex items-center border-b bg-white',
+            'group/table-header sticky z-4 flex items-center border-b border-l-0 border-t-0 border-solid border-gray-200 bg-white',
             headerClass
           )}
           style={{

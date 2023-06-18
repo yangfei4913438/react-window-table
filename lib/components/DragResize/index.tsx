@@ -53,9 +53,9 @@ function DraggableItem({ id, onDragging }: DraggableItemProps) {
       ref={setNodeRef}
       className={cx(
         'absolute inset-y-0 -right-2 z-2 flex cursor-ew-resize items-center justify-center',
-        'after:pointer-events-none after:z-5 after:h-3/5 after:w-3 after:rounded hover:after:bg-green-500',
+        'after:pointer-events-none after:z-5 after:h-screen-60 after:w-3 after:rounded hover:after:bg-green-500',
         'before:pointer-events-none before:absolute before:inset-y-2 before:w-px before:rounded before:transition-colors',
-        'group-hover/table-header:before:bg-light-100',
+        'group-hover/table-header:before:bg-gray-100',
         isDragging && 'after:bg-green-500'
       )}
       {...listeners}

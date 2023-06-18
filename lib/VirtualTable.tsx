@@ -5,9 +5,6 @@ import React, {
   type MouseEvent,
   type ReactNode,
   type SetStateAction,
-  useCallback,
-  useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -282,7 +279,7 @@ const VirtualTable = <T extends ListType>({
     }
   };
 
-  const getMoreWidth = useMemo(() => {
+  const getMoreWidth = () => {
     if (canChecked && !canDragSortRow) {
       return checkBoxWidth;
     }
@@ -293,26 +290,19 @@ const VirtualTable = <T extends ListType>({
       return dragIconWidth + checkBoxWidth;
     }
     return 0;
-  }, [canChecked, canDragSortRow]);
+  };
+  const moreWidth = getMoreWidth();
 
   // 获取key的临时宽度
-  const getTempKeyWidth = useCallback(
-    (key: string): number => {
-      if (key === changeKey) {
-        return widths[key] * (tableWidth - getMoreWidth) + changeWidth;
-      }
-      return widths[key] * (tableWidth - getMoreWidth);
-    },
-    [changeKey, widths, tableWidth, getMoreWidth, changeWidth]
-  );
+  const getTempKeyWidth = (key: string): number => {
+    if (key === changeKey) {
+      return widths[key] * (tableWidth - moreWidth) + changeWidth;
+    }
+    return widths[key] * (tableWidth - moreWidth);
+  };
 
   // 实时宽度
-  const realWidth = useMemo(() => {
-    // 正常计算
-    const res = labels.map(getTempKeyWidth).reduce((a, b) => a + b, 0);
-    // 返回的总宽度，要带上变化的宽度
-    return getMoreWidth + res;
-  }, [labels, getMoreWidth, getTempKeyWidth]);
+  const realWidth = moreWidth + labels.map(getTempKeyWidth).reduce((a, b) => a + b, 0);
 
   // 监听渲染的行索引
   const onItemsRendered = (info: ListOnItemsRenderedProps) => {
@@ -357,8 +347,11 @@ const VirtualTable = <T extends ListType>({
         if (row.label === key) {
           return row;
         }
-        if (row?.children) {
-          return getRow(row.children, key);
+        // 如果没匹配上，还有子元素，就继续往下匹配
+        else if (row?.children) {
+          const res = getRow(row.children, key);
+          // 结果为真，才可以返回，否则逻辑就是错的
+          if (res) return res;
         }
       }
       return undefined;
@@ -377,14 +370,14 @@ const VirtualTable = <T extends ListType>({
   // 获取左侧绝对定位的距离
   const getLeftWidth = (idx: number) => {
     if (idx === 0) {
-      return getMoreWidth;
+      return moreWidth;
     }
     const cols = labels
       .map(getTempKeyWidth)
       .slice(0, idx)
       .reduce((a, b) => a + b);
 
-    return getMoreWidth + cols;
+    return moreWidth + cols;
   };
 
   // 获取右侧绝对定位的距离
@@ -402,22 +395,10 @@ const VirtualTable = <T extends ListType>({
   const emptyRow: { [key: string]: any } = {};
   labels.forEach((o, idx) => (emptyRow[o] = `row_${idx}`));
 
+  // 顶部高度
+  const top = headerTrees?.length > 0 ? headerList.length * titleHeight : titleHeight;
   // 真实高度计算
-  const realHeight = useMemo(() => {
-    // 顶部高度
-    const top = headerTrees?.length > 0 ? headerList.length * titleHeight : titleHeight;
-
-    // 真实高度
-    return disableScroll ? list.length * rowHeight + top + 7 : tableHeight;
-  }, [
-    headerTrees?.length,
-    headerList?.length,
-    titleHeight,
-    disableScroll,
-    list.length,
-    rowHeight,
-    tableHeight,
-  ]);
+  const realHeight = disableScroll ? list.length * rowHeight + top + 7 : tableHeight;
 
   const disableScrollStyle = disableScroll ? { overflowY: 'hidden' } : {};
   const emptyStyle = list.length === 0 ? { height: '100%' } : {};
