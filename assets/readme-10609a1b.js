@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-d673cef9.js";import{M as s}from"./index-7a89357b.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-d3809d64.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-9828acaf.js";import"./index-356e4a49.js";function l(e){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},r(),e.components);return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"Readme"}),`
+import{j as n}from"./jsx-runtime-d673cef9.js";import{M as s}from"./index-becc7c7e.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-a3d38399.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-9828acaf.js";import"./index-356e4a49.js";function l(e){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},r(),e.components);return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"Readme"}),`
 `,n.jsx(i.h2,{id:"项目说明",children:"项目说明："}),`
 `,n.jsx(i.h4,{id:"安装",children:"安装"}),`
 `,n.jsx(i.pre,{children:n.jsx(i.code,{className:"language-shell",children:`npm install @yangfei-ui/react-window-table
@@ -47,4 +47,4 @@ yarn dev
 `,n.jsx(i.li,{children:"表格支持行点击事件，传参数生效。"}),`
 `,n.jsx(i.li,{children:"支持分组展示，需要自己在外部定义渲染逻辑。"}),`
 `]})]})}function g(e={}){const{wrapper:i}=Object.assign({},r(),e.components);return i?n.jsx(i,Object.assign({},e,{children:n.jsx(l,e)})):l(e)}export{g as default};
-//# sourceMappingURL=readme-0a485a34.js.map
+//# sourceMappingURL=readme-10609a1b.js.map
