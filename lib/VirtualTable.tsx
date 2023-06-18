@@ -15,7 +15,6 @@ import {
   type ListChildComponentProps,
   type ListOnItemsRenderedProps,
 } from 'react-window';
-import useResizeObserver from 'use-resize-observer';
 
 import {
   checkBoxWidth,
@@ -26,6 +25,7 @@ import {
   VirtualTableContext,
 } from './consts';
 import DragRowsItem from './DragRowsItem';
+import useResize from './hooks/useResize';
 import TableWrapper from './TableWrapper';
 import useTableScroll from './useTableScroll';
 
@@ -207,15 +207,10 @@ const VirtualTable = <T extends ListType>({
   // 表格高度
   const [tableHeight, setTableHeight] = useState<number>(1);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const { width = 1, height = 1 } = useResizeObserver<HTMLDivElement>({
-    ref: ref,
-    box: 'border-box',
-    round: Math.floor,
-    onResize: ({ width, height }) => {
-      setTableWidth(width as number);
-      setTableHeight(height ?? ref.current?.offsetHeight ?? document.body.offsetHeight);
-    },
+  // 监听外部容器的宽高
+  const { resizeRef, width, height } = useResize({
+    setHeight: setTableHeight,
+    setWidth: setTableWidth,
   });
 
   // 临时变化的key
@@ -434,7 +429,7 @@ const VirtualTable = <T extends ListType>({
     FixedSizeList;
 
   return (
-    <div ref={ref} className='h-full w-full'>
+    <div ref={resizeRef} className='h-full w-full'>
       <VirtualTableContext.Provider
         value={{
           fixedTopCount,
@@ -504,8 +499,8 @@ const VirtualTable = <T extends ListType>({
           }
           // 一共有多少行
           itemCount={list.length > fixedTopCount ? list.length - fixedTopCount : 1}
-          height={height > 1 ? height : ref.current?.offsetHeight || 0}
-          width={width > 1 ? width : ref.current?.offsetWidth || 0}
+          height={height}
+          width={width}
           itemSize={rowHeight}
           overscanCount={disableScroll ? 0 : 3} // 比实际多渲染n行元素
           onItemsRendered={onItemsRendered} // 渲染进度监听
