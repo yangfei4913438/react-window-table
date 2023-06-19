@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-d673cef9.js";import{M as s}from"./index-96c528b3.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-2af6b95f.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-9828acaf.js";import"./index-356e4a49.js";function l(e){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},r(),e.components);return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"Readme"}),`
+import{j as n}from"./jsx-runtime-d673cef9.js";import{M as s}from"./index-6e0d51ba.js";import{u as r}from"./index-63317901.js";import"./index-cdf295ea.js";import"./iframe-080e931e.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./isNativeReflectConstruct-1da304ae.js";import"./index-d37d4223.js";import"./index-9828acaf.js";import"./index-356e4a49.js";function l(e){const i=Object.assign({h2:"h2",h4:"h4",pre:"pre",code:"code",p:"p",ul:"ul",li:"li"},r(),e.components);return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"Readme"}),`
 `,n.jsx(i.h2,{id:"项目说明",children:"项目说明："}),`
 `,n.jsx(i.h4,{id:"安装",children:"安装"}),`
 `,n.jsx(i.pre,{children:n.jsx(i.code,{className:"language-shell",children:`npm install @yangfei-ui/react-window-table
@@ -46,4 +46,4 @@ yarn dev
 `,n.jsx(i.h4,{id:"有可能的计划",children:"有可能的计划"}),`
 `,n.jsx(i.p,{children:"考虑使用canvas渲染表格，替换react-window，整个项目重写，模块化、配置化。列可配置、单元格可配置，表头可配置"}),`
 `,n.jsx(i.p,{children:"应该是重开一个项目做这个事情，替换react-window等于把最底层的逻辑推翻了。"})]})}function g(e={}){const{wrapper:i}=Object.assign({},r(),e.components);return i?n.jsx(i,Object.assign({},e,{children:n.jsx(l,e)})):l(e)}export{g as default};
-//# sourceMappingURL=readme-9f13835d.js.map
+//# sourceMappingURL=readme-c7937b7d.js.map
