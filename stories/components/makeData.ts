@@ -1,4 +1,4 @@
-import Mockjs from 'mockjs';
+import Mockjs, { Random } from 'mockjs';
 
 // 多语言值的显示类型
 export const PersonLabels = {
@@ -48,7 +48,7 @@ export function makeData(lens: number): IPerson[] {
         visits: '@integer(0,1000)',
         ip: '@ip',
         last_visit: '@datetime("yyyy-MM-dd HH:mm:ss")',
-        [`children|0-3`]: [
+        [`children|0-5`]: [
           {
             id: '@id',
             name: '@cname',
@@ -68,13 +68,11 @@ export function makeData(lens: number): IPerson[] {
   };
   const result = Mockjs.mock(mockData);
 
-  const num = Math.ceil(Math.random() * 5);
-
   return result.data.map((item: IPerson, index: number) => {
-    if (index % num === 0) {
-      const { children, ...rest } = item;
-      return rest;
+    const { children, ...rest } = item;
+    if (children && children.length > 0) {
+      return item;
     }
-    return item;
+    return rest;
   });
 }
