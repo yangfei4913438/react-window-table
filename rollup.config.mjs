@@ -1,19 +1,19 @@
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'; // // 打包的时候用来排除 package.json 内 peerDependencies 字段内的包
+import { defineConfig } from 'rollup';
+import alias from '@rollup/plugin-alias'; // 别名处理
 import commonjs from '@rollup/plugin-commonjs'; // 可以处理commonjs类型的库
-import json from '@rollup/plugin-json'; // 识别json文件, 自动摇树
+import json from '@rollup/plugin-json'; // 识别json文件
 import resolve from '@rollup/plugin-node-resolve'; // 可以让 Rollup 查找到外部模块
-import { terser } from 'rollup-plugin-terser'; // 代码压缩
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'; // // 打包的时候用来排除 package.json 内 peerDependencies 字段内的包
 import typescript from 'rollup-plugin-typescript2'; // 处理ts文件
+import { terser } from 'rollup-plugin-terser'; // 代码压缩
 import postcss from 'rollup-plugin-postcss'; // 样式处理
 import { visualizer } from 'rollup-plugin-visualizer'; // 打包分析
-import { defineConfig } from 'rollup';
-import alias from 'rollup-plugin-alias';
 
 /** @type {import('rollup-plugin-typescript2').default} */
 const tsOptions = {
   tsconfigOverride: {
     compilerOptions: {
-      declaration: true,
+      declaration: true, // 打包生成 .d.ts 声明文件
     },
     // 排除的文件
     exclude: [
@@ -89,6 +89,7 @@ const rollupConfig = defineConfig([
         file: 'dist/index.es.js',
         format: 'es',
         name: 'react-window-table', // 全局变量的名称
+        exports: 'named', // 导出的是全局变量命名
       },
     ],
     // rollup的插件都是函数，这些函数之间是有执行顺序的。
