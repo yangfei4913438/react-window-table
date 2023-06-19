@@ -70,7 +70,7 @@ export function makeData(lens: number): IPerson[] {
 
   return result.data.map((item: IPerson, index: number) => {
     const { children, ...rest } = item;
-    if (children && children.length > 0) {
+    if (children && children.length > 2) {
       return item;
     }
     return rest;
