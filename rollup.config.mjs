@@ -1,12 +1,12 @@
-import { defineConfig } from 'rollup';
 import alias from '@rollup/plugin-alias'; // 别名处理
 import commonjs from '@rollup/plugin-commonjs'; // 可以处理commonjs类型的库
 import json from '@rollup/plugin-json'; // 识别json文件
 import resolve from '@rollup/plugin-node-resolve'; // 可以让 Rollup 查找到外部模块
+import { defineConfig } from 'rollup';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'; // // 打包的时候用来排除 package.json 内 peerDependencies 字段内的包
-import typescript from 'rollup-plugin-typescript2'; // 处理ts文件
-import { terser } from 'rollup-plugin-terser'; // 代码压缩
 import postcss from 'rollup-plugin-postcss'; // 样式处理
+import { terser } from 'rollup-plugin-terser'; // 代码压缩
+import typescript from 'rollup-plugin-typescript2'; // 处理ts文件
 import { visualizer } from 'rollup-plugin-visualizer'; // 打包分析
 
 /** @type {import('rollup-plugin-typescript2').default} */
