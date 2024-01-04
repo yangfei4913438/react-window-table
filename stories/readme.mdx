@@ -4,6 +4,25 @@ import { Meta } from '@storybook/blocks';
 
 ## 项目说明：
 
+一个基于 react-window 的全功能表单组件。
+
+#### 重要提示
+
+我在仓库的项目介绍页面，放了一个演示 demo, 看上去是有一些小 'bug', 但实际是没有问题的，是环境问题。
+大家可以直接安装到本地去演示，演示代码直接拷贝 `stories/components` 这个目录下的就行，
+但是记得更换 `stories/components/Table.tsx` 里面的表格引入代码。
+因为这个文件是直接引用库代码的，你得改成下载的包名，也就是 `@yf-ui/react-window-table`
+
+还有就是，组件不支持服务端渲染，如果要在服务端渲染组件内引入，请注意渲染成非 ssr组件。
+
+next 里面的非 ssr 组件引入方式。
+```typescript
+import dynamic from "next/dynamic";
+
+const Tab = dynamic(() => import('./tab'), { ssr: false })
+```
+
+
 #### 安装
 
 ```shell
@@ -56,3 +75,12 @@ yarn dev
 - 表格支持行点击事件，传参数生效。
 - 支持分组展示，需要自己在外部定义渲染逻辑。
 - 行选中，默认显示行号，hover之后显示checkbox, 自身被选中或者子元素被选中，则checkbox选项框会持续显示。
+
+#### 其他说明
+
+如果大家发现什么 bug, 可以给我提 issue，看到了我会安排时间修复。不过可能没那么及时，因为我目前在做我的一个大前端博客项目，
+包含了，桌面客户端，web端，移动端。
+
+当然了，更欢迎大家给我提 pr, 如果没啥问题我就会合并的。
+
+我也在看合适的工作机会，欢迎联系我:)
