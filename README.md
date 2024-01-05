@@ -1,12 +1,19 @@
 ## 项目说明：
 一个基于 react-window 的全功能表单组件。
 
-### 重要提示
+### 提示
 
-我在仓库的项目介绍页面，放了一个演示 demo, 看上去是有一些小 'bug', 但实际是没有问题的，是环境问题。
-大家可以直接安装到本地去演示，演示代码直接拷贝 `stories/components` 这个目录下的就行，
+表格可以直接在右上角 About 里面的找到链接，点击就能查看在线演示。
+
+如果你想要下载到本地尝试，可以直接复制 `dev/demo` 这个目录下的代码到你的项目里，
+
 但是记得更换 `stories/components/Table.tsx` 里面的表格引入代码。
+
+`import { VirtualTable } from 'lib';` 这行代码替换成 `import { VirtualTable } from '@yf-ui/react-window-table';`
+
 因为这个文件是直接引用库代码的，你得改成下载的包名，也就是 `@yf-ui/react-window-table`
+
+`import { Button } from 'ui/button';` 这行代码，换成你用的 button 组件。
 
 还有就是，组件不支持服务端渲染，如果要在服务端渲染组件内引入，请注意渲染成非 ssr组件。
 
