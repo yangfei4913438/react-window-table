@@ -7,15 +7,17 @@
 
 如果你想要下载到本地尝试，可以直接复制 `dev/demo` 这个目录下的代码到你的项目里，
 
-但是记得更换 `stories/components/Table.tsx` 里面的表格引入代码。
+但是记得更换 `dev/demo/Table.tsx` 里面的表格引入代码。
 
 `import { VirtualTable } from 'lib';` 这行代码替换成 `import { VirtualTable } from '@yf-ui/react-window-table';`
 
 因为这个文件是直接引用库代码的，你得改成下载的包名，也就是 `@yf-ui/react-window-table`
 
-`import { Button } from 'ui/button';` 这行代码，换成你用的 button 组件。
+`import { Button } from 'ui/button';` 这行代码，换成你用的 button 组件。 
 
-还有就是，组件不支持服务端渲染，如果要在服务端渲染组件内引入，请注意渲染成非 ssr组件。
+如果你还没有，当然也可以从源码里面, 直接复制 button 组件使用，路径 `lib/ui/button.tsx`，一样很方便。
+
+还有就是，表格组件是不支持服务端渲染的。 如果要在服务端渲染组件内引入，请注意渲染成非 ssr 组件。
 
 next 里面的非 ssr 组件引入方式。
 ```typescript
