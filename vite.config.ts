@@ -14,14 +14,12 @@ export default ({ mode }: UserConfig) => {
     },
     plugins: [react(), eslint()],
     build: {
-      outDir: 'dist2',
+      outDir: 'github-static',
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, '.', 'stories'),
         lib: resolve(__dirname, '.', 'lib'),
         ui: resolve(__dirname, '.', 'lib', 'ui'),
-        demo: resolve(__dirname, '.', 'demo'),
       },
     },
   });

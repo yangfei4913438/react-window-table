@@ -14,7 +14,6 @@ module.exports = {
     // 2. 开启rules的 "prettier/prettier": "error"
     // 3. eslint fix 的同时执行 prettier 格式化
     'plugin:prettier/recommended',
-    'plugin:storybook/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

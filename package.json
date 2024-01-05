@@ -44,9 +44,8 @@
     "prepare": "husky install",
     "commit": "git add . && cz-customizable",
     "changelog": "conventional-changelog -p gitmoji-config -i CHANGELOG.md -s",
-    "storybook": "storybook dev -p 6008",
-    "build": "rimraf storybook-static && storybook build -o storybook-static",
-    "deploy": "npm run build && gh-pages -d storybook-static --branch docs"
+    "build": "rimraf github-static && tsc && vite build",
+    "deploy": "npm run build && gh-pages -d github-static --branch docs"
   },
   "config": {
     "commitizen": {
@@ -90,11 +89,6 @@
     "@rollup/plugin-commonjs": "^25.0.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
-    "@storybook/addon-essentials": "^7.0.22",
-    "@storybook/addon-links": "^7.0.21",
-    "@storybook/blocks": "^7.0.21",
-    "@storybook/react": "^7.0.21",
-    "@storybook/react-vite": "^7.0.21",
     "@types/lodash-es": "^4.17.7",
     "@types/mockjs": "^1.0.7",
     "@types/node": "^20.3.1",
@@ -121,7 +115,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-storybook": "^0.6.12",
     "eslint-plugin-tailwindcss": "^3.12.1",
     "gh-pages": "^5.0.0",
     "husky": "^8.0.0",
@@ -144,7 +137,6 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.62.1",
-    "storybook": "^7.0.21",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.5.3",
     "typescript": "5.0.4",
