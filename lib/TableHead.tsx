@@ -1,8 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import Button from 'antd/es/button';
 import cx from 'classnames';
 import React, { FC, useContext } from 'react';
+import { Button } from 'ui/button';
 
 import DragResize from './components/DragResize';
 import { VirtualTableContext } from './consts';
@@ -101,13 +101,25 @@ const TableHead: FC<ITableHead> = ({
           })}
         >
           {!!sortRenders && sortRenders[id] && (
-            <Button aria-label='sort' size={'small'} onClick={(e) => e.stopPropagation()}>
+            <Button
+              aria-label='sort'
+              variant='ghost'
+              size={'sm'}
+              className='h-full p-1 hover:bg-gray-300'
+              onClick={(e) => e.stopPropagation()}
+            >
               {sortRenders[id]}
             </Button>
           )}
 
           {!!filterRenders && filterRenders[id] && (
-            <Button aria-label='filter' size={'small'} onClick={(e) => e.stopPropagation()}>
+            <Button
+              aria-label='filter'
+              variant='ghost'
+              size={'sm'}
+              className='h-full p-1 hover:bg-gray-300'
+              onClick={(e) => e.stopPropagation()}
+            >
               {filterRenders[id]}
             </Button>
           )}

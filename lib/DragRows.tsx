@@ -961,7 +961,7 @@ const DragRows = ({ children }: DragRowsProps) => {
           <DragOverlay>
             <div
               className={cx(
-                'ring-accent relative w-full overflow-hidden bg-body shadow-lg ring-1',
+                'relative w-full overflow-hidden bg-body shadow-lg ring-1 ring-accent',
                 dragRowsItemClassName
               )}
             >
