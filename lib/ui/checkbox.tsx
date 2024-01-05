@@ -1,7 +1,8 @@
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { cn } from 'lib/utils/tailwind';
 import { CheckIcon, MinusIcon } from 'lucide-react';
 import React from 'react';
+
+import { cn } from '../utils/tailwind';
 
 interface ICheckboxProps extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
   className?: string;
