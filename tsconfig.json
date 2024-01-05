@@ -29,7 +29,8 @@
     "paths": {
       "@/*": ["stories/*"],
       "lib/*": ["lib/*"],
-      "ui/*": ["lib/components/ui/*"]
+      "ui/*": ["lib/ui/*"],
+      "demo/*": ["demo/*"]
     }
   },
   "include": [

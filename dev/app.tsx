@@ -1,8 +1,8 @@
-import Table from './components/Table';
+import Table from '../demo/Table';
 
 const App = () => {
   return (
-    <div>
+    <div className='h-full w-full'>
       <Table />
     </div>
   );

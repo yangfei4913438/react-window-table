@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
-import { options } from '@/components/consts';
-import Table from '@/components/Table';
+import { options } from 'demo/consts';
+import Table from 'demo/Table';
 
 const meta: Meta<typeof Table> = {
   title: 'Table',
