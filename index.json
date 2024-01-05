@@ -1,1 +1,0 @@
-{"v":4,"entries":{"readme--docs":{"id":"readme--docs","title":"Readme","name":"Docs","importPath":"./stories/readme.mdx","storiesImports":[],"type":"docs","tags":["unattached-mdx","docs"]},"table--example":{"id":"table--example","title":"Table","name":"Example","importPath":"./stories/table.stories.tsx","tags":["story"],"type":"story"}}}

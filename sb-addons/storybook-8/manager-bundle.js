@@ -1,4 +1,0 @@
-try{
-var i=__STORYBOOKAPI__,{ActiveTabs:S,Consumer:h,ManagerContext:d,Provider:m,addons:s,combineParameters:b,controlOrMetaKey:p,controlOrMetaSymbol:y,eventMatchesShortcut:T,eventToShortcut:A,isMacLike:O,isShortcutTaken:P,keyToSymbol:_,merge:f,mockChannel:v,optionOrAltSymbol:g,shortcutMatchesShortcut:k,shortcutToHumanString:M,types:C,useAddonState:w,useArgTypes:x,useArgs:K,useChannel:B,useGlobalTypes:G,useGlobals:I,useParameter:R,useSharedState:Y,useStoryPrepared:F,useStorybookApi:H,useStorybookState:L}=__STORYBOOKAPI__;s.setConfig({isFullscreen:!1,showNav:!0,showPanel:!0,panelPosition:"bottom",enableShortcuts:!1,showToolbar:!1,theme:void 0,selectedPanel:"addon-controls",initialActive:"canvas"});
-}catch(e){ console.error("[Storybook] One of your manager-entries failed: " + import.meta.url, e); }
-//# sourceMappingURL=manager-bundle.js.map
