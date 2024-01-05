@@ -1,17 +1,17 @@
-import {
-  CaretDownOutlined,
-  CaretRightOutlined,
-  FileTextOutlined,
-  FilterFilled,
-  FilterOutlined,
-  FolderOpenOutlined,
-  FolderOutlined,
-  LineHeightOutlined,
-  SortAscendingOutlined,
-  SortDescendingOutlined,
-} from '@ant-design/icons';
 import cx from 'classnames';
 import { VirtualTable } from 'lib';
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronsDownIcon,
+  ChevronsUpDownIcon,
+  ChevronsUpIcon,
+  FileTextIcon,
+  FilterIcon,
+  FilterXIcon,
+  FolderClosedIcon,
+  FolderOpenIcon,
+} from 'lucide-react';
 import { type FC, type ReactNode, useLayoutEffect, useMemo, useState } from 'react';
 import { Button } from 'ui/button';
 
@@ -61,7 +61,7 @@ const Table: FC<TableType> = ({
     email: 0.25,
     phone: 0.15,
     status: 0.1,
-    visits: 0.1,
+    visits: 0.12,
     last_visit: 0.2,
   });
 
@@ -262,7 +262,7 @@ const Table: FC<TableType> = ({
   const filterRenders = {
     name: (
       <div className='' onClick={() => getFilterData('name', filter.name ? undefined : 'aa')}>
-        {filter.name ? <FilterFilled /> : <FilterOutlined />}
+        {filter.name ? <FilterXIcon className='h-4 w-4' /> : <FilterIcon className='h-4 w-4' />}
       </div>
     ),
   };
@@ -288,12 +288,12 @@ const Table: FC<TableType> = ({
   // 渲染排序ICON
   const renderSortIcon = (sortIcon: 'asc' | 'desc' | undefined) => {
     if (sortIcon === 'asc') {
-      return <SortAscendingOutlined />;
+      return <ChevronsDownIcon className='h-4 w-4' />;
     }
     if (sortIcon === 'desc') {
-      return <SortDescendingOutlined />;
+      return <ChevronsUpIcon className='h-4 w-4' />;
     }
-    return <LineHeightOutlined />;
+    return <ChevronsUpDownIcon className='h-4 w-4' />;
   };
 
   const sortRenders = {
@@ -353,23 +353,23 @@ const Table: FC<TableType> = ({
         if (!item?.children) {
           return (
             <i className={cx(hasParent(item.id) && 'ml-6')}>
-              <FileTextOutlined />
+              <FileTextIcon className='h-4 w-4' />
             </i>
           );
         }
         if (item.children.length === 0 || !groups[item.id]) {
-          return <FolderOutlined />;
+          return <FolderClosedIcon className='h-4 w-4' />;
         }
-        return <FolderOpenOutlined />;
+        return <FolderOpenIcon className='h-4 w-4' />;
       };
       const renderPointer = () => {
         if (!item?.children) {
           return <div className='h-3 w-3' />;
         }
         if (!groups[item.id]) {
-          return <CaretRightOutlined />;
+          return <ChevronRightIcon className='h-4 w-4' />;
         }
-        return <CaretDownOutlined />;
+        return <ChevronDownIcon className='h-4 w-4' />;
       };
       return (
         <div
@@ -442,14 +442,14 @@ const Table: FC<TableType> = ({
   };
 
   return (
-    <section className='h-screen w-screen'>
-      <header className='flex h-16 items-center justify-between bg-gray-400'>
-        <span className='mr-4 cursor-pointer py-1.5 text-2xl'>React Window Table</span>
+    <div className='flex h-screen w-screen flex-col'>
+      <div className='flex h-16 items-center justify-between bg-gray-800 px-8 text-white'>
+        <div className='mr-4 cursor-pointer py-1.5 text-2xl'>React Window Table</div>
         <Button color='blue' onClick={initData}>
           刷新数据
         </Button>
-      </header>
-      <div className=''>
+      </div>
+      <div className='flex-1'>
         <VirtualTable
           titleHeight={48}
           rowHeight={40}
@@ -486,7 +486,7 @@ const Table: FC<TableType> = ({
           emptyNode={emptyDom}
         />
       </div>
-    </section>
+    </div>
   );
 };
 

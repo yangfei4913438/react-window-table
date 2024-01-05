@@ -20,6 +20,7 @@ const tsOptions = {
       'dist',
       'dist2',
       'node_modules',
+      'dev',
       'src',
       'stories',
       'vite.config.ts',
@@ -95,7 +96,10 @@ const rollupConfig = defineConfig([
     // rollup的插件都是函数，这些函数之间是有执行顺序的。
     plugins: [
       alias({
-        entries: [{ find: '@', replacement: 'src' }],
+        entries: [
+          { find: 'lib', replacement: './lib' },
+          { find: 'ui', replacement: './lib/components/ui' },
+        ],
       }),
       json(),
       peerDepsExternal(),

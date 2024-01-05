@@ -109,7 +109,7 @@ const TableRow = <T extends ListType>({
     <div
       className={cx(
         'group/row hover:bg-primary/3 inline-flex items-center bg-white',
-        rowClass?.({ index, row }) || 'border-b-secondary border-b'
+        rowClass?.({ index, row }) || 'border-b border-b-secondary'
       )}
       style={{ height: rowHeight }}
       onClick={(event) => rowClick?.({ event, index, row })}

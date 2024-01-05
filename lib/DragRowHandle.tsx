@@ -1,5 +1,5 @@
-import { HolderOutlined } from '@ant-design/icons';
 import cx from 'classnames';
+import { GripVerticalIcon } from 'lucide-react';
 import { useContext, useMemo } from 'react';
 
 import { dragIconWidth, VirtualTableContext } from './consts';
@@ -36,7 +36,7 @@ const DragRowHandle = ({ dragRowIcon, isDragging, className, ...rest }: DragRowH
         style={{ width: dragIconWidth, ...leftStyle }}
         {...rest}
       >
-        {dragRowIcon ?? <HolderOutlined />}
+        {dragRowIcon ?? <GripVerticalIcon className='h-4 w-4' />}
       </div>
     </div>
   );

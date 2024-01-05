@@ -20,6 +20,7 @@ export default ({ mode }: UserConfig) => {
       alias: {
         '@': resolve(__dirname, '.', 'stories'),
         lib: resolve(__dirname, '.', 'lib'),
+        ui: resolve(__dirname, '.', 'lib', 'components', 'ui'),
       },
     },
   });

@@ -1,6 +1,6 @@
-import { Checkbox } from 'antd';
 import cx from 'classnames';
 import React, { FC, useContext, useMemo, useState } from 'react';
+import { Checkbox } from 'ui/checkbox';
 
 import { checkBoxWidth, dragIconWidth, VirtualTableContext } from './consts';
 
