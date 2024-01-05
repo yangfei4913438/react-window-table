@@ -27,10 +27,8 @@
     "baseUrl": ".",
     /* 配置路径别名 */
     "paths": {
-      "@/*": ["stories/*"],
       "lib/*": ["lib/*"],
-      "ui/*": ["lib/ui/*"],
-      "demo/*": ["demo/*"]
+      "ui/*": ["lib/ui/*"]
     }
   },
   "include": [

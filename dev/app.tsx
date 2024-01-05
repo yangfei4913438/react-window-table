@@ -1,4 +1,4 @@
-import Table from '../demo/Table';
+import Table from './demo/Table';
 
 const App = () => {
   return (

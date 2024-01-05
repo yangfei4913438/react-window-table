@@ -22,7 +22,7 @@ const Tab = dynamic(() => import('./tab'), { ssr: false })
 - [x] 全面移除 antd 相关代码
 - [x] 引入 shadcn 相关生态
 - [x] 回归传统的组件开发模式
-- [ ] 移除 storybook 相关代码
+- [x] 移除 storybook 相关代码
 
 ---
 
